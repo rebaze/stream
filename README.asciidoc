@@ -1,0 +1,17 @@
+rebaze inc. presents
+
+= Autocode
+
+== Introduction
+
+== Requirememts
+
+== Contributions
+
+are very welcome. Send a pull request or report issues on GitHub. Even just a
+spelling fix in the readme or anything else really is a welcome help.
+
+== Contributors
+
+- Toni Menzel http://www.rebaze.com
+- More details on github - https://github.com/rebaze/autocode/network/members[members] and https://github.com/simpligility/autocode/graphs/contributors[contributors]
