@@ -1,0 +1,36 @@
+{
+  "name": "Toni's local universe",
+  "owner": "toni@rebaze.com",
+  "repository": {
+    "subjects": [
+      {
+        "type": "maven3",
+        "vendor": "apache",
+        "source": {
+          "type": "git",
+          "url": "https://git-wip-us.apache.org/repos/asf/maven.git"
+        },
+        "distributions": [
+          {
+            "version": "3.3.3",
+            "scm-tag": "3.3.3",
+            "artifacts": [
+              {
+                "coordinates": "org.apache.maven:apache-maven",
+                "classifier": "bin",
+                "extension": "zip",
+                "checksum": {
+                  "type": "sha-1",
+                  "data": "b8eebb7ba265532bf55aa17f89440c2fe267bed3"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "cache": {
+      "folder": "/tmp/autocode/cache"
+    }
+  }
+}

@@ -1,10 +1,62 @@
-rebaze inc. presents
+*rebaze* "Precision Tools for the Software Industry" presents
 
 = Autocode
 
+*Proactive Integration*
+
+Autocode is your software parts tailor.
+It is a SaaS made for companies creating their own distributions of commodity software.
+Reasons for this need are:
+
+- Governance
+- Security
+- Compliance
+- Work efficiency
+- Long Support
+
+Autocode's claim is: *Unpack & Go*.
+
 == Introduction
 
-== Requirememts
+Modification with Autocode can happen at build time of the subject ("rebuild") as well as augmenting the deliverable.
+Both strategies are transparent to the user.
+
+== Required Capabilities
+
+- Download and cache stuff using http-client. Must support proxies.
+- Create and run shallow execution environments.
+- Modify source code (start with pom.xml for maven)
+- checkout, commit and work with a git repository (jgit)
+- Provide a web front-end that allows retrieving refined distributions of Maven, Jenkins and Eclipse.
+
+*Preconfigured distributions of*
+
+- Maven
+- Gradle
+- Eclipse
+- Jenkins
+
+We not only might provide the refined binary but also an aggregated view showing: activity, people,
+companies involved, vulnerabilities, links.
+
+== Use case: DZMaven
+
+=== Problem
+
+There is a mandatory (single) repository for all dependencies that is not
+transparent to Maven Central.
+
+There is an internet proxy for desktop machines to use.
+Developers struggle with getting all required dependencies known to the company repo.
+
+=== Solution
+
+Build a *trusted* maven distribution that
+
+- has valid configuration readily set up (password? Per user?)
+- make overwriting settings explicit (unsafe option)
+- build-problems should be easily sharable with internal and external team.
+- release-channel based version role-out
 
 == Contributions
 
