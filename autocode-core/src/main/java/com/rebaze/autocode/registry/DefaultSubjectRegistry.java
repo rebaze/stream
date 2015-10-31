@@ -1,8 +1,9 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.registry;
 
-import okio.BufferedSource;
+import com.rebaze.autocode.core.StagedSubject;
+import com.rebaze.autocode.core.SubjectRegistry;
+import com.rebaze.autocode.config.WorkspaceConfiguration;
 import okio.Okio;
-import okio.Sink;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;

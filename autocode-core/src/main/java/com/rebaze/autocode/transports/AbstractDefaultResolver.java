@@ -1,16 +1,14 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.transports;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.rebaze.autocode.api.ArtifactLocation;
-import com.rebaze.autocode.api.AutocodeArtifact;
-import com.rebaze.autocode.api.CacheSettings;
-import com.rebaze.autocode.api.URLLocation;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
-import org.ops4j.store.Handle;
+import com.rebaze.autocode.config.ArtifactLocation;
+import com.rebaze.autocode.config.AutocodeArtifact;
+import com.rebaze.autocode.config.CacheSettings;
+import com.rebaze.autocode.config.URLLocation;
+import com.rebaze.autocode.core.AutocodeArtifactResolver;
+import com.rebaze.autocode.core.StagedSubject;
+import com.rebaze.autocode.config.WorkspaceConfiguration;
 import org.ops4j.store.Store;
 import org.ops4j.store.intern.TemporaryStore;
 import org.slf4j.Logger;

@@ -1,12 +1,12 @@
-package com.rebaze.autocode.api;
+package com.rebaze.autocode.config;
 
 /**
  * Created by tonit on 28/10/15.
  */
-public class AutocodeChecksum
+public class SourceSettings
 {
     private String type;
-    private String data;
+    private String url;
 
     public String getType()
     {
@@ -18,13 +18,13 @@ public class AutocodeChecksum
         this.type = type;
     }
 
-    public String getData()
+    public String getUrl()
     {
-        return data;
+        return url;
     }
 
-    public void setData( String data )
+    public void setUrl( String url )
     {
-        this.data = data;
+        this.url = url;
     }
 }

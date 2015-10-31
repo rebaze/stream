@@ -1,6 +1,6 @@
 package com.rebaze.autocode.core;
 
-import com.rebaze.autocode.api.AutocodeArtifact;
+import com.rebaze.autocode.config.AutocodeArtifact;
 
 import java.io.IOException;
 

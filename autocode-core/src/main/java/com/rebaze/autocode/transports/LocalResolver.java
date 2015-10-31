@@ -1,6 +1,9 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.transports;
+
+import com.rebaze.autocode.config.WorkspaceConfiguration;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -9,6 +12,7 @@ import java.net.URL;
 /**
  *
  */
+@Singleton
 public class LocalResolver extends AbstractDefaultResolver
 {
 

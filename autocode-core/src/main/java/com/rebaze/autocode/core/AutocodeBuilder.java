@@ -1,13 +1,15 @@
 package com.rebaze.autocode.core;
 
 import com.google.inject.Provides;
-import com.rebaze.autocode.api.*;
+import com.rebaze.autocode.config.AutocodeArtifact;
+import com.rebaze.autocode.config.BuildSubject;
+import com.rebaze.autocode.config.SubjectVersion;
+import com.rebaze.autocode.config.WorkspaceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 /**

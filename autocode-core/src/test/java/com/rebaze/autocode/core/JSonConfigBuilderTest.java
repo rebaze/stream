@@ -1,11 +1,10 @@
 package com.rebaze.autocode.core;
 
-import com.rebaze.autocode.api.Configuration;
+import com.rebaze.autocode.config.Configuration;
 import okio.Okio;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertEquals;
 

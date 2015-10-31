@@ -1,5 +1,6 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.transports;
 
+import com.rebaze.autocode.config.WorkspaceConfiguration;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;

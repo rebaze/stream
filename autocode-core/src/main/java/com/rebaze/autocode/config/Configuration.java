@@ -1,4 +1,4 @@
-package com.rebaze.autocode.api;
+package com.rebaze.autocode.config;
 
 /**
  * Created by tonit on 27/10/15.

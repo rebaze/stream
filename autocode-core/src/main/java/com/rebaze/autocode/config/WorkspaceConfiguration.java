@@ -1,7 +1,7 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.config;
 
-import com.rebaze.autocode.api.ArtifactLookupSites;
-import com.rebaze.autocode.api.Configuration;
+import com.rebaze.autocode.config.ArtifactLookupSites;
+import com.rebaze.autocode.config.Configuration;
 
 /**
  * Created by tonit on 29/10/15.

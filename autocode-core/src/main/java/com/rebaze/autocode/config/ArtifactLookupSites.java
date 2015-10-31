@@ -1,4 +1,4 @@
-package com.rebaze.autocode.api;
+package com.rebaze.autocode.config;
 
 import java.util.ArrayList;
 import java.util.List;

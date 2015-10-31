@@ -2,8 +2,6 @@ package com.rebaze.autocode.core;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.rebaze.autocode.api.ArtifactLookupSites;
-import com.rebaze.autocode.api.Configuration;
 import org.junit.Test;
 
 import java.io.*;
