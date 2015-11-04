@@ -20,7 +20,7 @@ public class ApiUsageTest
         Autocode autocode  = injector.getInstance( Autocode.class );
 
         // build:
-        autocode.build( new File( "/Users/tonit/devel/org.ops4j.base" ) );
+        assertEquals(0,autocode.build( new File( "/Users/tonit/devel/org.ops4j.base" ) ));
     }
 
 }

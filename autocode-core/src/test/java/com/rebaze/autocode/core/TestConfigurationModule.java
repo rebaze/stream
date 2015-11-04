@@ -14,6 +14,7 @@ public class TestConfigurationModule extends AbstractModule
 {
     @Override protected void configure()
     {
+        //bind(Source.class).toInstance( Okio.source( getClass().getResourceAsStream( "/autocode-locations.json" ) ) );
 
     }
 

@@ -26,9 +26,4 @@ public class DefaultModule extends AbstractModule
         uriBinder.addBinding().to(HttpResolver.class);
     }
 
-    @Provides
-    public Autocode clearAutocode( AutocodeBuilder builder ) throws IOException
-    {
-        return builder.build();
-    }
 }

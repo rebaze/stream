@@ -1,11 +1,12 @@
 package com.rebaze.autocode.core;
 
-import com.rebaze.autocode.config.WorkspaceConfiguration;
 import com.rebaze.autocode.exec.ShellRunner;
+import com.rebaze.autocode.registry.NativeSubjectHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * High level interface to Autocode.
@@ -13,15 +14,24 @@ import java.io.File;
 @Singleton
 public class Autocode
 {
-    @Inject WorkspaceConfiguration config;
 
-    public void build( File path )
+    private final SubjectRegistry registry;
+
+    @Inject
+    public Autocode(SubjectRegistry registry) throws IOException
     {
-        // build the toolchain:
+        this.registry = registry;
+        registry.unpack();
+    }
 
+    public int build( File path )
+    {
+        // select appropriate builder and find it in registry:
+        NativeSubjectHandler handler = registry.get("maven3");
         ShellRunner runner = new ShellRunner( true );
+        return runner.exec( path, handler.getEnv(),(handler.getExecutable().getAbsolutePath() +  " -v").split(" ") );
 
-        //runner.exec( path, "".split( " " ),"/Users/tonit/devel/build/bin/mvn clean install".split(" ") );
+        // consume result?
 
     }
 }

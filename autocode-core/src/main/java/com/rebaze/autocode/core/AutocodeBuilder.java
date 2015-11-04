@@ -22,33 +22,8 @@ public class AutocodeBuilder
 
     @Inject WorkspaceConfiguration workspaceConfig;
 
-    @Inject Set<AutocodeArtifactResolver> resolvers;
 
     @Inject SubjectRegistry subjectRegistry;
 
-    @Provides
-    public Autocode build() throws IOException
-    {
-        LOG.info("Unpacking universe..");
-        // download all subjects
-        for( BuildSubject sub : workspaceConfig.getConfiguration().getRepository().getSubjects()) {
-            for ( SubjectVersion version : sub.getDistributions()) {
-                for (AutocodeArtifact artifact : version.getArtifacts()) {
-                    for (AutocodeArtifactResolver resolver : resolvers)
-                    {
-                        StagedSubject installed = resolver.download( artifact );
-                        if ( installed != null )
-                        {
-                            subjectRegistry.install( installed );
-                            break;
-                        }
-                    }
-                }
-            }
-        }
 
-        return new Autocode();
-        // clone all subjects git
-
-    }
 }

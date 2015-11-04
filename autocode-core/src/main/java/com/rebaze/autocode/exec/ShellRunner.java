@@ -57,9 +57,11 @@ public class ShellRunner
     /**
      * {@inheritDoc}
      */
-    public synchronized void exec( File workingDirectory, String[] envOptions, String[] cmd )
+    public synchronized int exec( File workingDirectory, String[] envOptions, String[] cmd )
         throws ExecutionException
     {
+        int result = -1;
+
         final CommandLineBuilder commandLine = new CommandLineBuilder();
         commandLine.append( cmd );
 
@@ -88,12 +90,13 @@ public class ShellRunner
 
         if ( m_wait )
         {
-            waitForExit();
+            result =  waitForExit();
         }
         else
         {
             System.out.println();
         }
+        return result;
     }
 
     private String[] createEnvironmentVars( String[] envOptions )
@@ -138,7 +141,7 @@ public class ShellRunner
     /**
      * Wait till the framework process exits.
      */
-    public void waitForExit()
+    public int waitForExit()
     {
         synchronized ( m_frameworkProcess )
         {
@@ -146,15 +149,19 @@ public class ShellRunner
             {
                 LOG.debug( "Waiting for framework exit." );
                 System.out.println();
-                m_frameworkProcess.waitFor();
+                int result = m_frameworkProcess.waitFor();
+
                 shutdown();
+                return result;
             }
             catch ( Throwable e )
             {
                 LOG.debug( "Early shutdown.", e );
                 shutdown();
+                return -1;
             }
         }
+
     }
 
     /**
