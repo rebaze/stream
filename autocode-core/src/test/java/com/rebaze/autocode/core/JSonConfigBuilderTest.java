@@ -1,6 +1,7 @@
 package com.rebaze.autocode.core;
 
 import com.rebaze.autocode.config.Configuration;
+import com.rebaze.autocode.config.JSonConfigBuilder;
 import okio.Okio;
 import org.junit.Test;
 

@@ -18,12 +18,16 @@ public class ApiUsageTest
     @Test
     public void testSimple() throws IOException
     {
-        Injector injector = Guice.createInjector( new TestConfigurationModule(), new DefaultModule() );
-        Autocode autocode  = injector.getInstance( Autocode.class );
-
-        // build:
+        Autocode autocode = getAutocode();
         Effect build = autocode.build( new File( "/Users/tonit/devel/org.ops4j.base" ) );
+
         assertEquals("Executor should return normally",0, build.getReturnCode());
         assertEquals("No change in filesystem",0, TreeSession.leafs( build.getTree()) );
+    }
+
+    private Autocode getAutocode()
+    {
+        Injector injector = Guice.createInjector( new TestConfigurationModule(), new DefaultModule() );
+        return injector.getInstance( Autocode.class );
     }
 }

@@ -1,15 +1,7 @@
 package com.rebaze.autocode.registry;
 
-import com.google.inject.Provides;
-import com.rebaze.autocode.config.AutocodeArtifact;
-import com.rebaze.autocode.config.BuildSubject;
-import com.rebaze.autocode.config.SubjectVersion;
-import com.rebaze.autocode.core.Autocode;
-import com.rebaze.autocode.core.AutocodeArtifactResolver;
-import com.rebaze.autocode.core.StagedSubject;
-import com.rebaze.autocode.core.SubjectRegistry;
-import com.rebaze.autocode.config.WorkspaceConfiguration;
-import com.rebaze.autocode.maven.MavenSubjectHandler;
+import com.rebaze.autocode.config.*;
+import com.rebaze.autocode.core.*;
 import okio.Okio;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -39,6 +31,8 @@ public class DefaultSubjectRegistry implements SubjectRegistry
     private final static Logger LOG = LoggerFactory.getLogger( DefaultSubjectRegistry.class );
 
     @Inject Set<AutocodeArtifactResolver> resolvers;
+    @Inject Set<SubjectHandlerFactory> handlerFactories;
+
     @Inject WorkspaceConfiguration configuration;
     private Map<String, NativeSubjectHandler> map = new HashMap<>(  );
 
@@ -48,25 +42,33 @@ public class DefaultSubjectRegistry implements SubjectRegistry
     {
         LOG.info("Unpacking universe..");
         // download all subjects
-        for( BuildSubject sub : configuration.getConfiguration().getRepository().getSubjects()) {
-            for ( SubjectVersion version : sub.getDistributions()) {
-                for (AutocodeArtifact artifact : version.getArtifacts()) {
-                    for (AutocodeArtifactResolver resolver : resolvers)
-                    {
-                        StagedSubject installed = resolver.download( artifact );
-                        if ( installed != null )
-                        {
-                            install( installed );
-                            break;
-                        }
-                    }
-                }
-            }
+        Repository repository = configuration.getConfiguration().getRepository();
+        for( BuildSubject sub : repository.getSubjects()) {
+            installSubject( sub );
         }
 
     }
 
-    private void install( StagedSubject installed )
+    private void installSubject( BuildSubject subject ) throws IOException
+    {
+        SubjectHandlerFactory factory = selectHandlerFactory( subject );
+
+        for ( SubjectVersion version : subject.getDistributions()) {
+            for (AutocodeArtifact artifact : version.getArtifacts()) {
+                for (AutocodeArtifactResolver resolver : resolvers)
+                {
+                    StagedSubject installed = resolver.download( artifact );
+                    if ( installed != null )
+                    {
+                        install( factory, installed );
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void install(  SubjectHandlerFactory factory, StagedSubject installed )
     {
         LOG.info("Installing " + installed);
         File base = new File( configuration.getConfiguration().getRepository().getCache().getFolder(), installed.getArtifact().getChecksum().getData() );
@@ -79,12 +81,14 @@ public class DefaultSubjectRegistry implements SubjectRegistry
         // Now that it is extracted..
         // select the "processor" for type:
 
-        install(selectHandlerFromInstalledBase(unwrapFirstSublevel(base)));
+        install(factory.create( unwrapFirstSublevel(base)));
 
     }
 
     private void install( NativeSubjectHandler handler )
     {
+        // process:
+
         this.map.put(handler.getType(),handler);
     }
 
@@ -99,9 +103,14 @@ public class DefaultSubjectRegistry implements SubjectRegistry
         return base;
     }
 
-    private NativeSubjectHandler selectHandlerFromInstalledBase( File base )
+    private SubjectHandlerFactory selectHandlerFactory( BuildSubject subject )
     {
-        return new MavenSubjectHandler(base);
+        for (SubjectHandlerFactory candidate : handlerFactories) {
+            if (candidate.accept(subject)) {
+                return candidate;
+            }
+        }
+        throw new AutocodeException("No handler available for subject " + subject);
     }
 
     private void extract( StagedSubject installed, File base )

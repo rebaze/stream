@@ -28,7 +28,6 @@ public class MavenSubjectHandler implements NativeSubjectHandler
 
     @Override public File getExecutable()
     {
-
         File f = new File(base,"/bin/mvn");
         f.setExecutable( true );
         return f;
@@ -38,4 +37,5 @@ public class MavenSubjectHandler implements NativeSubjectHandler
     {
         return ("M2_HOME=" + getInstallPath().getAbsolutePath()).split( " " );
     }
+
 }

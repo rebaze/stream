@@ -46,6 +46,8 @@ public class Autocode
         Tree after = new FSScanner().collect( session.createTreeBuilder(), path  ).seal();
         Tree result = new DiffTreeCombiner(session).combine( before, after );
 
+        // TODO: read output from extension to read execution plan from maven.
+
         if (result.branches().length > 0) {
             TreeConsoleFormatter format = new TreeConsoleFormatter(System.out);
             format.prettyPrint( result );

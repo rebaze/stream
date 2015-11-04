@@ -1,11 +1,8 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.name.Named;
-import com.rebaze.autocode.config.ArtifactLookupSites;
-import com.rebaze.autocode.config.Configuration;
-import com.rebaze.autocode.config.WorkspaceConfiguration;
 import okio.Okio;
 import okio.Source;
 import org.slf4j.Logger;
