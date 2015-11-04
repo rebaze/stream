@@ -20,7 +20,9 @@ public class ApiUsageTest
         Autocode autocode  = injector.getInstance( Autocode.class );
 
         // build:
-        assertEquals(0,autocode.build( new File( "/Users/tonit/devel/org.ops4j.base" ) ));
+        Effect build = autocode.build( new File( "/Users/tonit/devel/org.ops4j.base" ) );
+        assertEquals("Executor should return normally",0, build.getReturnCode());
+        assertEquals("No change in filesystem",0, build.getTree().branches().length);
     }
 
 }

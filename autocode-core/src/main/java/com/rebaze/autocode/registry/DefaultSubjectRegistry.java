@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +33,7 @@ import static okio.Okio.buffer;
 /**
  * Unpacks deliverables into a local cache.
  */
+@Singleton
 public class DefaultSubjectRegistry implements SubjectRegistry
 {
     private final static Logger LOG = LoggerFactory.getLogger( DefaultSubjectRegistry.class );
