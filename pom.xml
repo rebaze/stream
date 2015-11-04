@@ -81,6 +81,7 @@
 
     <modules>
         <module>autocode-core</module>
+        <module>autocode-maven-extension</module>
     </modules>
 
     <profiles>
