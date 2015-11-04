@@ -1,5 +1,6 @@
-package com.rebaze.autocode.core;
+package com.rebaze.autocode.internal;
 
+import com.rebaze.autocode.core.Effect;
 import com.rebaze.commons.tree.Tree;
 
 /**
