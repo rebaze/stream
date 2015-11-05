@@ -1,5 +1,7 @@
 package com.rebaze.autocode.maven;
 
+import com.rebaze.autocode.config.BuildSubject;
+import com.rebaze.autocode.core.AcceptsExtensions;
 import com.rebaze.autocode.registry.NativeSubjectHandler;
 
 import java.io.File;
@@ -7,7 +9,7 @@ import java.io.File;
 /**
  * Created by tonit on 03/11/15.
  */
-public class MavenSubjectHandler implements NativeSubjectHandler
+public class MavenSubjectHandler implements NativeSubjectHandler, AcceptsExtensions
 {
     private final File base;
 
@@ -31,6 +33,11 @@ public class MavenSubjectHandler implements NativeSubjectHandler
         File f = new File(base,"/bin/mvn");
         f.setExecutable( true );
         return f;
+    }
+
+    @Override
+    public void installExtension(BuildSubject extension) {
+        //
     }
 
     @Override public String[] getEnv()

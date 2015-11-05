@@ -1,5 +1,7 @@
 package com.rebaze.autocode.config;
 
+import java.util.List;
+
 /**
  * Created by tonit on 28/10/15.
  */
@@ -8,16 +10,17 @@ public class AutocodeArtifact
     private String coordinates;
     private String classifier;
     private String extension;
-    private AutocodeChecksum checksum;
+    private AutocodeAddress address;
+    private List<AutocodeAddress> extensions;
 
-    public AutocodeChecksum getChecksum()
+    public AutocodeAddress getAddress()
     {
-        return checksum;
+        return address;
     }
 
-    public void setChecksum( AutocodeChecksum checksum )
+    public void setAddress( AutocodeAddress address )
     {
-        this.checksum = checksum;
+        this.address = address;
     }
 
     public String getExtension()
@@ -48,5 +51,15 @@ public class AutocodeArtifact
     public void setCoordinates( String coordinates )
     {
         this.coordinates = coordinates;
+    }
+
+    public List<AutocodeAddress> getExtensions()
+    {
+        return extensions;
+    }
+
+    public void setExtensions( List<AutocodeAddress> extensions )
+    {
+        this.extensions = extensions;
     }
 }

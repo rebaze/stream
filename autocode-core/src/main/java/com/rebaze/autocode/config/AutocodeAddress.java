@@ -3,7 +3,7 @@ package com.rebaze.autocode.config;
 /**
  * Created by tonit on 28/10/15.
  */
-public class AutocodeChecksum
+public class AutocodeAddress
 {
     private String type;
     private String data;

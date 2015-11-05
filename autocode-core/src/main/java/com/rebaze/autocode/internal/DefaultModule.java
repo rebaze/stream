@@ -9,7 +9,6 @@ import com.rebaze.autocode.config.JSonConfigBuilder;
 import com.rebaze.autocode.core.SubjectHandlerFactory;
 import com.rebaze.autocode.core.SubjectRegistry;
 import com.rebaze.autocode.maven.MavenSubjectHandlerFactory;
-import com.rebaze.autocode.registry.DefaultSubjectRegistry;
 import com.rebaze.autocode.transports.HttpResolver;
 import com.rebaze.autocode.transports.LocalResolver;
 import com.rebaze.commons.tree.util.DefaultTreeSessionFactory;

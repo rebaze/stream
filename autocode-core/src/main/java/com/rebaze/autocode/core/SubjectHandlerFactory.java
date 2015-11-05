@@ -1,5 +1,6 @@
 package com.rebaze.autocode.core;
 
+import com.rebaze.autocode.config.AutocodeArtifact;
 import com.rebaze.autocode.config.BuildSubject;
 import com.rebaze.autocode.registry.NativeSubjectHandler;
 
@@ -10,7 +11,7 @@ import java.io.File;
  */
 public interface SubjectHandlerFactory
 {
-    NativeSubjectHandler create(File path);
+    NativeSubjectHandler create( AutocodeArtifact artifact, File path );
 
     boolean accept( BuildSubject subject );
 }

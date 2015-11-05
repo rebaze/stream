@@ -1,7 +1,8 @@
-package com.rebaze.autocode.registry;
+package com.rebaze.autocode.internal;
 
 import com.rebaze.autocode.config.*;
 import com.rebaze.autocode.core.*;
+import com.rebaze.autocode.registry.NativeSubjectHandler;
 import okio.Okio;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -71,7 +72,7 @@ public class DefaultSubjectRegistry implements SubjectRegistry
     private void install(  SubjectHandlerFactory factory, StagedSubject installed )
     {
         LOG.info("Installing " + installed);
-        File base = new File( configuration.getConfiguration().getRepository().getCache().getFolder(), installed.getArtifact().getChecksum().getData() );
+        File base = new File( configuration.getConfiguration().getRepository().getCache().getFolder(), installed.getArtifact().getAddress().getData() );
         if (base.exists()) {
             LOG.info("{} is already installed.",installed);
         }else {
@@ -81,7 +82,7 @@ public class DefaultSubjectRegistry implements SubjectRegistry
         // Now that it is extracted..
         // select the "processor" for type:
 
-        install(factory.create( unwrapFirstSublevel(base)));
+        install(factory.create( installed.getArtifact(),unwrapFirstSublevel(base)));
 
     }
 

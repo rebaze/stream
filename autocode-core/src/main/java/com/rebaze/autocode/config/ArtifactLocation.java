@@ -7,16 +7,16 @@ import java.util.List;
  */
 public class ArtifactLocation
 {
-    private AutocodeChecksum checksum;
+    private AutocodeAddress checksum;
 
     private List<URLLocation> locations;
 
-    public AutocodeChecksum getChecksum()
+    public AutocodeAddress getChecksum()
     {
         return checksum;
     }
 
-    public void setChecksum( AutocodeChecksum checksum )
+    public void setChecksum( AutocodeAddress checksum )
     {
         this.checksum = checksum;
     }

@@ -53,7 +53,8 @@ public abstract class  AbstractDefaultResolver implements AutocodeArtifactResolv
     {
         // check if we already have it:
 
-        Collection<String> urls = locations.get( artifact.getChecksum().getData() );
+
+        Collection<String> urls = locations.get( artifact.getAddress().getData() );
         File res = null;
         if ( urls != null && urls.size() > 0 )
         {
