@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * High level interface to Autocode.
@@ -34,7 +36,6 @@ public class Autocode
     public Effect build( File path )
     {
         // scan:
-
         Tree before = new FSScanner().collect( session.createTreeBuilder(), path  ).seal();
 
         // select appropriate builder and find it in registry:
@@ -45,6 +46,8 @@ public class Autocode
 
         Tree after = new FSScanner().collect( session.createTreeBuilder(), path  ).seal();
         Tree result = new DiffTreeCombiner(session).combine( before, after );
+
+        List<File> diff = new ArrayList<>(  );
 
         // TODO: read output from extension to read execution plan from maven.
 
