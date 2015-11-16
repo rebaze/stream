@@ -3,7 +3,7 @@ package com.rebaze.autocode.config;
 import java.util.List;
 
 /**
- * Created by tonit on 28/10/15.
+ * Will be changed dramatically.
  */
 public class AutocodeArtifact
 {

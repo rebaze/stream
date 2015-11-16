@@ -1,8 +1,7 @@
 package com.rebaze.autocode.internal;
 
 import com.rebaze.autocode.config.*;
-import com.rebaze.autocode.core.*;
-import com.rebaze.autocode.registry.NativeSubjectHandler;
+import com.rebaze.autocode.api.core.NativeSubjectHandler;
 import okio.Okio;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
