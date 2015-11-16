@@ -12,6 +12,10 @@
     <name>Autocode - Core</name>
     <artifactId>autocode-core</artifactId>
 
+    <properties>
+        <ops4j-base-version>1.6.0-SNAPSHOT</ops4j-base-version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.rebaze.commons.tree</groupId>
@@ -21,12 +25,12 @@
         <dependency>
             <groupId>org.ops4j.base</groupId>
             <artifactId>ops4j-base-exec</artifactId>
-            <version>1.5.0</version>
+            <version>${ops4j-base-version}</version>
         </dependency>
         <dependency>
             <groupId>org.ops4j.base</groupId>
             <artifactId>ops4j-base-store</artifactId>
-            <version>1.5.0</version>
+            <version>${ops4j-base-version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -77,6 +81,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
 
