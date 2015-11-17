@@ -10,18 +10,7 @@ public class AutocodeArtifact
     private String coordinates;
     private String classifier;
     private String extension;
-    private AutocodeAddress address;
     private List<AutocodeAddress> extensions;
-
-    public AutocodeAddress getAddress()
-    {
-        return address;
-    }
-
-    public void setAddress( AutocodeAddress address )
-    {
-        this.address = address;
-    }
 
     public String getExtension()
     {

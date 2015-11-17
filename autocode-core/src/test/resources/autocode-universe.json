@@ -19,10 +19,6 @@
                 "coordinates": "org.apache.maven:apache-maven",
                 "classifier": "bin",
                 "extension": "zip",
-                "checksum": {
-                  "type": "sha-1",
-                  "data": "b8eebb7ba265532bf55aa17f89440c2fe267bed3"
-                },
                 "extensions": [
                   {
                     "type": "gav",

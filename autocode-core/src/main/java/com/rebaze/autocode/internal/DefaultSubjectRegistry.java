@@ -1,7 +1,12 @@
 package com.rebaze.autocode.internal;
 
 import com.rebaze.autocode.api.core.*;
+import com.rebaze.autocode.api.transport.ResourceMaterializer;
+import com.rebaze.autocode.api.transport.ResourceResolver;
+import com.rebaze.autocode.api.transport.Workspace;
+import com.rebaze.autocode.api.transport.WorkspaceException;
 import com.rebaze.autocode.config.*;
+import com.rebaze.commons.tree.Tree;
 import okio.Okio;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -26,16 +31,18 @@ import static okio.Okio.buffer;
  * Unpacks deliverables into a local cache.
  */
 @Singleton
-public class DefaultSubjectRegistry implements SubjectRegistry
+public class DefaultSubjectRegistry implements SubjectRegistry, Workspace
 {
     private final static Logger LOG = LoggerFactory.getLogger( DefaultSubjectRegistry.class );
 
-    @Inject Set<AutocodeArtifactResolver> resolvers;
+    @Inject ResourceResolver<GAV> resolver;
+
+    @Inject ResourceMaterializer materializer;
+
     @Inject Set<SubjectHandlerFactory> handlerFactories;
 
     @Inject WorkspaceConfiguration configuration;
     private Map<String, NativeSubjectHandler> map = new HashMap<>(  );
-
 
     // Unpack
     public void unpack() throws IOException
@@ -52,18 +59,11 @@ public class DefaultSubjectRegistry implements SubjectRegistry
     private void installSubject( BuildSubject subject ) throws IOException
     {
         SubjectHandlerFactory factory = selectHandlerFactory( subject );
-
         for ( SubjectVersion version : subject.getDistributions()) {
             for (AutocodeArtifact artifact : version.getArtifacts()) {
-                for (AutocodeArtifactResolver resolver : resolvers)
-                {
-                    StagedSubject installed = resolver.download( artifact );
-                    if ( installed != null )
-                    {
-                        install( factory, installed );
-                        break;
-                    }
-                }
+                Tree tree = resolver.resolve( GAV.fromString( artifact.getCoordinates() + ":" + version.getVersion() ) );
+                File f = materializer.get( tree );
+                install (factory, new StagedSubject( artifact,tree, f ));
             }
         }
     }
@@ -71,7 +71,7 @@ public class DefaultSubjectRegistry implements SubjectRegistry
     private void install(  SubjectHandlerFactory factory, StagedSubject installed )
     {
         LOG.info("Installing " + installed);
-        File base = new File( configuration.getConfiguration().getRepository().getCache().getFolder(), installed.getArtifact().getAddress().getData() );
+        File base = new File( configuration.getConfiguration().getRepository().getCache().getFolder(), installed.getTree().fingerprint() );
         if (base.exists()) {
             LOG.info("{} is already installed.",installed);
         }else {
@@ -138,4 +138,10 @@ public class DefaultSubjectRegistry implements SubjectRegistry
     {
         return map.get(subjectType);
     }
+
+    @Override public File locate( Tree tree ) throws WorkspaceException
+    {
+        return null;
+    }
+
 }

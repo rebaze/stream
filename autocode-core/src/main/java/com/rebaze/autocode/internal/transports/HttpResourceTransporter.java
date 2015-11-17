@@ -17,13 +17,13 @@ import java.net.URL;
 /**
  *
  */
-public class HttpResolver extends AbstractDefaultResolver
+public class HttpResourceTransporter extends AbstractResourceTransporter
 {
-    private final static Logger LOG = LoggerFactory.getLogger( HttpResolver.class );
+    private final static Logger LOG = LoggerFactory.getLogger( HttpResourceTransporter.class );
     private OkHttpClient client = new OkHttpClient();
 
     @Inject
-    public HttpResolver( WorkspaceConfiguration workspaceConfiguration )
+    public HttpResourceTransporter( WorkspaceConfiguration workspaceConfiguration )
     {
         super(workspaceConfiguration);
     }

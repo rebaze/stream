@@ -1,5 +1,6 @@
 package com.rebaze.autocode.api.core;
 
+import com.google.common.collect.Sets;
 import com.rebaze.autocode.api.transport.ResourceMaterializer;
 import com.rebaze.autocode.api.transport.ResourceResolver;
 import com.rebaze.autocode.api.transport.Workspace;
@@ -7,6 +8,7 @@ import com.rebaze.autocode.config.JSonConfigBuilder;
 import com.rebaze.autocode.config.JSonConfigBuilderTest;
 import com.rebaze.autocode.config.ResourceTreeConfiguration;
 import com.rebaze.autocode.internal.transports.DefaultMaterializer;
+import com.rebaze.autocode.internal.transports.ResourceTransporter;
 import com.rebaze.autocode.internal.transports.StaticGAVResolver;
 import com.rebaze.commons.tree.Tree;
 import com.rebaze.commons.tree.TreeSessionFactory;
@@ -16,11 +18,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.rebaze.commons.tree.Selector.selector;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by tonit on 16/11/15.
@@ -59,13 +65,25 @@ public class TransportTest
         resolver.resolve( GAV.fromString("org.apache.maven:notavailable:3.3.3") );
     }
 
+    @Test (expected = AutocodeException.class)
+    public void testMaterializeWithoutTransporters() {
+        Tree input = mock(Tree.class);
+        Set<ResourceTransporter> transporters = Sets.newHashSet();
+        ResourceMaterializer materializer = new DefaultMaterializer(transporters);
+        materializer.get( input );
+    }
+
     @Test public void testThatGAVsCanBeMaterialized() {
-        // build tree:
-        Tree input = null;
-        ResourceMaterializer materializer = new DefaultMaterializer();
-        Workspace workspace = mock(Workspace.class);
-        materializer.get( input,workspace );
-        // make sure workspace got the data:
+        Tree input = mock(Tree.class);
+        Set<ResourceTransporter> transporters = Sets.newHashSet();
+        ResourceTransporter t1 = mock(ResourceTransporter.class);
+        transporters.add(t1);
+        File in = new File("dummy");
+        when(t1.transport( input )).thenReturn( in );
+        ResourceMaterializer materializer = new DefaultMaterializer(transporters);
+        File f = materializer.get( input );
+        assertNotNull(f);
+        assertSame(in,f);
 
     }
 }

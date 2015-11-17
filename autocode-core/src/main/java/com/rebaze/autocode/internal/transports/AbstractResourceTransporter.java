@@ -2,9 +2,8 @@ package com.rebaze.autocode.internal.transports;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.rebaze.autocode.api.core.AutocodeArtifactResolver;
-import com.rebaze.autocode.api.core.StagedSubject;
 import com.rebaze.autocode.config.*;
+import com.rebaze.commons.tree.Tree;
 import org.ops4j.store.Store;
 import org.ops4j.store.StoreFactory;
 import org.slf4j.Logger;
@@ -20,15 +19,15 @@ import java.util.Collection;
 /**
  * Created by tonit on 30/10/15.
  */
-public abstract class  AbstractDefaultResolver implements AutocodeArtifactResolver
+abstract class AbstractResourceTransporter implements ResourceTransporter
 {
-    private final static Logger LOG = LoggerFactory.getLogger( AbstractDefaultResolver.class );
+    private final static Logger LOG = LoggerFactory.getLogger( AbstractResourceTransporter.class );
     private final Store<InputStream> store;
     private final CacheSettings cache;
     private Multimap<String, String> locations = ArrayListMultimap.create();
 
     @Inject
-    public AbstractDefaultResolver( WorkspaceConfiguration workspaceConfiguration )
+    public AbstractResourceTransporter( WorkspaceConfiguration workspaceConfiguration )
     {
 
         LOG.info( "Indexing from config {}", workspaceConfiguration );
@@ -45,12 +44,10 @@ public abstract class  AbstractDefaultResolver implements AutocodeArtifactResolv
     }
 
     @Override
-    public StagedSubject download( AutocodeArtifact artifact ) throws IOException
+    public File transport( Tree tree )
     {
         // check if we already have it:
-
-
-        Collection<String> urls = locations.get( artifact.getAddress().getData() );
+        Collection<String> urls = locations.get( tree.fingerprint() );
         File res = null;
         if ( urls != null && urls.size() > 0 )
         {
@@ -79,7 +76,7 @@ public abstract class  AbstractDefaultResolver implements AutocodeArtifactResolv
         if ( res != null )
         {
 
-            return new StagedSubject(artifact,res);
+            return res;
         }else {
             return null;
         }

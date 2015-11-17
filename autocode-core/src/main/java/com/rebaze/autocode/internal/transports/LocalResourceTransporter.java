@@ -13,11 +13,11 @@ import java.net.URL;
  *
  */
 @Singleton
-public class LocalResolver extends AbstractDefaultResolver
+public class LocalResourceTransporter extends AbstractResourceTransporter
 {
 
     @Inject
-    public LocalResolver( WorkspaceConfiguration workspaceConfiguration )
+    public LocalResourceTransporter( WorkspaceConfiguration workspaceConfiguration )
     {
         super( workspaceConfiguration );
     }

@@ -36,7 +36,7 @@ public class StaticGAVResolver implements ResourceResolver<GAV>
         }
     }
 
-    @Override public Tree resolve( GAV query )
+    @Override public Tree resolve( GAV query ) throws AutocodeException
     {
         // Will lookup gav from config file:
         Tree result = mapToTree.get(query);
