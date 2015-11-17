@@ -27,12 +27,16 @@ public class JSonConfigBuilder implements WorkspaceConfiguration
 
     private final ArtifactLookupSites sites;
 
+    private ResourceTreeConfiguration resourceTree;
+
+
     @Inject
-    JSonConfigBuilder( @Named( "universe" ) Source rawConfiguration, @Named( "sites" ) Source rawSites ) throws IOException
+    JSonConfigBuilder( @Named( "universe" ) Source rawConfiguration, @Named( "sites" ) Source rawSites, @Named( "tree" ) Source rawTree) throws IOException
     {
         configuration = build( rawConfiguration, Configuration.class );
         sites = build( rawSites, ArtifactLookupSites.class );
-        LOG.info("[WorkspaceConfiguration] Built {} and {}",configuration,sites);
+        resourceTree = build(rawTree,ResourceTreeConfiguration.class);
+        LOG.info("[WorkspaceConfiguration] Built config={}, sites={}, tree={}",configuration,sites,resourceTree);
     }
 
     @Override
@@ -45,6 +49,12 @@ public class JSonConfigBuilder implements WorkspaceConfiguration
     public ArtifactLookupSites getSites()
     {
         return sites;
+    }
+
+    @Override
+    public ResourceTreeConfiguration getResourceTreeConfiguration()
+    {
+        return resourceTree;
     }
 
     private <T> T build( Source raw, Class<T> clazz ) throws IOException

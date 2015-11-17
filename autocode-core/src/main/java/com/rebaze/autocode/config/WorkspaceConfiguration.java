@@ -12,4 +12,5 @@ public interface WorkspaceConfiguration
 
     public ArtifactLookupSites getSites();
 
+    ResourceTreeConfiguration getResourceTreeConfiguration();
 }

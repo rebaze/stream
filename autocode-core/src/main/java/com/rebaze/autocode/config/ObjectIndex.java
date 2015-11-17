@@ -8,15 +8,15 @@ import java.util.List;
  */
 public class ObjectIndex
 {
-    private ObjectNode node;
+    private String node;
     private List<IndexKey> index = new ArrayList<>(  );
 
-    public ObjectNode getNode()
+    public String getNode()
     {
         return node;
     }
 
-    public void setNode( ObjectNode node )
+    public void setNode( String node )
     {
         this.node = node;
     }
