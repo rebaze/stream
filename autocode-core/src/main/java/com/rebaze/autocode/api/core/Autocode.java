@@ -3,10 +3,10 @@ package com.rebaze.autocode.api.core;
 import com.rebaze.autocode.internal.exec.ShellRunner;
 import com.rebaze.autocode.internal.fs.FSScanner;
 import com.rebaze.autocode.internal.DefaultEffect;
-import com.rebaze.commons.tree.Tree;
-import com.rebaze.commons.tree.operators.DiffTreeCombiner;
-import com.rebaze.commons.tree.util.TreeConsoleFormatter;
-import com.rebaze.commons.tree.util.TreeSession;
+import com.rebaze.trees.core.Tree;
+import com.rebaze.trees.ext.operators.DiffTreeCombiner;
+import com.rebaze.trees.core.util.TreeConsoleFormatter;
+import com.rebaze.trees.core.util.TreeSession;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,15 +21,15 @@ import java.util.List;
 @Singleton
 public class Autocode
 {
-    private final SubjectRegistry registry;
+    private final Workspace workspace;
     private final TreeSession session;
 
     @Inject
-    public Autocode(SubjectRegistry registry, TreeSession session) throws IOException
+    public Autocode(Workspace workspace, TreeSession session) throws IOException
     {
-        this.registry = registry;
+        this.workspace = workspace;
         this.session = session;
-        registry.unpack();
+        workspace.unpack();
     }
 
     public Effect build( File path )
@@ -38,7 +38,7 @@ public class Autocode
         Tree before = new FSScanner().collect( session.createTreeBuilder(), path  ).seal();
 
         // select appropriate builder and find it in registry:
-        NativeSubjectHandler handler = registry.get("maven3");
+        NativeSubjectHandler handler = workspace.get("maven3");
 
         ShellRunner runner = new ShellRunner( true );
         int res = runner.exec( path, handler.getEnv(),(handler.getExecutable().getAbsolutePath() +  " verify").split(" ") );

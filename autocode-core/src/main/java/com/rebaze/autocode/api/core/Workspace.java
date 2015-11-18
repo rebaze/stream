@@ -1,13 +1,17 @@
 package com.rebaze.autocode.api.core;
 
+import com.rebaze.autocode.config.AutocodeAddress;
+
 import java.io.IOException;
 
 /**
- * Created by tonit on 29/10/15.
+ * Created by tonit on 16/11/15.
  */
-public interface SubjectRegistry
+public interface Workspace
 {
     void unpack() throws IOException;
+
+    StagedSubject install( AutocodeAddress address );
 
     NativeSubjectHandler get( String subjectType );
 }

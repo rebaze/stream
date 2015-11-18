@@ -8,6 +8,15 @@ public class AutocodeAddress
     private String type;
     private String data;
 
+    public AutocodeAddress(String type, String data) {
+        this.type = type;
+        this.data = data;
+    }
+
+    public AutocodeAddress() {
+
+    }
+
     public String getType()
     {
         return type;

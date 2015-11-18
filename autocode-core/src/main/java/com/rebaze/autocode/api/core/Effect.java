@@ -1,6 +1,6 @@
 package com.rebaze.autocode.api.core;
 
-import com.rebaze.commons.tree.Tree;
+import com.rebaze.trees.core.Tree;
 
 /**
  * Created by tonit on 04/11/15.

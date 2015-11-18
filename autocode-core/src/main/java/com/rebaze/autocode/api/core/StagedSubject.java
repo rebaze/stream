@@ -1,24 +1,24 @@
 package com.rebaze.autocode.api.core;
 
-import com.rebaze.autocode.config.AutocodeArtifact;
-import com.rebaze.commons.tree.Tree;
+import com.rebaze.autocode.config.AutocodeAddress;
+import com.rebaze.trees.core.Tree;
 
 import java.io.File;
 
 /**
- * Created by tonit on 29/10/15.
+ *
  */
 public class StagedSubject
 {
     private final File file;
-    private final AutocodeArtifact artifact;
+    private final AutocodeAddress address;
     private final Tree tree;
 
-    public StagedSubject( AutocodeArtifact artifact, Tree tree, File res )
+    public StagedSubject( AutocodeAddress address, Tree tree, File res )
     {
         this.file = res;
         this.tree = tree;
-        this.artifact = artifact;
+        this.address = address;
     }
 
     public File getFile()
@@ -26,13 +26,14 @@ public class StagedSubject
         return file;
     }
 
-    public Tree getTree() {
+    public Tree getTree()
+    {
         return tree;
     }
 
-    public AutocodeArtifact getArtifact()
+    public AutocodeAddress getAddress()
     {
-        return artifact;
+        return address;
     }
 
     @Override public String toString()

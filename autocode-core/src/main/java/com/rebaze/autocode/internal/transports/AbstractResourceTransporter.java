@@ -3,7 +3,7 @@ package com.rebaze.autocode.internal.transports;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.rebaze.autocode.config.*;
-import com.rebaze.commons.tree.Tree;
+import com.rebaze.trees.core.Tree;
 import org.ops4j.store.Store;
 import org.ops4j.store.StoreFactory;
 import org.slf4j.Logger;

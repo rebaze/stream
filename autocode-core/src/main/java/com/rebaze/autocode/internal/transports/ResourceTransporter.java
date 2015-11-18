@@ -1,9 +1,8 @@
 package com.rebaze.autocode.internal.transports;
 
-import com.rebaze.commons.tree.Tree;
+import com.rebaze.trees.core.Tree;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * A thing that can make a given object available offline.

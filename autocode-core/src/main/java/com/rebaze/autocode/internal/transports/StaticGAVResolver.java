@@ -1,14 +1,14 @@
 package com.rebaze.autocode.internal.transports;
 
 import com.rebaze.autocode.api.core.AutocodeException;
-import com.rebaze.autocode.api.core.GAV;
+import com.rebaze.autocode.internal.maven.GAV;
 import com.rebaze.autocode.api.transport.ResourceResolver;
 import com.rebaze.autocode.config.IndexKey;
 import com.rebaze.autocode.config.ObjectIndex;
 import com.rebaze.autocode.config.ResourceTreeConfiguration;
 import com.rebaze.autocode.config.WorkspaceConfiguration;
-import com.rebaze.commons.tree.Tree;
-import com.rebaze.commons.tree.util.TreeSession;
+import com.rebaze.trees.core.Tree;
+import com.rebaze.trees.core.util.TreeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rebaze.commons.tree.Selector.selector;
+import static com.rebaze.trees.core.Selector.selector;
 
 /**
  * Can resolve the tree from a given gav

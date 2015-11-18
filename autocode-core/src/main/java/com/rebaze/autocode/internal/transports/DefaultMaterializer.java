@@ -2,7 +2,7 @@ package com.rebaze.autocode.internal.transports;
 
 import com.rebaze.autocode.api.core.AutocodeException;
 import com.rebaze.autocode.api.transport.ResourceMaterializer;
-import com.rebaze.commons.tree.Tree;
+import com.rebaze.trees.core.Tree;
 
 import javax.inject.Inject;
 import java.io.File;

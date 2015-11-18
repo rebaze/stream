@@ -1,4 +1,6 @@
-package com.rebaze.autocode.api.core;
+package com.rebaze.autocode.internal.maven;
+
+import com.rebaze.autocode.api.core.AutocodeException;
 
 import java.util.Objects;
 
