@@ -62,4 +62,12 @@ public class JSonConfigBuilder implements WorkspaceConfiguration
         return gson.fromJson( new InputStreamReader( Okio.buffer(raw).inputStream() ), clazz );
     }
 
+    @Override public String toString()
+    {
+        return "JSonConfigBuilder{" +
+            "configuration=" + configuration +
+            ", sites=" + sites +
+            ", resourceTree=" + resourceTree +
+            '}';
+    }
 }

@@ -83,4 +83,15 @@ public class GAV
             throw new AutocodeException( "Cannot parse " + s + " to GAV." );
         }
     }
+
+    @Override public String toString()
+    {
+        return "GAV{" +
+            "groupId='" + groupId + '\'' +
+            ", artifactId='" + artifactId + '\'' +
+            ", extension='" + extension + '\'' +
+            ", classifier='" + classifier + '\'' +
+            ", version='" + version + '\'' +
+            '}';
+    }
 }

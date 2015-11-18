@@ -27,4 +27,9 @@ public class TestConfigurationModule extends AbstractModule
     public Source defaultConfiguration() {
         return Okio.source(getClass().getResourceAsStream( "/autocode-universe.json" ));
     }
+
+    @Provides @Named ("tree")
+    public Source defaultTree() {
+        return Okio.source(getClass().getResourceAsStream( "/autocode-tree.json" ));
+    }
 }
