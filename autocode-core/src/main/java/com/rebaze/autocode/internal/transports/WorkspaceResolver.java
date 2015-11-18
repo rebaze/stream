@@ -1,37 +1,63 @@
 package com.rebaze.autocode.internal.transports;
 
+import com.rebaze.autocode.api.core.AutocodeException;
 import com.rebaze.autocode.api.transport.ResourceMaterializer;
 import com.rebaze.autocode.api.transport.ResourceResolver;
 import com.rebaze.autocode.internal.maven.GAV;
 import com.rebaze.trees.core.Tree;
+import com.rebaze.trees.core.TreeSession;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.rebaze.trees.core.Selector.selector;
 
 /**
  * Can resolve things based on a given Treescape.
- *
  */
 @Singleton
 public class WorkspaceResolver implements ResourceResolver<GAV>, ResourceMaterializer
 {
+    private TreeSession treesession;
+
+    private final Map<GAV, Tree> map = new HashMap<>();
 
     @Inject
-    public WorkspaceResolver(Tree surface) {
+    public WorkspaceResolver( TreeSession session )
+    {
+        treesession = session;
+
+        // TODO: Do this.
         // that tree makes up everything this resolver knows about.
         // Index tree using GAV->Tree->File
+        // for now we hard wire certain "known" artifacts:
+        addToIndex( GAV.fromString( "com.rebaze.autocode:autocode-maven-extension" ), new File( "/Users/tonit/devel/rebaze/autocode/autocode-maven-extension/target/autocode-maven-extension-0.1.0-SNAPSHOT.jar" ) );
+    }
+
+    // TODO: This is a shortcut until we have implemented the surface tree.
+    private void addToIndex( GAV gav, File file )
+    {
+        map.put( gav, treesession.createStreamTreeBuilder().selector( selector( file.getAbsolutePath() ) ).add( file ).seal() );
     }
 
     @Override public File get( Tree input )
     {
-        // trees coming in here already have metadata for the file location, so its just about reveiling the info.
-        return null;
+        if ( map.containsValue( input ) )
+        {
+            return new File( input.selector().name() );
+        }
+        else
+        {
+            throw new AutocodeException( "Given tree is not from WorkspaceResolver: " + input + ". Make sure you derive it from WorkspaceResolver.resolve()." );
+        }
     }
 
     @Override public Tree resolve( GAV query )
     {
         // Look up at the index.
-        return null;
+        return map.get( query );
     }
 }

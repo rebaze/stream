@@ -8,7 +8,7 @@ import com.rebaze.autocode.config.ObjectIndex;
 import com.rebaze.autocode.config.ResourceTreeConfiguration;
 import com.rebaze.autocode.config.WorkspaceConfiguration;
 import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.util.TreeSession;
+import com.rebaze.trees.core.TreeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class StaticGAVResolver implements ResourceResolver<GAV>
         LOG.info( "Indexing tree configuration: " + config );
         for ( ObjectIndex idx : config.getObjects() )
         {
-            Tree tree = session.tree( selector( "" ), idx.getNode() );
+            Tree tree = session.createTree( selector( "default" ), idx.getNode() );
             for ( IndexKey key : idx.getIndex() )
             {
                 if ( "gav".equalsIgnoreCase( key.getType() ) )

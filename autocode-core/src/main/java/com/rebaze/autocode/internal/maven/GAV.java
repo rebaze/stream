@@ -76,7 +76,11 @@ public class GAV
     public static GAV fromString( String s )
     {
         String[] split = s.split( ":" );
-        if ( split.length == 3 )
+        if ( split.length == 2 )
+        {
+            return new GAV( split[0], split[1], "" );
+        }
+        else if ( split.length == 3 )
         {
             return new GAV( split[0], split[1], split[2] );
         }

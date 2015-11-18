@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -34,7 +35,8 @@ public class DefaultWorkspace implements Workspace
 {
     private final static Logger LOG = LoggerFactory.getLogger( DefaultWorkspace.class );
 
-    @Inject ResourceResolver<GAV> resolver;
+
+    @Inject  ResourceResolver<GAV> resolver;
 
     @Inject ResourceMaterializer materializer;
 

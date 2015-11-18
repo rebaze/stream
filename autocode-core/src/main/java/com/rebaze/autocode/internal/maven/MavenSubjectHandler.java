@@ -8,6 +8,7 @@ import com.rebaze.autocode.api.core.NativeSubjectHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 
 /**
@@ -45,11 +46,16 @@ public class MavenSubjectHandler implements NativeSubjectHandler, AcceptsExtensi
         // or make sure that every "run" has a properly configured .mvn/extensions.xml
         try
         {
-            Files.copy(extension.getFile().toPath(),new File(base,"/lib/ext/" + extension.getTree().fingerprint() + ".jar").toPath());
+            File targetName = new File( base, "/lib/ext/" + extension.getTree().fingerprint() + ".jar" );
+
+            if (!targetName.exists())
+            {
+                Files.copy(extension.getFile().toPath(), targetName.toPath());
+            }
         }
         catch ( IOException e )
         {
-            throw new AutocodeException( "Cannot install extension " + extension );
+            throw new AutocodeException( "Cannot install extension " + extension,e );
         }
     }
 

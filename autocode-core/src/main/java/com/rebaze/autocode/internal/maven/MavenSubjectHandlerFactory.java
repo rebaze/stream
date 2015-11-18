@@ -1,11 +1,10 @@
 package com.rebaze.autocode.internal.maven;
 
-import com.rebaze.autocode.api.core.StagedSubject;
+import com.rebaze.autocode.api.core.SubjectHandlerFactory;
 import com.rebaze.autocode.api.core.Workspace;
 import com.rebaze.autocode.config.AutocodeAddress;
 import com.rebaze.autocode.config.AutocodeArtifact;
 import com.rebaze.autocode.config.BuildSubject;
-import com.rebaze.autocode.api.core.SubjectHandlerFactory;
 
 import javax.inject.Inject;
 import java.io.File;

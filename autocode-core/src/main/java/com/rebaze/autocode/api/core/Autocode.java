@@ -6,7 +6,7 @@ import com.rebaze.autocode.internal.DefaultEffect;
 import com.rebaze.trees.core.Tree;
 import com.rebaze.trees.ext.operators.DiffTreeCombiner;
 import com.rebaze.trees.core.util.TreeConsoleFormatter;
-import com.rebaze.trees.core.util.TreeSession;
+import com.rebaze.trees.core.TreeSession;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
