@@ -10,8 +10,7 @@ import com.rebaze.trees.core.TreeSession;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,38 +24,62 @@ public class Autocode
     private final TreeSession session;
 
     @Inject
-    public Autocode(Workspace workspace, TreeSession session) throws IOException
+    public Autocode( Workspace workspace, TreeSession session ) throws IOException
     {
         this.workspace = workspace;
         this.session = session;
         workspace.unpack();
     }
 
-    public Effect build( File path )
+    public Effect build( File path ) throws FileNotFoundException
     {
         // scan:
-        Tree before = new FSScanner().collect( session.createTreeBuilder(), path  ).seal();
+        Tree before = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
 
         // select appropriate builder and find it in registry:
-        NativeSubjectHandler handler = workspace.get("maven3");
+        NativeSubjectHandler handler = workspace.get( "maven3" );
 
-        ShellRunner runner = new ShellRunner( true );
-        int res = runner.exec( path, handler.getEnv(),(handler.getExecutable().getAbsolutePath() +  " verify").split(" ") );
+        OutputStream out = new FileOutputStream( new File( "target/out.txt" ) ); // TODO: Tee to event listener in order to grab messages on the fly.
+        InputStream in = null; // Todo: do not accept input from here now.
 
-        Tree after = new FSScanner().collect( session.createTreeBuilder(), path  ).seal();
-        Tree result = new DiffTreeCombiner(session).combine( before, after );
+        Integer res = null;
+        try
+        {
+            ShellRunner runner = new ShellRunner( out, in, true );
+            System.out.print("Building.. hold your breath..");
+            System.out.flush();
+            res = runner.exec( path, handler.getEnv(), ( handler.getExecutable().getAbsolutePath() + " verify" ).split( " " ) );
+        }
+        finally
+        {
+            try
+            {
+                out.close();
+            }
+            catch ( IOException e )
+            {
 
-        List<File> diff = new ArrayList<>(  );
+            }
+        }
+        if (res == 0) {
+            System.out.println("SUCCESS!");
+        }else {
+            System.out.println("FAILED!");
+        }
+        Tree after = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
+        Tree result = new DiffTreeCombiner( session ).combine( before, after );
+
+        List<File> diff = new ArrayList<>();
 
         // TODO: read output from extension to read execution plan from maven.
 
-        if (result.branches().length > 0) {
-            TreeConsoleFormatter format = new TreeConsoleFormatter(System.out);
+        if ( result.branches().length > 0 )
+        {
+            TreeConsoleFormatter format = new TreeConsoleFormatter( System.out );
             format.prettyPrint( result );
         }
         // TODO: Add output streams
-        return new DefaultEffect(res,result);
+        return new DefaultEffect( res, result );
     }
-
 
 }

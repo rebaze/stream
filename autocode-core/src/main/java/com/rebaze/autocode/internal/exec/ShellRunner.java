@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,8 @@ public class ShellRunner
      * If the execution should wait for platform shutdown.
      */
     private final boolean m_wait;
+    private final OutputStream m_out;
+    private final InputStream m_in;
     /**
      * Framework process.
      */
@@ -38,19 +42,13 @@ public class ShellRunner
 
     /**
      * Constructor.
-     */
-    public ShellRunner()
-    {
-        this( true );
-    }
-
-    /**
-     * Constructor.
      *
      * @param wait should wait for framework exists
      */
-    public ShellRunner( boolean wait )
+    public ShellRunner( OutputStream out, InputStream in, boolean wait )
     {
+        m_out = out;
+        m_in = in;
         m_wait = wait;
     }
 
@@ -94,7 +92,7 @@ public class ShellRunner
         }
         else
         {
-            System.out.println();
+           //m_out.write( "".getBytes() );
         }
         return result;
     }
@@ -148,7 +146,7 @@ public class ShellRunner
             try
             {
                 LOG.debug( "Waiting for framework exit." );
-                System.out.println();
+                //System.out.println();
                 int result = m_frameworkProcess.waitFor();
 
                 shutdown();
@@ -174,13 +172,13 @@ public class ShellRunner
     {
         LOG.debug( "Wrapping stream I/O." );
 
-        final Pipe errPipe = new Pipe( process.getErrorStream(), System.err ).start( "Error pipe" );
-        final Pipe outPipe = new Pipe( process.getInputStream(), System.out ).start( "Out pipe" );
-        final Pipe inPipe = new Pipe( process.getOutputStream(), System.in ).start( "In pipe" );
+        final Pipe errPipe = new Pipe( process.getErrorStream(), m_out ).start( "Error pipe" );
+        final Pipe outPipe = new Pipe( process.getInputStream(), m_out ).start( "Out pipe" );
+        final Pipe inPipe = new Pipe( process.getOutputStream(), m_in ).start( "In pipe" );
 
         return new Thread(
             () -> {
-                System.out.println();
+                //System.out.println();
                 LOG.debug( "Unwrapping stream I/O." );
 
                 inPipe.stop();
