@@ -11,7 +11,6 @@ public class Configuration
 
     private Repository repository;
 
-
     public String getName()
     {
         return name;

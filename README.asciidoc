@@ -16,6 +16,20 @@ Reasons for this need are:
 
 Autocode's claim is: *Unpack & Go*.
 
+
+== What Autocode helps with
+
+- Semantic Versioning
+- Typical toolchain issues: versions, configuration, problem communication
+- Automate standard tasks
+
+
+== Why autocode shines
+
+- incorporates proven tools like maven, git and jenkins under the hood
+- no lock in because Autocode really just instruments other tools in a reliable, automated and reproducable way.
+
+
 == Introduction
 
 Modification with Autocode can happen at build time of the subject ("rebuild") as well as augmenting the deliverable.
