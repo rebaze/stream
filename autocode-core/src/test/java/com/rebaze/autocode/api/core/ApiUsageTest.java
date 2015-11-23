@@ -16,15 +16,22 @@ import static org.junit.Assert.assertTrue;
 public class ApiUsageTest
 {
     @Test
-    public void testSimple() throws IOException
+    public void testBuildSimpleMavenProject() throws IOException
     {
         Autocode autocode = getAutocode();
-        File base = new File( "/Users/tonit/devel/org.ops4j.base" );
+        File base = new File( "src/test/resources/maven/project1" );
         Effect build = autocode.build( base );
 
         assertEquals("Executor should return normally",0, build.getReturnCode());
         assertTrue(new File(base,"/target/autocode.json").exists());
         //assertEquals("No change in filesystem",0, TreeSession.leafs( build.getTree()) );
+    }
+
+    @Test(expected = AutocodeException.class)
+    public void testBuildUnsupportedProject() throws IOException
+    {
+        Autocode autocode = getAutocode();
+        autocode.build( new File( "src/test/resources/gradle/project2" ) );
     }
 
     private Autocode getAutocode()

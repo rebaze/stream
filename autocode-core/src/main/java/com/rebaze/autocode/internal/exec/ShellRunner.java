@@ -84,7 +84,7 @@ public class ShellRunner
         Runtime.getRuntime().addShutdownHook( m_shutdownHook );
 
         LOG.debug( "Added shutdown hook." );
-        LOG.info( "DefaultJavaRunner completed successfully" );
+        LOG.debug( "ShellRunner completed successfully" );
 
         if ( m_wait )
         {
@@ -125,7 +125,7 @@ public class ShellRunner
                         m_frameworkProcess = null;
                         m_shutdownHook.run();
                         m_shutdownHook = null;
-                        LOG.info( "Platform has been shutdown." );
+                        LOG.debug( "Platform has been shutdown." );
                     }
                 }
             }

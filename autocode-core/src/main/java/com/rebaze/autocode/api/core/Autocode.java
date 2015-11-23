@@ -36,8 +36,9 @@ public class Autocode
         // scan:
         Tree before = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
 
-        // select appropriate builder and find it in registry:
-        NativeSubjectHandler handler = workspace.get( "maven3" );
+        //
+
+        NativeSubjectHandler handler = selectHandlerForBase(path); //
 
         OutputStream out = new FileOutputStream( new File( "target/out.txt" ) ); // TODO: Tee to event listener in order to grab messages on the fly.
         InputStream in = null; // Todo: do not accept input from here now.
@@ -47,6 +48,8 @@ public class Autocode
         {
             ShellRunner runner = new ShellRunner( out, in, true );
             System.out.print("Building.. hold your breath..");
+            System.out.println();
+
             System.out.flush();
             res = runner.exec( path, handler.getEnv(), ( handler.getExecutable().getAbsolutePath() + " verify" ).split( " " ) );
         }
@@ -80,6 +83,23 @@ public class Autocode
         }
         // TODO: Add output streams
         return new DefaultEffect( res, result );
+    }
+
+    // Simplified version.. ;)
+    private NativeSubjectHandler selectHandlerForBase( File path )
+    {
+        if (new File(path,"pom.xml").exists())
+        {
+            NativeSubjectHandler handler = workspace.get("maven3");
+            if (handler == null) {
+                throw new AutocodeException( "No Maven handler found to build " + path.getAbsolutePath() );
+            } else
+            {
+                return handler;
+            }
+        }else {
+            throw new AutocodeException( "No subject handler to perform build on project " + path.getAbsolutePath());
+        }
     }
 
 }
