@@ -22,12 +22,8 @@ public class Runner
     @Inject
     public HelpOption helpOption;
 
-    @Option(name = { "-d", "--directory" }, description = "Project to build",required=true)
-    public File m_folder;
-
-    @Option(name = { "-l", "--list" }, description = "List of repositories to load.", required=false)
-    public File list;
-
+    @Option(name = { "-c", "--config" }, description = "config folder",required=true)
+    public File m_config;
 
     public static void main(String[] args) throws Exception {
         Runner runner = SingleCommand.singleCommand(Runner.class).parse(args);
@@ -41,12 +37,12 @@ public class Runner
 
     private void build() throws IOException
     {
-        getAutocode().build( m_folder );
+        getAutocode().build( new File(".") );
     }
 
     private Autocode getAutocode()
     {
-        Injector injector = Guice.createInjector( new CmdModule(), new DefaultModule() );
+        Injector injector = Guice.createInjector( new CmdModule(m_config), new DefaultModule() );
         return injector.getInstance( Autocode.class );
     }
 }
