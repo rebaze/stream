@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * High level interface to Autocode.
@@ -22,17 +23,27 @@ public class Autocode
 {
     private final Workspace workspace;
     private final TreeSession session;
+    private  boolean initialized = false;
 
     @Inject
-    public Autocode( Workspace workspace, TreeSession session ) throws IOException
+    public Autocode( Workspace workspace, TreeSession session )
     {
         this.workspace = workspace;
         this.session = session;
-        workspace.unpack();
     }
 
-    public Effect build( File path ) throws FileNotFoundException
+    public synchronized void unpack() throws IOException
     {
+        if ( !initialized )
+        {
+            workspace.unpack();
+            initialized = true;
+        }
+    }
+
+    public Effect build( File path ) throws IOException
+    {
+        unpack();
         // scan:
         Tree before = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
 
