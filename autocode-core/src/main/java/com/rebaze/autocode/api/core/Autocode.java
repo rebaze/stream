@@ -13,10 +13,13 @@ import javax.inject.Singleton;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * High level interface to Autocode.
+ * It can:
+ * - BUILD: Reliably build projects across build technology and configuration.
+ * - OPTIMIZE: Optimize the underlying build descriptor.
+ * - SHARE: Ability to -repackage underlying project into a form that can be reproduced from an OSS community without leaking corporate data.
  */
 @Singleton
 public class Autocode
@@ -39,6 +42,11 @@ public class Autocode
             workspace.unpack();
             initialized = true;
         }
+    }
+
+    public void configure() throws IOException
+    {
+        unpack();
     }
 
     public Effect build( File path ) throws IOException
@@ -94,6 +102,14 @@ public class Autocode
         }
         // TODO: Add output streams
         return new DefaultEffect( res, result );
+    }
+
+    public void modify() {
+
+    }
+
+    public void share() {
+
     }
 
     // Simplified version.. ;)
