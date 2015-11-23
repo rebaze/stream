@@ -18,8 +18,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.rebaze.commons.tree</groupId>
-            <artifactId>rebaze-commons-tree</artifactId>
+            <groupId>com.rebaze.trees</groupId>
+            <artifactId>rebaze-trees-core</artifactId>
             <version>0.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>

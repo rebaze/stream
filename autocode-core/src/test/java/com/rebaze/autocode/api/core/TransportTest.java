@@ -10,8 +10,8 @@ import com.rebaze.autocode.internal.transports.DefaultMaterializer;
 import com.rebaze.autocode.internal.transports.ResourceTransporter;
 import com.rebaze.autocode.internal.transports.StaticGAVResolver;
 import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import com.rebaze.trees.core.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import static com.rebaze.trees.core.Selector.selector;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

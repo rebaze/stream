@@ -3,7 +3,6 @@ package com.rebaze.autocode.api.core;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.rebaze.autocode.internal.DefaultModule;
-import com.rebaze.trees.core.TreeSession;
 import org.junit.Test;
 
 import java.io.*;
