@@ -35,7 +35,6 @@ public class DefaultWorkspace implements Workspace
 {
     private final static Logger LOG = LoggerFactory.getLogger( DefaultWorkspace.class );
 
-
     @Inject  ResourceResolver<GAV> resolver;
 
     @Inject ResourceMaterializer materializer;
@@ -43,6 +42,7 @@ public class DefaultWorkspace implements Workspace
     @Inject Set<SubjectHandlerFactory> handlerFactories;
 
     @Inject WorkspaceConfiguration configuration;
+
     private Map<String, NativeSubjectHandler> map = new HashMap<>();
 
     // Unpack

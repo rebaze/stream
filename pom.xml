@@ -69,6 +69,7 @@
     </organization>
 
     <modules>
+        <module>autocode-api</module>
         <module>autocode-core</module>
         <module>autocode-maven-extension</module>
     </modules>

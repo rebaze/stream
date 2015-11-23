@@ -1,5 +1,6 @@
 package com.rebaze.autocode.api.core;
 
+import com.rebaze.autocode.api.AutocodeRemoteChannel;
 import com.rebaze.autocode.internal.exec.ShellRunner;
 import com.rebaze.autocode.internal.fs.FSScanner;
 import com.rebaze.autocode.internal.DefaultEffect;
@@ -7,11 +8,20 @@ import com.rebaze.trees.core.Tree;
 import com.rebaze.trees.ext.operators.DiffTreeCombiner;
 import com.rebaze.trees.core.util.TreeConsoleFormatter;
 import com.rebaze.trees.core.TreeSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
+import java.rmi.AlreadyBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,9 +34,12 @@ import java.util.List;
 @Singleton
 public class Autocode
 {
+    private final static Logger LOG = LoggerFactory.getLogger( Autocode.class );
+
     private final Workspace workspace;
     private final TreeSession session;
     private  boolean initialized = false;
+    private volatile Remote remoteStub;
 
     @Inject
     public Autocode( Workspace workspace, TreeSession session )
@@ -54,40 +67,9 @@ public class Autocode
         unpack();
         // scan:
         Tree before = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
-
         //
 
-        NativeSubjectHandler handler = selectHandlerForBase(path); //
-
-        OutputStream out = new FileOutputStream( new File( "target/out.txt" ) ); // TODO: Tee to event listener in order to grab messages on the fly.
-        InputStream in = null; // Todo: do not accept input from here now.
-
-        Integer res = null;
-        try
-        {
-            ShellRunner runner = new ShellRunner( out, in, true );
-            System.out.print("Building.. hold your breath..");
-            System.out.println();
-
-            System.out.flush();
-            res = runner.exec( path, handler.getEnv(), ( handler.getExecutable().getAbsolutePath() + " verify" ).split( " " ) );
-        }
-        finally
-        {
-            try
-            {
-                out.close();
-            }
-            catch ( IOException e )
-            {
-
-            }
-        }
-        if (res == 0) {
-            System.out.println("SUCCESS!");
-        }else {
-            System.out.println("FAILED!");
-        }
+        Integer res = execBuild( path );
         Tree after = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
         Tree result = new DiffTreeCombiner( session ).combine( before, after );
 
@@ -102,6 +84,76 @@ public class Autocode
         }
         // TODO: Add output streams
         return new DefaultEffect( res, result );
+    }
+
+    private Integer execBuild( File path ) throws FileNotFoundException
+    {
+        NativeSubjectHandler handler = selectHandlerForBase(path); //
+
+        File target = new File(path,"target");
+        target.mkdirs();
+        OutputStream out = new FileOutputStream( new File( target,"autocode.log" ) ); // TODO: Tee to event listener in order to grab messages on the fly.
+        InputStream in = null; // Todo: do not accept input from here now.
+
+        Integer res = null;
+        Registry registry = null;
+        ShellRunner runner = new ShellRunner( out, in, true );
+
+        try
+        {
+            registry = LocateRegistry.createRegistry( 9981 );
+            SimpleAutocodeRemoteChannel channel = new SimpleAutocodeRemoteChannel();
+            remoteStub = UnicastRemoteObject.exportObject(channel , 0);
+            registry.rebind("autocode", remoteStub);
+            System.out.print("Building.. hold your breath..");
+            System.out.println();
+
+            System.out.flush();
+
+
+            res = runner.exec( path, handler.getEnv(), ( handler.getExecutable().getAbsolutePath() + " verify" ).split( " " ) );
+
+        }
+        catch ( RemoteException e )
+        {
+            LOG.error("Problem..", e);
+        }
+        finally
+        {
+            unbind( registry );
+            safeClose( out );
+            runner.shutdown();
+        }
+        if (res == 0) {
+            System.out.println("SUCCESS!");
+        }else {
+            System.out.println("FAILED!");
+        }
+        return res;
+    }
+
+    private void safeClose( OutputStream out )
+    {
+        try
+        {
+            out.close();
+        }
+        catch ( IOException e )
+        {
+
+        }
+    }
+
+    private void unbind( Registry registry )
+    {
+        try
+        {
+            registry.unbind( "autocode" );
+            UnicastRemoteObject.unexportObject( remoteStub,true );
+            registry = null;
+        }catch(Exception e) {
+            // don't care
+        }
     }
 
     public void modify() {

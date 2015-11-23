@@ -22,8 +22,8 @@ public class Runner
     @Inject
     public HelpOption helpOption;
 
-    @Option(name = { "-c", "--config" }, description = "config folder",required=true)
-    public File m_config;
+    @Option(name = { "-c", "--config" }, description = "config folder",required=false)
+    public File m_config = new File("/Users/tonit/devel/rebaze/autocode/autocode-core/src/test/resources/");
 
     public static void main(String[] args) throws Exception {
         Runner runner = SingleCommand.singleCommand(Runner.class).parse(args);
