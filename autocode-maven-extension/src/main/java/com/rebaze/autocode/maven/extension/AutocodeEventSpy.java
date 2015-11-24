@@ -14,7 +14,6 @@ import com.rebaze.autocode.api.AutocodeRemoteChannel;
 import com.rebaze.autocode.api.NullRemoteChannel;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.eventspy.AbstractEventSpy;
-import org.apache.maven.eventspy.EventSpy;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.RepositoryEvent;
@@ -24,8 +23,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
@@ -50,13 +47,12 @@ public class AutocodeEventSpy extends AbstractEventSpy
         {
             Registry registry = LocateRegistry.getRegistry( 9981 );
             remoteAutocode = ( AutocodeRemoteChannel ) registry.lookup( "autocode" );
+            //remoteAutocode = new NullRemoteChannel();
 
             System.out.println( "############## Got remote: " + remoteAutocode );
         }
-        catch ( RemoteException | NotBoundException e )
+        catch ( Exception e )
         {
-            // just give it a null stub.
-            remoteAutocode = new NullRemoteChannel();
             throw new RuntimeException( e );
         }
     }

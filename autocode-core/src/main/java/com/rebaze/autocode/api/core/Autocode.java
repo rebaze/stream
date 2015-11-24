@@ -107,19 +107,16 @@ public class Autocode
             registry.rebind("autocode", remoteStub);
             System.out.print("Building.. hold your breath..");
             System.out.println();
-
             System.out.flush();
-
-
             res = runner.exec( path, handler.getEnv(), ( handler.getExecutable().getAbsolutePath() + " verify" ).split( " " ) );
-
         }
-        catch ( RemoteException e )
+        catch ( Exception e )
         {
             LOG.error("Problem..", e);
         }
         finally
         {
+
             unbind( registry );
             safeClose( out );
             runner.shutdown();
@@ -148,9 +145,17 @@ public class Autocode
     {
         try
         {
-            registry.unbind( "autocode" );
-            UnicastRemoteObject.unexportObject( remoteStub,true );
+            for (String s : registry.list() ) {
+                LOG.info("Unbind " + s);
+                registry.unbind( s );
+                Remote remote = registry.lookup(s);
+                if (remote instanceof UnicastRemoteObject)
+                {
+                    UnicastRemoteObject.unexportObject( remote, true );
+                }
+            }
             registry = null;
+            remoteStub = null;
         }catch(Exception e) {
             // don't care
         }

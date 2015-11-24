@@ -3,6 +3,7 @@ package com.rebaze.autocode;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.rebaze.autocode.api.core.Autocode;
+import com.rebaze.autocode.api.core.Effect;
 import com.rebaze.autocode.internal.DefaultModule;
 import io.airlift.airline.Command;
 import io.airlift.airline.HelpOption;
@@ -32,12 +33,15 @@ public class Runner
             return;
         }
 
-        runner.build();
+        Effect effect = runner.build();
+        // We should not need this. Make sure to shutdown registry cleanly.
+        System.exit( effect.getReturnCode() );
     }
 
-    private void build() throws IOException
+    private Effect build() throws IOException
     {
-        getAutocode().build( new File(".") );
+        return getAutocode().build( new File(".") );
+
     }
 
     private Autocode getAutocode()
