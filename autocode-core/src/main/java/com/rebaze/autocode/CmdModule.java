@@ -26,7 +26,7 @@ public class CmdModule extends AbstractModule
         m_baseConfig = baseConfigFolder;
     }
 
-    @Override protected void configure()simpl
+    @Override protected void configure()
     {
         try
         {
