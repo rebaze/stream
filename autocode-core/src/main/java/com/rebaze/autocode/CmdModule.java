@@ -16,9 +16,9 @@ import java.io.InputStream;
  */
 public class CmdModule extends AbstractModule
 {
-    public static final String NAME_LOCATIONS = "autocode-locations.json";
-    public static final String NAME_TOOLCHAIN = "autocode-universe.json";
-    public static final String NAME_TREE = "autocode-tree.json";
+    public static final String NAME_LOCATIONS = "/autocode-locations.json";
+    public static final String NAME_TOOLCHAIN = "/autocode-universe.json";
+    public static final String NAME_TREE = "/autocode-tree.json";
     private final File m_baseConfig;
 
     public CmdModule(File baseConfigFolder)
@@ -26,13 +26,13 @@ public class CmdModule extends AbstractModule
         m_baseConfig = baseConfigFolder;
     }
 
-    @Override protected void configure()
+    @Override protected void configure()simpl
     {
         try
         {
-            bind(Source.class).annotatedWith( Names.named("sites") ).toInstance( Okio.source( getResource( "/" + NAME_LOCATIONS ) ) );
-            bind(Source.class).annotatedWith( Names.named("tree") ).toInstance( Okio.source( getResource( "/" + NAME_TREE ) ) );
-            bind(Source.class).annotatedWith( Names.named("universe") ).toInstance( Okio.source( getResource( "/" + NAME_TOOLCHAIN ) ) );
+            bind(Source.class).annotatedWith( Names.named("sites") ).toInstance( Okio.source( getResource( NAME_LOCATIONS ) ) );
+            bind(Source.class).annotatedWith( Names.named("tree") ).toInstance( Okio.source( getResource( NAME_TREE ) ) );
+            bind(Source.class).annotatedWith( Names.named("universe") ).toInstance( Okio.source( getResource( NAME_TOOLCHAIN ) ) );
         }
         catch ( FileNotFoundException e )
         {
