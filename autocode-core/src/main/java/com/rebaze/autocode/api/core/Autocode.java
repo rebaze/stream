@@ -66,10 +66,13 @@ public class Autocode
     {
         unpack();
         // scan:
+        LOG.info("Creating surface..");
         Tree before = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
         //
 
         Integer res = execBuild( path );
+        LOG.info("Creating footprint analysis..");
+
         Tree after = new FSScanner().collect( session.createTreeBuilder(), path ).seal();
         Tree result = new DiffTreeCombiner( session ).combine( before, after );
 

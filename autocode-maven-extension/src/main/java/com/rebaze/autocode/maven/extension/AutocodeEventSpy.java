@@ -13,9 +13,14 @@ package com.rebaze.autocode.maven.extension;
 import com.rebaze.autocode.api.AutocodeRemoteChannel;
 import com.rebaze.autocode.api.NullRemoteChannel;
 import org.apache.maven.MavenExecutionException;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.eventspy.AbstractEventSpy;
+import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.ExecutionEvent;
+import org.apache.maven.execution.MavenExecutionResult;
+import org.apache.maven.project.DependencyResolutionResult;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.artifact.ProjectArtifact;
 import org.eclipse.aether.RepositoryEvent;
 
 import javax.inject.Named;
@@ -65,9 +70,14 @@ public class AutocodeEventSpy extends AbstractEventSpy
         super.onEvent( event );
         try
         {
+            //remoteAutocode.progress( "+ " + event.getClass().getName());
+
             if ( event instanceof ExecutionEvent )
             {
+
                 org.apache.maven.execution.ExecutionEvent exec = ( ExecutionEvent ) event;
+                //remoteAutocode.progress( "Build: " + "[" + exec.getType() + "] " + exec.getProject().getBuild().getFinalName());
+
                 if ( exec.getProject() != null && exec.getProject().isExecutionRoot() )
                 {
                     if ( m_reactorProject == null )
@@ -80,8 +90,21 @@ public class AutocodeEventSpy extends AbstractEventSpy
             else if ( event instanceof org.eclipse.aether.RepositoryEvent )
             {
 
-                remoteAutocode.progress( "+ " + " " + ( ( RepositoryEvent ) event ).getType() + " " + ( ( RepositoryEvent ) event ).getArtifact().toString() );
+                //remoteAutocode.progress( "+ " + " " + ( ( RepositoryEvent ) event ).getType() + " " + ( ( RepositoryEvent ) event ).getArtifact().toString() );
                 m_eventLog.add( ( RepositoryEvent ) event );
+            }else if (event instanceof org.apache.maven.project.DependencyResolutionResult ) {
+                DependencyResolutionResult res = ( DependencyResolutionResult ) event;
+
+            } else if ( event instanceof org.apache.maven.execution.MavenExecutionResult ) {
+                MavenExecutionResult res = ( MavenExecutionResult ) event;
+                long runtime = res.getBuildSummary( res.getProject() ).getTime();
+                for (MavenProject project : res.getProject().getCollectedProjects()) {
+                    for (Artifact artifact : res.getBuildSummary( project ).getProject().getAttachedArtifacts()) {
+                        remoteAutocode.progress( "+ " + artifact);
+                    }
+
+                }
+
             }
 
         }

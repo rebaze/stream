@@ -27,6 +27,7 @@ public class Runner
     public File m_config = new File("/Users/tonit/devel/rebaze/autocode/autocode-core/src/test/resources/");
 
     public static void main(String[] args) throws Exception {
+
         Runner runner = SingleCommand.singleCommand(Runner.class).parse(args);
 
         if (runner.helpOption.showHelpIfRequested()) {
@@ -41,7 +42,6 @@ public class Runner
     private Effect build() throws IOException
     {
         return getAutocode().build( new File(".") );
-
     }
 
     private Autocode getAutocode()
@@ -49,4 +49,5 @@ public class Runner
         Injector injector = Guice.createInjector( new CmdModule(m_config), new DefaultModule() );
         return injector.getInstance( Autocode.class );
     }
+
 }

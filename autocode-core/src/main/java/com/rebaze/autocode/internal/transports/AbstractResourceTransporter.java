@@ -29,7 +29,6 @@ abstract class AbstractResourceTransporter implements ResourceTransporter
     @Inject
     public AbstractResourceTransporter( WorkspaceConfiguration workspaceConfiguration )
     {
-
         LOG.info( "Indexing from config {}", workspaceConfiguration );
         this.cache = workspaceConfiguration.getConfiguration().getRepository().getCache();
         store = StoreFactory.newStore( new File( cache.getFolder() ), false );
