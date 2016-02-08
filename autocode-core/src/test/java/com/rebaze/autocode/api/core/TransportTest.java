@@ -11,7 +11,8 @@ import com.rebaze.autocode.internal.transports.ResourceTransporter;
 import com.rebaze.autocode.internal.transports.StaticGAVResolver;
 import com.rebaze.trees.core.Tree;
 import com.rebaze.trees.core.TreeSession;
-import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
+import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

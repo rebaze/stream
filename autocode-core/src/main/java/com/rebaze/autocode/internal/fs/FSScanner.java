@@ -2,7 +2,7 @@ package com.rebaze.autocode.internal.fs;
 
 import com.rebaze.trees.core.Tree;
 import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.internal.StreamTreeBuilder;
+import com.rebaze.trees.core.util.StreamTreeBuilder;
 import com.rebaze.trees.core.util.TreeConsoleFormatter;
 import com.rebaze.trees.core.TreeSession;
 
