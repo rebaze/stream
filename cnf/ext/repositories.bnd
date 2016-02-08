@@ -1,0 +1,33 @@
+-plugin: \
+	aQute.bnd.deployer.repository.LocalIndexedRepo;\
+		name=Release; \
+		local=${workspace}/cnf/releaserepo; \
+		pretty=true; \
+	, \
+	aQute.bnd.deployer.repository.LocalIndexedRepo; \
+		name=Local; \
+		local=${workspace}/cnf/localrepo; \
+		pretty=true; \
+	, \
+	aQute.bnd.deployer.repository.FixedIndexedRepo; \
+		name=Bndtools Hub; \
+		locations=https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz; \
+	, \
+	aQute.lib.deployer.FileRepo; \
+		name=Non OSGi; \
+		location=${workspace}/cnf/nonosgi-repo; \
+		latest=false; \
+	, \
+	aQute.bnd.deployer.repository.FixedIndexedRepo; \
+		name=bundles-virt; \
+		locations=http://localhost:8081/nexus/content/shadows/bundles-virt/.meta/obr.xml;  \
+	, \
+	aQute.bnd.deployer.repository.FixedIndexedRepo; \
+		name=bundles1; \
+		locations=http://localhost:8081/nexus/content/shadows/bundles1/.meta/obr.xml; \
+	, \
+	aQute.bnd.deployer.repository.FixedIndexedRepo; \
+		name=localbundles; \
+		locations=file:///Users/tonit/.m2/repository/repository.xml;
+	
+-releaserepo: Release
