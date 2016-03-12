@@ -8,11 +8,6 @@
 		name=Bndtools Hub; \
 		locations=https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz; \
 	, \
-	aQute.lib.deployer.FileRepo; \
-		name=Non OSGi; \
-		location=${workspace}/cnf/nonosgi-repo; \
-		latest=false; \
-	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Maven Central; \
 		locations=file://${workspace}/com.rebaze.maven.dependencies/target/index.xml;  \
