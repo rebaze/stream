@@ -13,8 +13,8 @@ import com.rebaze.autocode.config.JSonConfigBuilder;
 import com.rebaze.autocode.config.WorkspaceConfiguration;
 import com.rebaze.autocode.internal.maven.MavenSubjectHandlerFactory;
 import com.rebaze.autocode.internal.transports.*;
-import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import com.rebaze.trees.core.TreeSession;
+import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;

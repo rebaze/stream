@@ -1,0 +1,19 @@
+{
+  "locations": [
+    {
+      "checksum": {
+        "type": "sha-1",
+        "data": "2ddf9bb8c3b41bc2891832a6d6fc25f8bf41d77f"
+      },
+      "locations": [
+        //{
+        //  "last-success": "",
+        //  "url": "http://search.maven.org/remotecontent?filepath=org/apache/maven/apache-maven/3.3.3/apache-maven-3.3.3-bin.tar.gz"
+        //},
+        {
+          "url" : "file:///Users/tonit/Downloads/apache-maven-3.3.9-bin.zip"
+        }
+      ]
+    }
+  ]
+}
