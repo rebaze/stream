@@ -5,7 +5,9 @@ import static com.rebaze.trees.core.Selector.selector;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,21 +24,23 @@ import com.rebaze.trees.core.TreeSession;
 /**
  * Can resolve the tree from a given gav
  */
-@Component
+@Component(immediate=true)
 public class StaticGAVResolver implements ResourceResolver<GAV>
 {
     public static final Logger LOG = LoggerFactory.getLogger( StaticGAVResolver.class );
     private Map<GAV, Tree> mapToTree = new HashMap<>();
+    
+    @Reference
+    WorkspaceConfiguration config;
+    
+    @Reference
+    TreeSession session;    
 
-    public StaticGAVResolver( WorkspaceConfiguration config, TreeSession session )
-    {
-        this(config.getResourceTreeConfiguration(),session);
-    }
-
-    public StaticGAVResolver( ResourceTreeConfiguration config, TreeSession session )
+    @Activate
+    public void index()
     {
         LOG.info( "Indexing tree configuration: " + config );
-        for ( ObjectIndex idx : config.getObjects() )
+        for ( ObjectIndex idx : config.getResourceTreeConfiguration().getObjects() )
         {
             Tree tree = session.createTree( selector( "default" ), idx.getNode() );
             for ( IndexKey key : idx.getIndex() )
@@ -55,7 +59,7 @@ public class StaticGAVResolver implements ResourceResolver<GAV>
         Tree result = mapToTree.get( query );
         if ( result == null )
         {
-            throw new AutocodeException( "Query " + query + " cannot be resolved by " + toString() );
+            //LOG.info( "Query " + query + " cannot be resolved by " + toString() );
         }
         return result;
     }

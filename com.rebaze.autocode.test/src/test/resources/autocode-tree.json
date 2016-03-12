@@ -1,0 +1,14 @@
+{
+  // A static mapping from available trees to an index.
+  "objects": [
+    {
+      "node":  "2ddf9bb8c3b41bc2891832a6d6fc25f8bf41d77f",
+      "index": [
+        {
+          "type": "gav",
+          "parameter": "org.apache.maven:apache-maven:3.3.9"
+        }
+      ]
+    }
+  ]
+}

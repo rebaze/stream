@@ -6,20 +6,18 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import com.rebaze.autocode.config.WorkspaceConfiguration;
 
 /**
  *
  */
-@Component
+@Component(service=ResourceTransporter.class)
 public class LocalResourceTransporter extends AbstractResourceTransporter
 {
-
-    public LocalResourceTransporter( WorkspaceConfiguration workspaceConfiguration )
-    {
-        super( workspaceConfiguration );
-    }
+	@Reference(bind="setConfiguration") 
+	WorkspaceConfiguration configuration;
 
     @Override public boolean accept( String protocol )
     {
@@ -28,8 +26,7 @@ public class LocalResourceTransporter extends AbstractResourceTransporter
 
     @Override protected File download( URL url ) throws IOException
     {
-        try
-        {
+        try{
             return new File(url.toURI());
         }
         catch ( URISyntaxException e )

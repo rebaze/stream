@@ -1,18 +1,17 @@
 package com.rebaze.autocode.internal.maven;
 
-import com.rebaze.autocode.api.core.AutocodeException;
-import com.rebaze.autocode.api.core.StagedSubject;
-import com.rebaze.autocode.config.BuildSubject;
-import com.rebaze.autocode.api.core.AcceptsExtensions;
-import com.rebaze.autocode.api.core.NativeSubjectHandler;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import org.ops4j.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
+import com.rebaze.autocode.api.core.AcceptsExtensions;
+import com.rebaze.autocode.api.core.AutocodeException;
+import com.rebaze.autocode.api.core.NativeSubjectHandler;
+import com.rebaze.autocode.api.core.StagedSubject;
 
 /**
  * Created by tonit on 03/11/15.

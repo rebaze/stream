@@ -1,7 +1,8 @@
 -buildpath: \
-	osgi.annotation; version=6.0.1,\
-	osgi.core; version=6.0,\
-	osgi.cmpn; version=6.0
+	osgi.annotation;version=6.0.1,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	com.rebaze.tree
 
 -testpath: \
 	junit; version=4,\
@@ -9,4 +10,8 @@
 
 Bundle-Version: 0.0.0.${tstamp}
 
-Export-Package: com.rebaze.autocode.api
+Export-Package: \
+	com.rebaze.autocode.api,\
+	com.rebaze.autocode.api.core,\
+	com.rebaze.autocode.api.transport,\
+	com.rebaze.autocode.config

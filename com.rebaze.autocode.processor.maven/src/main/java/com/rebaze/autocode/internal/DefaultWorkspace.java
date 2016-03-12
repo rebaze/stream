@@ -13,6 +13,8 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +22,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,14 +41,21 @@ public class DefaultWorkspace implements Workspace
     @Reference
     ResourceResolver<GAV> resolver;
 
-    @Reference ResourceMaterializer materializer;
+    @Reference(name="compositeResolver")
+    ResourceMaterializer materializer;
 
-    @Reference Set<SubjectHandlerFactory> handlerFactories;
+    @Reference
+    List<SubjectHandlerFactory> handlerFactories;
 
-    @Reference WorkspaceConfiguration configuration;
+    @Reference 
+    WorkspaceConfiguration configuration;
 
     private Map<String, NativeSubjectHandler> map = new HashMap<>();
 
+    
+    public DefaultWorkspace() {
+    	handlerFactories = new ArrayList<>();
+    }
     // Unpack
     public void unpack() throws IOException
     {
@@ -67,7 +78,7 @@ public class DefaultWorkspace implements Workspace
             {
                 StagedSubject installed = install( getAddressFromArtifact( version, artifact ) );
                 File base = unpackIfNew( installed );
-                install( factory.create( artifact, unwrapFirstSublevel( base ) ) );
+                install( factory.create( this, artifact, unwrapFirstSublevel( base ) ) );
             }
         }
     }
@@ -130,7 +141,7 @@ public class DefaultWorkspace implements Workspace
                 return candidate;
             }
         }
-        throw new AutocodeException( "No handler available for subject " + subject );
+        throw new AutocodeException( "No handler available for subject type " + subject.getType() + "(tested: "+handlerFactories.size()+" services.)");
     }
 
     private void extract( StagedSubject installed, File base )

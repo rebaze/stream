@@ -5,11 +5,41 @@
 
 -resolve.effective: active;skip:="osgi.service"
 
--runbundles:\
-	org.apache.felix.gogo.runtime,\
-	org.apache.felix.gogo.shell,\
-	org.apache.felix.gogo.command
+-runbundles: \
+	com.google.gson;version='[2.5.0,2.5.1)',\
+	com.google.guava;version='[18.0.0,18.0.1)',\
+	com.rebaze.autocode.processor.maven;version=snapshot,\
+	com.rebaze.autocode.shell;version=snapshot,\
+	com.rebaze.trees;version='[0.3.0,0.3.1)',\
+	org.apache.commons.compress;version='[1.10.0,1.10.1)',\
+	org.apache.felix.configadmin;version='[1.8.8,1.8.9)',\
+	org.apache.felix.eventadmin;version='[1.4.4,1.4.5)',\
+	org.apache.felix.gogo.command;version='[0.14.0,0.14.1)',\
+	org.apache.felix.gogo.runtime;version='[0.16.2,0.16.3)',\
+	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
+	org.apache.felix.http.jetty;version='[2.2.2,2.2.3)',\
+	org.apache.felix.scr;version='[2.0.2,2.0.3)',\
+	org.apache.felix.webconsole;version='[4.2.10,4.2.11)',\
+	org.ops4j.base.exec;version='[1.6.0,1.6.1)',\
+	org.ops4j.base.io;version='[1.6.0,1.6.1)',\
+	org.ops4j.base.lang;version='[1.6.0,1.6.1)',\
+	org.ops4j.base.monitors;version='[1.6.0,1.6.1)',\
+	org.ops4j.base.store;version='[1.6.0,1.6.1)',\
+	org.ops4j.pax.logging.pax-logging-api;version='[1.8.5,1.8.6)',\
+	org.ops4j.pax.logging.pax-logging-service;version='[1.8.5,1.8.6)',\
+	org.ops4j.pax.tipi.okhttp;version='[2.7.3,2.7.4)',\
+	org.ops4j.pax.tipi.okio;version='[1.6.0,1.6.1)'
 
--runrequires:\
+-runrequires: \
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)'
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)',\
+	osgi.identity;filter:='(osgi.identity=com.rebaze.autocode.processor.maven)',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=2.0.2))',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.webconsole)(version>=4.2.10))',\
+	osgi.identity;filter:='(&(osgi.identity=org.ops4j.pax.logging.pax-logging-service)(version>=1.8.5))',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.http.jetty)(version>=2.2.2))',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.eventadmin)(version>=1.4.4))',\
+	osgi.identity;filter:='(osgi.identity=com.rebaze.autocode.shell)'
+-runfw: org.apache.felix.framework;version='[5.4.0,5.4.0]'
+-runee: JavaSE-1.8
+-runproperties: org.osgi.service.http.port=8888

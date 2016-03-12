@@ -1,7 +1,13 @@
 package com.rebaze.autocode.internal.transports;
 
 import java.io.File;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rebaze.autocode.api.core.AutocodeException;
 import com.rebaze.autocode.api.transport.ResourceMaterializer;
@@ -10,12 +16,17 @@ import com.rebaze.trees.core.Tree;
 /**
  *
  */
+@Component
 public class DefaultMaterializer implements ResourceMaterializer
 {
-    private final Set<ResourceTransporter> transporters;
+	
+    private final static Logger LOG = LoggerFactory.getLogger( DefaultMaterializer.class );
 
-    public DefaultMaterializer(Set<ResourceTransporter> transporters) {
-        this.transporters = transporters;
+	@Reference
+    private List<ResourceTransporter> transporters;
+
+    public DefaultMaterializer() {
+    	transporters = new ArrayList<>();
     }
 
     @Override public File get( Tree input )
@@ -29,9 +40,15 @@ public class DefaultMaterializer implements ResourceMaterializer
                 break;
             }
         }
-        if (f == null) {
-            throw new AutocodeException( "Request " + input + " not available." );
-        }
+      
         return f;
     }
+    
+    @Override public String toString()
+    {
+        return "DefaultMaterializer{" +
+            "transporters=" + transporters.size() +
+            '}';
+    }
+    
 }
