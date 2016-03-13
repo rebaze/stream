@@ -21,21 +21,21 @@ Test-Cases: ${classes;CONCRETE;ANNOTATED;org.junit.runner.RunWith}
 -runbundles: \
 	${junit},\
 	${mockito},\
-	com.google.gson;version='[2.5.0,2.5.1)',\
+	com.google.gson;version='[2.6.0,2.7)',\
 	com.google.guava;version='[18.0.0,18.0.1)',\
 	com.rebaze.autocode.api;version=snapshot,\
 	com.rebaze.autocode.processor.maven;version=snapshot,\
-	com.rebaze.trees;version='[0.3.0,0.3.1)',\
+	com.rebaze.tree;version='[0.0.0,0.3.1)',\
 	org.apache.commons.compress;version='[1.10.0,1.10.1)',\
 	org.apache.felix.scr;version='[2.0.0,2.0.1)',\
-	org.ops4j.base.exec;version='[1.6.0,1.6.1)',\
-	org.ops4j.base.io;version='[1.6.0,1.6.1)',\
-	org.ops4j.base.lang;version='[1.6.0,1.6.1)',\
-	org.ops4j.base.monitors;version='[1.6.0,1.6.1)',\
-	org.ops4j.base.store;version='[1.6.0,1.6.1)',\
+	org.ops4j.base.exec;version='[1.5.0,1.6.1)',\
+	org.ops4j.base.io;version='[1.5.0,1.6.1)',\
+	org.ops4j.base.lang;version='[1.5.0,1.6)',\
+	org.ops4j.base.monitors;version='[1.5,1.6)',\
+	org.ops4j.base.store;version='[1.5,1.6)',\
 	org.ops4j.pax.logging.pax-logging-api;version='[1.8.5,1.8.6)',\
-	org.ops4j.pax.tipi.okhttp;version='[2.7.3,2.7.4)',\
-	org.ops4j.pax.tipi.okio;version='[1.6.0,1.6.1)'
+	okhttp;version='[2.7,2.8)',\
+	okio;version='[1.6.0,1.6.1)'
 
 Bundle-Version: 0.0.0.${tstamp}
 Private-Package: com.rebaze.autocode.test

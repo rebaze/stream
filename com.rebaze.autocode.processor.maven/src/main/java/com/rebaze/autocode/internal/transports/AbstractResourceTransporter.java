@@ -7,9 +7,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import org.ops4j.store.Store;
-import org.ops4j.store.StoreFactory;
 import org.ops4j.store.intern.TemporaryStore;
-import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
