@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.rebaze.autocode.api.core.AutocodeException;
 import com.rebaze.autocode.api.transport.ResourceMaterializer;
-import com.rebaze.trees.core.Tree;
+import com.rebaze.tree.api.Tree;
 
 /**
  *

@@ -11,9 +11,14 @@ package com.rebaze.trees.core.internal;
 import java.security.MessageDigest;
 import java.util.*;
 
-import com.rebaze.trees.core.Tag;
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeAlreadySealedException;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeException;
+import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.*;
-import com.rebaze.trees.core.TreeSession;
 
 /**
  * Default implementation not really suitable for very large trees but fast and simple.

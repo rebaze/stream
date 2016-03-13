@@ -1,4 +1,4 @@
-package com.rebaze.trees.core;
+package com.rebaze.tree.api;
 
 /**
  *

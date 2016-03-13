@@ -15,10 +15,10 @@
 	okio;version=1.6,\
 	okhttp;version=2.7
 	
-
 -testpath: \
 	junit; version=4,\
 	hamcrest-core; version=1.3
+
 
 Bundle-Version: 0.0.0.${tstamp}
 Private-Package: \

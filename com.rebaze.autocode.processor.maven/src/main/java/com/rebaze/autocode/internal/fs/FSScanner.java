@@ -1,15 +1,15 @@
 package com.rebaze.autocode.internal.fs;
 
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.util.StreamTreeBuilder;
-import com.rebaze.trees.core.util.TreeConsoleFormatter;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.StreamTreeBuilder;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeConsoleFormatter;
+import com.rebaze.tree.api.TreeSession;
+
+import static com.rebaze.tree.api.Selector.selector;
 
 import java.io.File;
 import java.util.Map;
-
-import static com.rebaze.trees.core.Selector.selector;
 
 /**
  * Created by tonit on 04/11/15.

@@ -2,13 +2,16 @@ package com.rebaze.trees.core;
 
 import org.junit.Test;
 
-import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeIndex;
+import com.rebaze.tree.api.TreeSession;
 
 import java.io.IOException;
 
-import static com.rebaze.trees.core.Selector.selector;
-import static com.rebaze.trees.core.Tag.tag;
-import static com.rebaze.trees.core.TreeSession.wrapAsIndex;
+import static com.rebaze.tree.api.Selector.selector;
+import static com.rebaze.tree.api.Tag.tag;
+import static com.rebaze.tree.api.TreeSession.wrapAsIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

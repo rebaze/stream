@@ -8,7 +8,7 @@
  */
 package com.rebaze.trees.core.internal;
 
-import com.rebaze.trees.core.Selector;
+import com.rebaze.tree.api.Selector;
 
 public class CompoundSelector extends Selector
 {

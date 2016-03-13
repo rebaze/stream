@@ -8,14 +8,17 @@
  */
 package com.rebaze.trees.core;
 
-import static com.rebaze.trees.core.Selector.selector;
+import static com.rebaze.tree.api.Selector.selector;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 
+import com.rebaze.tree.api.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.internal.InMemoryTreeBuilderImpl;
-import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
 
 public class SimpleHashTest
 {
@@ -25,6 +28,7 @@ public class SimpleHashTest
     public void emptyCollector() throws Exception
     {
         TreeBuilder root = session.createTreeBuilder().selector( selector( "Root" ) );
+        int i=0;
         assertEquals( InMemoryTreeBuilderImpl.FIXED_EMPTY, root.seal().fingerprint() );
 
         TreeBuilder root2 = session.createTreeBuilder().selector( selector( "RootOther" ) );

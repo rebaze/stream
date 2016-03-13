@@ -8,20 +8,20 @@
  */
 package com.rebaze.trees.ext.operators;
 
-import static com.rebaze.trees.core.Selector.selector;
-import static com.rebaze.trees.core.TreeSession.wrapAsIndex;
+import static com.rebaze.tree.api.Selector.selector;
+import static com.rebaze.tree.api.TreeSession.wrapAsIndex;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.TreeIndex;
-import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
-import com.rebaze.trees.core.util.TreeConsoleFormatter;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeConsoleFormatter;
+import com.rebaze.tree.api.TreeIndex;
+import com.rebaze.tree.api.TreeSession;
 
 public class DiffTreeCombinatorTest
 {

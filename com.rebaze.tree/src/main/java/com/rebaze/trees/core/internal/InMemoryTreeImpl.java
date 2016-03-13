@@ -8,9 +8,9 @@
  */
 package com.rebaze.trees.core.internal;
 
-import com.rebaze.trees.core.Selector;
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.Tag;
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
 
 /**
  * Default implementation not really suitable for very large trees but fast and simple.

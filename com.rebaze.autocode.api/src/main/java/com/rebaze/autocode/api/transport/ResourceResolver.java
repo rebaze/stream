@@ -1,6 +1,6 @@
 package com.rebaze.autocode.api.transport;
 
-import com.rebaze.trees.core.Tree;
+import com.rebaze.tree.api.Tree;
 
 /**
  * @author Toni Menzel< (toni.menzel@rebaze.com)

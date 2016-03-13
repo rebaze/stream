@@ -6,11 +6,7 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.trees.core.internal;
-
-import com.rebaze.trees.core.Selector;
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.Tag;
+package com.rebaze.tree.api;
 
 /**
  * Created by tonit on 05/03/15.

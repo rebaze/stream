@@ -1,6 +1,6 @@
 package com.rebaze.autocode.internal.transports;
 
-import static com.rebaze.trees.core.Selector.selector;
+import static com.rebaze.tree.api.Selector.selector;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import com.rebaze.autocode.api.transport.ResourceMaterializer;
 import com.rebaze.autocode.api.transport.ResourceResolver;
 import com.rebaze.autocode.internal.DefaultWorkspace;
 import com.rebaze.autocode.internal.maven.GAV;
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeSession;
 
 /**
  * Can resolve things based on a given Treescape.

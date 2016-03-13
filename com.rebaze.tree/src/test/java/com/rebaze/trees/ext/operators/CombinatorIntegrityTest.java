@@ -3,13 +3,13 @@ package com.rebaze.trees.ext.operators;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
-import com.rebaze.trees.core.util.TreeConsoleFormatter;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeConsoleFormatter;
+import com.rebaze.tree.api.TreeSession;
 
-import static com.rebaze.trees.core.Selector.selector;
+import static com.rebaze.tree.api.Selector.selector;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 

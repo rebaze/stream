@@ -6,9 +6,7 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.trees.core;
-
-import com.rebaze.trees.core.internal.AbstractDelegateTree;
+package com.rebaze.tree.api;
 
 import java.util.HashMap;
 import java.util.Map;

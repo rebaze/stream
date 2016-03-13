@@ -6,7 +6,7 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.trees.core.util;
+package com.rebaze.tree.api;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,12 +16,6 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.rebaze.trees.core.Selector;
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.TreeException;
-import com.rebaze.trees.core.Tag;
 
 public class StreamTreeBuilder implements TreeBuilder
 {

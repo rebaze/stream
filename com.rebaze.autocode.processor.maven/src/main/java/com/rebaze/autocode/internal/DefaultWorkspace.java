@@ -5,7 +5,8 @@ import com.rebaze.autocode.api.transport.ResourceMaterializer;
 import com.rebaze.autocode.api.transport.ResourceResolver;
 import com.rebaze.autocode.config.*;
 import com.rebaze.autocode.internal.maven.GAV;
-import com.rebaze.trees.core.Tree;
+import com.rebaze.tree.api.Tree;
+
 import okio.Okio;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;

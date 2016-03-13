@@ -1,9 +1,9 @@
 package com.rebaze.trees.ext.operators;
 
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.TreeCombiner;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeCombiner;
+import com.rebaze.tree.api.TreeSession;
 
 /**
  * Rebuilds left with paths only where right is a leaf.

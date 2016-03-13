@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.TreeSession;
 
 public class Activator implements BundleActivator
 {

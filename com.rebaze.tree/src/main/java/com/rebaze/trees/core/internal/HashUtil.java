@@ -2,7 +2,7 @@ package com.rebaze.trees.core.internal;
 
 import java.util.Comparator;
 
-import com.rebaze.trees.core.Tree;
+import com.rebaze.tree.api.Tree;
 
 /**
  * Created by tonit on 19/03/15.

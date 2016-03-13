@@ -1,6 +1,6 @@
 package com.rebaze.autocode.internal.transports;
 
-import static com.rebaze.trees.core.Selector.selector;
+import static com.rebaze.tree.api.Selector.selector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +18,8 @@ import com.rebaze.autocode.config.ObjectIndex;
 import com.rebaze.autocode.config.ResourceTreeConfiguration;
 import com.rebaze.autocode.config.WorkspaceConfiguration;
 import com.rebaze.autocode.internal.maven.GAV;
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeSession;
 
 /**
  * Can resolve the tree from a given gav

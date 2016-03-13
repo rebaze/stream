@@ -1,7 +1,4 @@
-package com.rebaze.trees.core.util;
-
-import com.rebaze.trees.core.TreeSessionFactory;
-import com.rebaze.trees.core.TreeSession;
+package com.rebaze.tree.api;
 
 /**
  * Standard impl without any DI fw.

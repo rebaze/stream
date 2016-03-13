@@ -8,12 +8,17 @@
  */
 package com.rebaze.trees.ext.operators;
 
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeCombiner;
+import com.rebaze.tree.api.TreeIndex;
+import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.*;
+
+import static com.rebaze.tree.api.Tag.tag;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.rebaze.trees.core.Tag.tag;
 
 /**
  * This {@link TreeCombiner} creates a intersection tree.

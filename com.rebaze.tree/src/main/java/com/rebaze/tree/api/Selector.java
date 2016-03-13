@@ -6,7 +6,7 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.trees.core;
+package com.rebaze.tree.api;
 
 public class Selector
 {

@@ -20,8 +20,8 @@
 #project:               ${basedir}
 src:                    src/main/java
 bin:                   	target/classes
-#testsrc:               test
-#testbin:               bin_test
+testsrc:                src/test/java
+testbin:                target/test-classes
 #test-reports:          test-reports
 #target-dir:            generated
 #target:                ${project}/${target-dir}

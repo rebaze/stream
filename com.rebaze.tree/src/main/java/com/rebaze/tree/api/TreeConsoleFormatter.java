@@ -6,11 +6,9 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.trees.core.util;
+package com.rebaze.tree.api;
 
 import java.io.PrintStream;
-
-import com.rebaze.trees.core.Tree;
 
 public class TreeConsoleFormatter
 {

@@ -8,16 +8,16 @@
  */
 package com.rebaze.trees.core.internal;
 
-import static com.rebaze.trees.core.Selector.*;
+import static com.rebaze.tree.api.Selector.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.TreeException;
-import com.rebaze.trees.core.TreeSession;
-import com.rebaze.trees.core.util.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.DefaultTreeSessionFactory;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeException;
+import com.rebaze.tree.api.TreeSession;
 
 public class DefaultHashTest
 {

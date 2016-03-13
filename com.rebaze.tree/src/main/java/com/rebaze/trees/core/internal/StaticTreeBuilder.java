@@ -3,11 +3,11 @@
  */
 package com.rebaze.trees.core.internal;
 
-import com.rebaze.trees.core.Selector;
-import com.rebaze.trees.core.Tree;
-import com.rebaze.trees.core.TreeBuilder;
-import com.rebaze.trees.core.Tag;
-import com.rebaze.trees.core.TreeSession;
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeSession;
 
 /**
  * Augments a given tree as {@link TreeBuilder}. Used to incorporate existing {@link Tree}s in Tree

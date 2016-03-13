@@ -1,7 +1,7 @@
 package com.rebaze.autocode.internal;
 
 import com.rebaze.autocode.api.core.Effect;
-import com.rebaze.trees.core.Tree;
+import com.rebaze.tree.api.Tree;
 
 /**
  * Created by tonit on 04/11/15.

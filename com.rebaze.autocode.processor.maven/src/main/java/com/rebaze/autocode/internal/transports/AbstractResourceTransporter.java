@@ -17,7 +17,7 @@ import com.rebaze.autocode.config.ArtifactLocation;
 import com.rebaze.autocode.config.CacheSettings;
 import com.rebaze.autocode.config.URLLocation;
 import com.rebaze.autocode.config.WorkspaceConfiguration;
-import com.rebaze.trees.core.Tree;
+import com.rebaze.tree.api.Tree;
 
 /**
  * Created by tonit on 30/10/15.
