@@ -9,4 +9,3 @@ target
 /bin
 *.iml
 /.idea/
-.gradle-wrapper/
