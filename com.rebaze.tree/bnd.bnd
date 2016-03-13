@@ -8,7 +8,7 @@
 	org.apache.servicemix.bundles.junit;version="[4.11,5)"
 	
 Bundle-Version: 0.0.0.${tstamp}
-Private-Package: com.rebaze.tree
+Private-Package: com.rebaze.trees.core.internal
 Export-Package: \
 	com.rebaze.trees.core,\
 	com.rebaze.trees.core.util,\
