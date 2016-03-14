@@ -9,6 +9,10 @@
 		locations=https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz; \
 	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
+		name=BND Latest; \
+		locations=https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles/index.xml.gz; \
+	, \
+	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Maven Central; \
 		locations=file://${workspace}/com.rebaze.maven.dependencies/target/index.xml;  \
 	,\
@@ -17,4 +21,3 @@
 	       locations=https://raw.githubusercontent.com/osgi/osgi.enroute/v1.0.0/cnf/distro/index.xml;
 	
 -releaserepo: Release
- 
