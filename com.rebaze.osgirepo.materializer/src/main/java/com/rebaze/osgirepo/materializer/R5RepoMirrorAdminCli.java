@@ -7,7 +7,7 @@ import java.net.URI;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.rebaze.osgirepo.api.StreamDefinitionDTO;
+import com.rebaze.stream.api.StreamDefinitionDTO;
 
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
 import okio.Okio;

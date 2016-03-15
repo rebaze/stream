@@ -16,4 +16,7 @@ package com.rebaze.tree.api;
 public interface TreeSessionFactory
 {
     TreeSession create();
+    
+    TreeSession create(String digestAlo);
+
 }

@@ -1,4 +1,4 @@
-package com.rebaze.osgirepo.api;
+package com.rebaze.mirror.api;
 
 import java.net.URI;
 

@@ -13,7 +13,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.rebaze.tree.api.DefaultTreeSessionFactory;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeException;

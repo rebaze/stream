@@ -17,12 +17,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rebaze.osgirepo.api.LoadableArtifactDTO;
-import com.rebaze.osgirepo.api.MirrorAdmin;
-import com.rebaze.osgirepo.api.StreamDefinitionDTO;
-import com.rebaze.osgirepo.api.StreamSourceDTO;
+import com.rebaze.mirror.api.LoadableArtifactDTO;
+import com.rebaze.mirror.api.MirrorAdmin;
+import com.rebaze.stream.api.StreamDefinitionDTO;
+import com.rebaze.stream.api.StreamSourceDTO;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -50,9 +51,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	public R5RepoMirrorAdmin(File base, IRepositoryContentProvider... contentProviders) {
 		baseFolder = base;
 		providers = contentProviders;
-		this.treeSession = new TreeSession();
-		treeSession.setDigestAlgorithm("SHA-256");
-	}
+		this.treeSession = new DefaultTreeSessionFactory().create("SHA-256");	}
 	
 	@Override
 	public URI mirror(StreamDefinitionDTO def) throws Exception {
@@ -83,9 +82,10 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 				resources.add(createLocalPath(processor, art));
 			}
 		}
-
 		// then create composite index:
 		File f = new File(baseFolder, "index.xml");
+		System.out.println("Creating composite index " + f.getAbsolutePath() + " for " + resources.size() + " resources in " + indexes.size() + " source streams." );
+
 		try (FileOutputStream fout = new FileOutputStream(f)) {
 			r5provider.generateIndex(resources, fout, def.name, baseFolder.toURI(), true, null, null);
 		}
@@ -107,7 +107,10 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 				provider.parseIndex(input, baseUri, processor, null);
 				List<File> indexable = new ArrayList<>();
 				for (LoadableArtifactDTO artifact : processor.getArtifacts()) {
-					indexable.add(download(name, artifact));
+					File localFile = download(name, artifact);
+					if (localFile != null) {
+						indexable.add(localFile);
+					}
 				}
 				// Index:
 				return index(new File(baseFolder, name + "/" + getFileName(index.getPath())), indexable);
@@ -165,10 +168,15 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 		if (!alreadyAvailable(target, artifact.getHash())) {
 			System.out.println("Downloading: " + target.getAbsolutePath());
 			target.getParentFile().mkdirs();
-			if ("file".equals(artifact.getUri().getScheme())) {
-				download(new File(artifact.getUri()), target);
-			} else {
-				download(artifact.getUri(), target);
+			try {
+				if ("file".equals(artifact.getUri().getScheme())) {
+					download(new File(artifact.getUri()), target);
+				} else {
+					download(artifact.getUri(), target);
+				}
+			}catch(Exception e) {
+				System.err.println("Unable to download " + artifact.getUri() + " Exception: " + e.getMessage());
+				target = null;
 			}
 		} else {
 			System.out.println("Already available: " + target.getAbsolutePath());

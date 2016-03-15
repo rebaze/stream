@@ -6,11 +6,15 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.tree.api;
+package com.rebaze.trees.core.internal;
 
-import com.rebaze.trees.core.internal.InMemoryTreeBuilderImpl;
-import com.rebaze.trees.core.internal.InMemoryTreeImpl;
-import com.rebaze.trees.core.internal.StaticTreeBuilder;
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.StreamTreeBuilder;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeException;
+import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.ext.operators.IntersectTreeCombiner;
 
 import java.io.UnsupportedEncodingException;
@@ -22,14 +26,17 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Toni Menzel <toni.menzel@rebaze.com>
  */
-public class TreeSession
+public class DefaultTreeSession implements TreeSession
 {
-    private static final String DEFAULT_HASH_ALOGO = "SHA-1";
+    public static final String DEFAULT_HASH_ALOGO = "SHA-1";
     public static final String CHARSET_NAME = "UTF-8";
-    private String m_messageDigestAlgorithm = DEFAULT_HASH_ALOGO;
+   // private String m_messageDigestAlgorithm = DEFAULT_HASH_ALOGO;
+	private final MessageDigest m_digest;
 
-    public TreeSession()
+    public DefaultTreeSession(String digestAlg) 
     {
+    	//m_messageDigestAlgorithm = digestAlg;
+    	m_digest = createMessageDigest(digestAlg);
     }
 
     /**
@@ -86,50 +93,62 @@ public class TreeSession
         }
     }
 
-    public static boolean isWrapper( Tree tree )
+   
+
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#createTreeBuilder()
+	 */
+    @Override
+	public TreeBuilder createTreeBuilder()
     {
-        return ( tree.branches().length == 1 && tree.fingerprint().equals( tree.branches()[0].fingerprint() ) );
+        return new InMemoryTreeBuilderImpl( this, m_digest );
     }
 
-    public TreeBuilder createTreeBuilder()
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#createStreamTreeBuilder()
+	 */
+    @Override
+	public StreamTreeBuilder createStreamTreeBuilder()
     {
-        return new InMemoryTreeBuilderImpl( this );
+        return new DefaultStreamTreeBuilder( createTreeBuilder() );
     }
 
-    public StreamTreeBuilder createStreamTreeBuilder()
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#createStreamTreeBuilder(com.rebaze.tree.api.TreeBuilder)
+	 */
+    @Override
+	public StreamTreeBuilder createStreamTreeBuilder( TreeBuilder delegate )
     {
-        return new StreamTreeBuilder( createTreeBuilder() );
+        return new DefaultStreamTreeBuilder( delegate );
     }
 
-    public StreamTreeBuilder createStreamTreeBuilder( TreeBuilder delegate )
-    {
-        return new StreamTreeBuilder( delegate );
-    }
-
-    public Tree createTree( Selector selector, String hashValue, Tree[] subs, Tag tag )
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#createTree(com.rebaze.tree.api.Selector, java.lang.String, com.rebaze.tree.api.Tree[], com.rebaze.tree.api.Tag)
+	 */
+    @Override
+	public Tree createTree( Selector selector, String hashValue, Tree[] subs, Tag tag )
     {
         return new InMemoryTreeImpl( selector, hashValue, subs, tag );
     }
 
-    public TreeSession setDigestAlgorithm( String algo )
+   
+    private MessageDigest createMessageDigest(String digest)
     {
-        m_messageDigestAlgorithm = algo;
-        return this;
+    	 try
+         {
+             return MessageDigest.getInstance( digest );
+         }
+         catch ( NoSuchAlgorithmException e )
+         {
+             throw new TreeException( "Problem loading digest with algorthm." );
+         }
     }
 
-    public MessageDigest createMessageDigest()
-    {
-        try
-        {
-            return MessageDigest.getInstance( m_messageDigestAlgorithm );
-        }
-        catch ( NoSuchAlgorithmException e )
-        {
-            throw new TreeException( "Problem loading digest with algorthm." );
-        }
-    }
-
-    public TreeBuilder createStaticTreeBuilder( Tree tree )
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#createStaticTreeBuilder(com.rebaze.tree.api.Tree)
+	 */
+    @Override
+	public TreeBuilder createStaticTreeBuilder( Tree tree )
     {
         return new StaticTreeBuilder( tree, this );
     }
@@ -158,7 +177,11 @@ public class TreeSession
         }
     }
 
-    public Tree find( Tree base, Tree subtree )
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#find(com.rebaze.tree.api.Tree, com.rebaze.tree.api.Tree)
+	 */
+    @Override
+	public Tree find( Tree base, Tree subtree )
     {
         //TreeBuilder builder = createTreeBuilder();
         // basically copy the whole input tree but erase all leafs
@@ -167,7 +190,11 @@ public class TreeSession
         return new IntersectTreeCombiner( this ).combine( base, subtree );
     }
 
-    public Tree createTree( Selector selector, String hashValue )
+    /* (non-Javadoc)
+	 * @see com.rebaze.tree.api.TreeSession#createTree(com.rebaze.tree.api.Selector, java.lang.String)
+	 */
+    @Override
+	public Tree createTree( Selector selector, String hashValue )
     {
         return createTree( selector, hashValue, new Tree[0], Tag.tag() );
     }

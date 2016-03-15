@@ -3,11 +3,11 @@ package com.rebaze.trees.ext.operators;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.rebaze.tree.api.DefaultTreeSessionFactory;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
-import com.rebaze.tree.api.TreeConsoleFormatter;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
+import com.rebaze.trees.core.internal.TreeConsoleFormatter;
 
 import static com.rebaze.tree.api.Selector.selector;
 import static org.junit.Assert.assertEquals;

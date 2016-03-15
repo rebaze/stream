@@ -1,12 +1,11 @@
 package com.rebaze.trees.core.internal;
 
 import static com.rebaze.tree.api.Selector.*;
-import static com.rebaze.tree.api.TreeSession.nodes;
+import static com.rebaze.trees.core.internal.DefaultTreeSession.nodes;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.rebaze.tree.api.DefaultTreeSessionFactory;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
@@ -62,8 +61,8 @@ public class InMemoryTreeImplTest
         c1.branch( selector( "db2" ) ).add( "data".getBytes() );
         c1.branch( selector( "db3" ) ).add( "data".getBytes() );
         Tree result = c1.seal();
-        assertEquals( 3, TreeSession.leafs( result ) );
-        assertEquals( 5, TreeSession.nodes( result ) );
+        assertEquals( 3, DefaultTreeSession.leafs( result ) );
+        assertEquals( 5, DefaultTreeSession.nodes( result ) );
 
     }
 }

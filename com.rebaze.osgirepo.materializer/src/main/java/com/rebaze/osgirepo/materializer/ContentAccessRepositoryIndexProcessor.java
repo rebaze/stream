@@ -7,7 +7,7 @@ import java.util.List;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
 
-import com.rebaze.osgirepo.api.LoadableArtifactDTO;
+import com.rebaze.mirror.api.LoadableArtifactDTO;
 
 import aQute.bnd.deployer.repository.api.IRepositoryIndexProcessor;
 import aQute.bnd.deployer.repository.api.Referral;

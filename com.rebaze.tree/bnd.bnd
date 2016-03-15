@@ -1,9 +1,8 @@
 -buildpath: \
 	osgi.annotation;version=6.0.1,\
 	osgi.core;version=6.0,\
-	osgi.cmpn;version=6.0,\
 	slf4j.api;version=1.7,\
-	biz.aQute.bndlib;version=3.1
+	com.rebaze.api;version=latest
 
 -testpath: \
 	junit; version=4,\
@@ -12,5 +11,4 @@
 Bundle-Version: 0.0.0.${tstamp}
 Private-Package: com.rebaze.trees.core.internal
 Export-Package: \
-	com.rebaze.tree.api,\
 	com.rebaze.trees.ext.operators

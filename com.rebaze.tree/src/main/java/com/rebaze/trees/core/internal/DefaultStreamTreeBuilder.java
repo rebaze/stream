@@ -6,7 +6,7 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.tree.api;
+package com.rebaze.trees.core.internal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,19 +17,30 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StreamTreeBuilder implements TreeBuilder
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.StreamTreeBuilder;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeException;
+
+public class DefaultStreamTreeBuilder implements StreamTreeBuilder
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger( StreamTreeBuilder.class );
+    private static final Logger LOG = LoggerFactory.getLogger( DefaultStreamTreeBuilder.class );
     private long m_dataAmountRead = 0L;
     final private TreeBuilder m_delegate;
 
-    public StreamTreeBuilder( final TreeBuilder delegate )
+    public DefaultStreamTreeBuilder( final TreeBuilder delegate )
     {
         m_delegate = delegate;
     }
 
-    public StreamTreeBuilder add( final InputStream is )
+    /* (non-Javadoc)
+	 * @see com.rebaze.trees.core.internal.StreamTreeBuilder#add(java.io.InputStream)
+	 */
+    @Override
+	public StreamTreeBuilder add( final InputStream is )
         throws IOException
     {
         byte[] bytes = new byte[1024];
@@ -42,6 +53,7 @@ public class StreamTreeBuilder implements TreeBuilder
         return this;
     }
 
+    @Override
     public StreamTreeBuilder add( final File f )
     {
         try
@@ -81,35 +93,44 @@ public class StreamTreeBuilder implements TreeBuilder
     }
 
     @Override
-    public StreamTreeBuilder add( byte[] bytes )
+    public DefaultStreamTreeBuilder add( byte[] bytes )
     {
         m_delegate.add( bytes );
         return this;
     }
 
-    @Override
-    public StreamTreeBuilder selector( Selector selector )
+    /* (non-Javadoc)
+	 * @see com.rebaze.trees.core.internal.StreamTreeBuilder#selector(com.rebaze.tree.api.Selector)
+	 */
+	@Override
+    public DefaultStreamTreeBuilder selector( Selector selector )
     {
         m_delegate.selector( selector );
         return this;
     }
 
+    /* (non-Javadoc)
+	 * @see com.rebaze.trees.core.internal.StreamTreeBuilder#branch(com.rebaze.tree.api.Selector)
+	 */
     @Override
-    public StreamTreeBuilder branch( Selector selector )
+    public DefaultStreamTreeBuilder branch( Selector selector )
     {
         LOG.warn( "Branching from StreamTreeBuilder is pretty unusually as it means you add raw data to an intermediate tree. " );
-        return new StreamTreeBuilder( m_delegate.branch( selector ) );
+        return new DefaultStreamTreeBuilder( m_delegate.branch( selector ) );
+    }
+
+    /* (non-Javadoc)
+	 * @see com.rebaze.trees.core.internal.StreamTreeBuilder#branch(com.rebaze.tree.api.Tree)
+	 */
+	@Override
+    public DefaultStreamTreeBuilder branch( Tree subtree )
+    {
+        LOG.warn( "Branching from StreamTreeBuilder is pretty unusually as it means you add raw data to an intermediate tree. " );
+        return new DefaultStreamTreeBuilder( m_delegate.branch( subtree ) );
     }
 
     @Override
-    public StreamTreeBuilder branch( Tree subtree )
-    {
-        LOG.warn( "Branching from StreamTreeBuilder is pretty unusually as it means you add raw data to an intermediate tree. " );
-        return new StreamTreeBuilder( m_delegate.branch( subtree ) );
-    }
-
-    @Override
-    public StreamTreeBuilder tag( Tag tag )
+    public DefaultStreamTreeBuilder tag( Tag tag )
     {
         m_delegate.tag( tag );
         return this;

@@ -1,10 +1,11 @@
 package com.rebaze.autocode.internal.fs;
 
-import com.rebaze.tree.api.StreamTreeBuilder;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
-import com.rebaze.tree.api.TreeConsoleFormatter;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
+import com.rebaze.trees.core.internal.DefaultStreamTreeBuilder;
+import com.rebaze.trees.core.internal.TreeConsoleFormatter;
 
 import static com.rebaze.tree.api.Selector.selector;
 
@@ -20,7 +21,7 @@ public class FSScanner
 
     public void walk( Map<Tree, Integer> map, Tree input )
     {
-        if (TreeSession.isWrapper( input )) {
+        if (DefaultTreeSessionFactory.isWrapper( input )) {
             // go deeper without counting:
             walk(map,input.branches()[0]);
             return;
@@ -52,7 +53,7 @@ public class FSScanner
                 collect( sub, f );
             else
             {
-                new StreamTreeBuilder( sub ).add( f );
+                new DefaultStreamTreeBuilder( sub ).add( f );
             }
         }
         return builder;

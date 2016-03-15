@@ -8,8 +8,6 @@
  */
 package com.rebaze.tree.api;
 
-import com.rebaze.trees.core.internal.StaticTreeBuilder;
-
 /**
  * The way for creating Trees.
  *

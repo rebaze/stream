@@ -29,8 +29,8 @@ import com.rebaze.autocode.api.core.Workspace;
 import com.rebaze.autocode.internal.exec.ShellRunner;
 import com.rebaze.autocode.internal.fs.FSScanner;
 import com.rebaze.tree.api.Tree;
-import com.rebaze.tree.api.TreeConsoleFormatter;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.TreeConsoleFormatter;
 import com.rebaze.trees.ext.operators.DiffTreeCombiner;
 
 /**

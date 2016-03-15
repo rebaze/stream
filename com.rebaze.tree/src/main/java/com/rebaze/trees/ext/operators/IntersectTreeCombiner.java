@@ -11,9 +11,9 @@ package com.rebaze.trees.ext.operators;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeCombiner;
-import com.rebaze.tree.api.TreeIndex;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.*;
+import com.rebaze.trees.core.internal.TreeIndex;
 
 import static com.rebaze.tree.api.Tag.tag;
 

@@ -41,13 +41,15 @@ public class InMemoryTreeBuilderImpl implements TreeBuilder
     private Tag m_tag;
     private final TreeSession m_tools;
 
-    public InMemoryTreeBuilderImpl( TreeSession tools )
+    public InMemoryTreeBuilderImpl( TreeSession session, MessageDigest digest )
     {
-        m_tools = tools;
-        m_digest = m_tools.createMessageDigest();
+        m_tools = session;
+        m_digest = digest;
         //m_sub = new ArrayList<TreeBuilder>();
         m_subItems = new HashMap<Selector, TreeBuilder>();
     }
+    
+    
 
     /*
      * (non-Javadoc)

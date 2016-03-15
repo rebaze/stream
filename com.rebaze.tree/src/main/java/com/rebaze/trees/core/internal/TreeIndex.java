@@ -6,10 +6,13 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.tree.api;
+package com.rebaze.trees.core.internal;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.Tree;
 
 /**
  * Index implementation that augments a given tree with some extra index accessors like find by

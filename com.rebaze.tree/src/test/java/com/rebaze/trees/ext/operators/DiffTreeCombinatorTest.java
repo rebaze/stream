@@ -9,19 +9,19 @@
 package com.rebaze.trees.ext.operators;
 
 import static com.rebaze.tree.api.Selector.selector;
-import static com.rebaze.tree.api.TreeSession.wrapAsIndex;
+import static com.rebaze.trees.core.internal.DefaultTreeSession.wrapAsIndex;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import com.rebaze.tree.api.DefaultTreeSessionFactory;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
-import com.rebaze.tree.api.TreeConsoleFormatter;
-import com.rebaze.tree.api.TreeIndex;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
+import com.rebaze.trees.core.internal.TreeConsoleFormatter;
+import com.rebaze.trees.core.internal.TreeIndex;
 
 public class DiffTreeCombinatorTest
 {

@@ -14,10 +14,10 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 
-import com.rebaze.tree.api.DefaultTreeSessionFactory;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import com.rebaze.trees.core.internal.InMemoryTreeBuilderImpl;
 
 public class SimpleHashTest

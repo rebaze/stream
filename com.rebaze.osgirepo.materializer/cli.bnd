@@ -39,5 +39,7 @@ Private-Package: \
 	aQute.libg.asn1,\
 	aQute.libg.filters,\
 	org.osgi.framework,\
-	org.osgi.service.log
+	org.osgi.service.log,\
+	com.rebaze.mirror.api,\
+	com.rebaze.stream.api
 Import-Package: *

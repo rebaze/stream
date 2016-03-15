@@ -13,7 +13,8 @@
 	com.google.guava;version=18.0,\
 	org.ops4j.base.store;version=1.5,\
 	okio;version=1.6,\
-	okhttp;version=2.7
+	okhttp;version=2.7,\
+	com.rebaze.api;version=latest
 	
 -testpath: \
 	junit; version=4,\

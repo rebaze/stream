@@ -19,6 +19,12 @@
       "url": "file:///Users/tonit/devel/rebaze/autocode/com.rebaze.maven.dependencies/target/index.xml",
       "type": "OSGiR5",
       "active":"true"
+    },
+    {
+      "name":"enroute_v1.0.0",
+      "url": "https://raw.githubusercontent.com/osgi/osgi.enroute/v1.0.0/cnf/distro/index.xml",
+      "type": "OSGiR5",
+      "active":"true"
     }
   ]
 }

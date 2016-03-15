@@ -1,4 +1,4 @@
-package com.rebaze.osgirepo.api;
+package com.rebaze.stream.api;
 
 import org.osgi.dto.DTO;
 
