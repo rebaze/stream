@@ -62,7 +62,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 				StreamSourceDTO dest = new StreamSourceDTO();
 				dest.name = src.name;
 				dest.active = src.active;
-				dest.url = mirror(src.name, new URI(src.url)).toASCIIString();
+				dest.url = mirror(src).toASCIIString();
 				indexes.add(dest);
 			}
 		}
@@ -93,12 +93,10 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	}
 
 	@Override
-	public URI mirror(String name, URI index) throws Exception {
+	public URI mirror(StreamSourceDTO src) throws Exception {
 		// calculate from index uri:
-		System.out.println("mirroring " + name + " from " + index.toASCIIString());
-		String uri = index.toASCIIString();
-		URI baseUri = new URI(uri.substring(0, uri.lastIndexOf("/") + 1));
-		return mirror(name, index, baseUri).toURI();
+		URI baseUri = new URI(src.url.substring(0, src.url.lastIndexOf("/") + 1));
+		return mirror(src.name, new URI(src.url), baseUri).toURI();
 	}
 
 	private File mirror(String name, URI index, URI baseUri) throws Exception {
