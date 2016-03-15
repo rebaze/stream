@@ -14,7 +14,7 @@
 	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Maven Central; \
-		locations=file://${workspace}/com.rebaze.maven.dependencies/target/index.xml;  \
+		locations=file:///Users/tonit/devel/rebaze/autocode/com.rebaze.osgirepo.materializer/target/repo/maven_deps/index.xml;  \
 	,\
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 	       name=Enroute; \
