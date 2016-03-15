@@ -3,16 +3,16 @@
   "version" : "1",
   "sources": [
     {
-      "name":"biz.aqute.bnd.latest",
+      "name":"bnd_latest",
       "url": "https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles/index.xml",
       "type": "OSGiR5",
-      "active":"false"
+      "active":"true"
     },
     {
-      "name":"org.amdatu.releases",
+      "name":"amdatu_release",
       "url": "http://repository.amdatu.org/release/index.xml",
       "type": "OSGiR5",
-      "active":"false"
+      "active":"true"
     },
     {
       "name":"maven_deps",
