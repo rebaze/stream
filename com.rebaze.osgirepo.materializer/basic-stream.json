@@ -1,0 +1,24 @@
+{
+  "name" : "stream.basic.osgi",
+  "version" : "1",
+  "sources": [
+    {
+      "name":"biz.aqute.bnd.latest",
+      "url": "https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles/index.xml",
+      "type": "OSGiR5",
+      "active":"false"
+    },
+    {
+      "name":"org.amdatu.releases",
+      "url": "http://repository.amdatu.org/release/index.xml",
+      "type": "OSGiR5",
+      "active":"false"
+    },
+    {
+      "name":"maven_deps",
+      "url": "file:///Users/tonit/devel/rebaze/autocode/com.rebaze.maven.dependencies/target/index.xml",
+      "type": "OSGiR5",
+      "active":"true"
+    }
+  ]
+}
