@@ -1,9 +1,8 @@
 package com.rebaze.mirror.api;
 
-import java.net.URI;
+import java.util.List;
 
-import com.rebaze.stream.api.StreamDefinitionDTO;
-import com.rebaze.stream.api.StreamSourceDTO;
+import com.rebaze.stream.api.StreamSourceResourcesDTO;
 
 /**
  * A service that is able to fully mirror remote repositories.
@@ -14,7 +13,5 @@ import com.rebaze.stream.api.StreamSourceDTO;
  */
 public interface MirrorAdmin {
 
-	public URI mirror(StreamDefinitionDTO def) throws Exception;
-
-	public URI mirror(StreamSourceDTO src) throws Exception;
+	public List<StreamSourceResourcesDTO> mirror() throws Exception;
 }

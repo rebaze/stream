@@ -6,13 +6,13 @@
       "name":"bnd_latest",
       "url": "https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles/index.xml",
       "type": "OSGiR5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"amdatu_release",
       "url": "http://repository.amdatu.org/release/index.xml",
       "type": "OSGiR5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"maven_deps",
@@ -23,6 +23,12 @@
     {
       "name":"enroute_v1.0.0",
       "url": "https://raw.githubusercontent.com/osgi/osgi.enroute/v1.0.0/cnf/distro/index.xml",
+      "type": "OSGiR5",
+      "active":"false"
+    },
+    {
+      "name":"bndtools.bundle.hub",
+      "url": "https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz",
       "type": "OSGiR5",
       "active":"true"
     }

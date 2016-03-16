@@ -7,5 +7,6 @@ public class StreamDefinitionDTO extends DTO {
 	public String name;
 	public String version;
 	public StreamSourceDTO[] sources;
+	public String compositeURI;
 	
 }

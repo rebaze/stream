@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.rebaze.index.api.IndexAdmin;
+import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
+import com.rebaze.stream.api.StreamSourceResourcesDTO;
 
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
 import okio.Okio;
@@ -33,9 +37,17 @@ public class R5RepoMirrorAdminCli {
 				StreamDefinitionDTO def = gson.fromJson(
 						new InputStreamReader(Okio.buffer(Okio.source(stream)).inputStream()),
 						StreamDefinitionDTO.class);
-				System.out.println("Def: " + def.toString());
-				R5RepoMirrorAdmin tool = new R5RepoMirrorAdmin(new File(dest), new R5RepoContentProvider());
-				tool.mirror(def);
+				
+				MirrorAdmin mirrorAdmin = new R5RepoMirrorAdmin(new File(dest), def, new R5RepoContentProvider());
+				IndexAdmin indexer = new R5RepoIndexAdmin(new File(dest), def);
+
+				System.out.println("Mirroring data: " + def.toString());
+				List<StreamSourceResourcesDTO> mirrored = mirrorAdmin.mirror();
+				
+				System.out.println("Indexing local data..");
+				indexer.index(mirrored);
+
+				
 			}
 
 		}

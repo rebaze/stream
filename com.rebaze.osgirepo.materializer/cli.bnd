@@ -1,6 +1,7 @@
 Bundle-Name: R5RepoMirrorAdmin CLI
 Bundle-Description: R5 Repository MirrorAdmin (Standalone)
 Main-Class: com.rebaze.osgirepo.materializer.R5RepoMirrorAdminCli
+
 Private-Package: \
 	com.rebaze.trees.core,\
 	com.rebaze.tree.api,\
@@ -41,5 +42,7 @@ Private-Package: \
 	org.osgi.framework,\
 	org.osgi.service.log,\
 	com.rebaze.mirror.api,\
-	com.rebaze.stream.api
+	com.rebaze.stream.api,\
+	com.rebaze.index.api,\
+	aQute.bnd.version
 Import-Package: *

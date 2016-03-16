@@ -8,11 +8,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,7 @@ import com.rebaze.mirror.api.LoadableArtifactDTO;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
+import com.rebaze.stream.api.StreamSourceResourcesDTO;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
@@ -33,6 +37,7 @@ import aQute.bnd.deployer.repository.api.Decision;
 import aQute.bnd.deployer.repository.api.IRepositoryContentProvider;
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
 import okio.BufferedSink;
+import okio.BufferedSource;
 import okio.Okio;
 import okio.Source;
 
@@ -47,73 +52,56 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	private final R5RepoContentProvider r5provider = new R5RepoContentProvider();
 
 	private final File baseFolder;
+	private StreamDefinitionDTO definition;
 
-	public R5RepoMirrorAdmin(File base, IRepositoryContentProvider... contentProviders) {
+	public R5RepoMirrorAdmin(File base, StreamDefinitionDTO def, IRepositoryContentProvider... contentProviders) {
 		baseFolder = base;
 		providers = contentProviders;
+		this.definition = def;
 		this.treeSession = new DefaultTreeSessionFactory().create("SHA-256");	}
 	
 	@Override
-	public URI mirror(StreamDefinitionDTO def) throws Exception {
-		List<StreamSourceDTO> indexes = new ArrayList<>();
-		for (StreamSourceDTO src : def.sources) {
-			if (src.active) {
-				StreamSourceDTO dest = new StreamSourceDTO();
-				dest.name = src.name;
-				dest.active = src.active;
-				dest.url = mirror(src).toASCIIString();
-				indexes.add(dest);
+	public List<StreamSourceResourcesDTO> mirror() throws Exception {
+		// Mirror must return a set of "mirrored" resources per StreamSource
+		List<StreamSourceResourcesDTO> resources = new ArrayList<>();
+		for (StreamSourceDTO src : definition.sources) {
+			if (src.active) {				
+				StreamSourceResourcesDTO local = new StreamSourceResourcesDTO();
+				local.url = src.url;
+				local.active = src.active;
+				local.name = src.name;
+				local.resources = mirror(src);
+				resources.add(local);
 			}
 		}
-		// retrieve artifacts from selected indexes:
-		List<ContentAccessRepositoryIndexProcessor> processed = new ArrayList<>();
-		for (StreamSourceDTO index : indexes) {
-			ContentAccessRepositoryIndexProcessor processor = new ContentAccessRepositoryIndexProcessor(index.name);
-			processed.add(processor);
-			try (InputStream input = new URL(index.url).openStream()) {
-				r5provider.parseIndex(input, new URI(index.name), processor, null);
-			}
-		}
-
-		Set<File> resources = new HashSet<>();
-		for (ContentAccessRepositoryIndexProcessor processor : processed) {
-			for (LoadableArtifactDTO art : processor.getArtifacts()) {
-				// we know its a local artifact
-				resources.add(createLocalPath(processor, art));
-			}
-		}
-		// then create composite index:
-		File f = new File(baseFolder, "index.xml");
-		System.out.println("Creating composite index " + f.getAbsolutePath() + " for " + resources.size() + " resources in " + indexes.size() + " source streams." );
-
-		try (FileOutputStream fout = new FileOutputStream(f)) {
-			r5provider.generateIndex(resources, fout, def.name, baseFolder.toURI(), true, null, null);
-		}
-		return f.toURI();
+		return resources; 
 	}
 
-	@Override
-	public URI mirror(StreamSourceDTO src) throws Exception {
+	private List<URI> mirror(StreamSourceDTO src) throws Exception {
 		// calculate from index uri:
 		URI baseUri = new URI(src.url.substring(0, src.url.lastIndexOf("/") + 1));
-		return mirror(src.name, new URI(src.url), baseUri).toURI();
+		return mirror(src.name, new URI(src.url), baseUri);
 	}
 
-	private File mirror(String name, URI index, URI baseUri) throws Exception {
-		try (InputStream input = index.toURL().openStream()) {
+	private List<URI> mirror(String name, URI index, URI baseUri) throws Exception {
+		
+		//try (InputStream input = openStream(index)) {
+		try (BufferedSource s = Okio.buffer(Okio.source(openStream(index)))) {
 			IRepositoryContentProvider provider = selectProviderForProvidedIndex(index);
+
 			if (provider != null) {
 				ContentAccessRepositoryIndexProcessor processor = new ContentAccessRepositoryIndexProcessor(name);
-				provider.parseIndex(input, baseUri, processor, null);
-				List<File> indexable = new ArrayList<>();
+				provider.parseIndex(s.inputStream(), baseUri, processor, null);
+				List<URI> indexable = new ArrayList<>();
 				for (LoadableArtifactDTO artifact : processor.getArtifacts()) {
 					File localFile = download(name, artifact);
 					if (localFile != null) {
-						indexable.add(localFile);
+						indexable.add(localFile.toURI());
 					}
 				}
 				// Index:
-				return index(new File(baseFolder, name + "/" + getFileName(index.getPath())), indexable);
+				return indexable;
+				
 			} else {
 				throw new RuntimeException("Unsupported repository type! " + index.toASCIIString());
 			}
@@ -121,48 +109,28 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 
 	}
 
+	private InputStream openStream(URI index) throws IOException {
+		if (index.getPath().endsWith(".gz")) {
+			return new GZIPInputStream(index.toURL().openStream());
+		} else {
+			return index.toURL().openStream();
+
+		}
+	}
+
 	private IRepositoryContentProvider selectProviderForProvidedIndex(URI index)
 			throws IOException, MalformedURLException {
 		IRepositoryContentProvider provider = null;
 
 		for (IRepositoryContentProvider p : this.providers) {
-			if (p.checkStream(index.getPath(), index.toURL().openStream()).getDecision() == Decision.accept) {
+			if (p.checkStream(index.getPath(), openStream(index)).getDecision() == Decision.accept) {
 				provider = p;
 				break;
 			}
 		}
 		return provider;
 	}
-
-	private File index(File indexFileName, List<File> indexable) throws Exception, IOException, FileNotFoundException {
-		indexFileName.getParentFile().mkdirs();
-		try (OutputStream out = new FileOutputStream(indexFileName)) {
-			String repoName = "Mirror " + baseFolder.getName();
-
-			r5provider.generateIndex(new HashSet<File>(indexable), out, repoName, indexFileName.getParentFile().toURI(),
-					true, null, null);
-			System.out.println("Created index (" + indexFileName.getAbsolutePath() + ") for " + indexable.size()
-					+ " files in repo: " + repoName);
-		}
-
-		return indexFileName;
-	}
-
-	private String getFileName(String path) {
-		int idx = path.lastIndexOf("/");
-		if (idx >= 0) {
-			return path.substring(idx + 1);
-		} else {
-			return path;
-		}
-	}
 	
-	
-
-	private File createLocalPath(ContentAccessRepositoryIndexProcessor processor, LoadableArtifactDTO art) {
-		return new File(baseFolder, processor.getName() + "/" + art.getUri());
-	}
-
 	protected File download(String repoName, LoadableArtifactDTO artifact) throws Exception {
 		File target = new File(baseFolder, repoName + "/" + artifact.getUri().getPath());
 		if (!alreadyAvailable(target, artifact.getHash())) {
