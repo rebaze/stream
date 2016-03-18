@@ -9,11 +9,18 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rebaze.index.api.IndexAdmin;
+import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceResourcesDTO;
+import com.rebaze.tree.api.Tree;
+import com.rebaze.tree.api.TreeBuilder;
+import com.rebaze.tree.api.TreeSession;
+import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
+import com.rebaze.trees.core.internal.TreeConsoleFormatter;
 
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
+import aQute.lib.collections.SortedList;
 import okio.Okio;
 
 public class R5RepoMirrorAdminCli {
@@ -32,24 +39,41 @@ public class R5RepoMirrorAdminCli {
 				uri = new File(path).toURI();
 
 			}
+			File baseFolder = new File(dest);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			try (InputStream stream = uri.toURL().openStream()) {
 				StreamDefinitionDTO def = gson.fromJson(
 						new InputStreamReader(Okio.buffer(Okio.source(stream)).inputStream()),
 						StreamDefinitionDTO.class);
+				TreeSession session = new DefaultTreeSessionFactory().create("SHA-256");	
 				
-				MirrorAdmin mirrorAdmin = new R5RepoMirrorAdmin(new File(dest), def, new R5RepoContentProvider());
-				IndexAdmin indexer = new R5RepoIndexAdmin(new File(dest), def);
+				MirrorAdmin mirrorAdmin = new R5RepoMirrorAdmin(session, baseFolder, def, new R5RepoContentProvider());
+				IndexAdmin indexer = new R5RepoIndexAdmin(session, new File(dest));
 
 				System.out.println("Mirroring data: " + def.toString());
-				List<StreamSourceResourcesDTO> mirrored = mirrorAdmin.mirror();
+				List<ResourceDTO> remoteResources = mirrorAdmin.fetchResources();
+				Tree tree = session.reduce(indexer.createTree(remoteResources)); 	
+				new TreeConsoleFormatter().prettyPrint(tree);
 				
-				System.out.println("Indexing local data..");
-				indexer.index(mirrored);
+				// create packs:
+				List<ResourceDTO> localResources = mirrorAdmin.download(remoteResources);
+				
+				System.out.println("Indexing local data.." + localResources.size());
+				List<URI> indexes = indexer.index(localResources);
 
+				indexer.compositeIndex(indexes);
 				
+				// Put that into a descriptor format, name it STREAM
+				
+				// 
+				//mirrored.stream().map(x -> indexer.index(x));
+				// then create the compound index:
+				//mirrored.stream().map(s -> indexer.index(x)).collect();
+				//indexer.index()
 			}
 
 		}
 	}
+	
+
 }

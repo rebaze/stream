@@ -16,4 +16,6 @@ public interface TreeSession {
 
 	Tree createTree(Selector selector, String hashValue);
 
+	Tree reduce(Tree tree);
+
 }

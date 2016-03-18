@@ -7,18 +7,19 @@ import java.util.List;
 import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
 
-import com.rebaze.mirror.api.LoadableArtifactDTO;
+import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.stream.api.StreamSourceDTO;
 
 import aQute.bnd.deployer.repository.api.IRepositoryIndexProcessor;
 import aQute.bnd.deployer.repository.api.Referral;
 
 public class ContentAccessRepositoryIndexProcessor implements IRepositoryIndexProcessor {
 
-	private final List<LoadableArtifactDTO> list;
-	private String name;
+	private final List<ResourceDTO> list;
+	private StreamSourceDTO origin;
 
-	ContentAccessRepositoryIndexProcessor(String name) {
-		this.name = name;
+	ContentAccessRepositoryIndexProcessor(StreamSourceDTO origin) {
+		this.origin =origin;
 		this.list = new ArrayList<>();
 	}
 
@@ -30,7 +31,7 @@ public class ContentAccessRepositoryIndexProcessor implements IRepositoryIndexPr
 			URI url = (URI) c.getAttributes().get("url");
 			String hash = (String) c.getAttributes().get("osgi.content");
 			try {
-				list.add(new LoadableArtifactDTO(url, hash));
+				list.add(new ResourceDTO(origin, url, hash));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -42,11 +43,7 @@ public class ContentAccessRepositoryIndexProcessor implements IRepositoryIndexPr
 		
 	}
 	
-	public String getName() {
-		return this.name;
-	}
-
-	public List<LoadableArtifactDTO> getArtifacts() {
+	public List<ResourceDTO> getArtifacts() {
 		return list;
 	}
 }

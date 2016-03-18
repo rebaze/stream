@@ -5,10 +5,6 @@
 		pretty=true; \
 	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
-		name=Bndtools Hub; \
-		locations=https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz; \
-	, \
-	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Stream; \
-		locations=file:///Users/tonit/devel/rebaze/autocode/com.rebaze.osgirepo.materializer/target/repo/index.xml; 
+		locations=file://${workspace}/com.rebaze.osgirepo.materializer/target/repo/index.xml; 
 -releaserepo: Release

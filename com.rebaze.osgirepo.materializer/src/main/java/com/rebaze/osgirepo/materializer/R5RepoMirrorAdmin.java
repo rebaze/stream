@@ -20,7 +20,7 @@ import java.util.zip.GZIPInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rebaze.mirror.api.LoadableArtifactDTO;
+import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
@@ -45,68 +45,62 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 
 	private final Logger LOG = LoggerFactory.getLogger(R5RepoMirrorAdmin.class);
 	private OkHttpClient client = new OkHttpClient();
-	private TreeSession treeSession;
 
+	private TreeSession treeSession;
 	private final IRepositoryContentProvider[] providers;
-	// we create r5 indexes only:
-	private final R5RepoContentProvider r5provider = new R5RepoContentProvider();
 
 	private final File baseFolder;
 	private StreamDefinitionDTO definition;
 
-	public R5RepoMirrorAdmin(File base, StreamDefinitionDTO def, IRepositoryContentProvider... contentProviders) {
+	public R5RepoMirrorAdmin(TreeSession session, File base, StreamDefinitionDTO def, IRepositoryContentProvider... contentProviders) {
 		baseFolder = base;
 		providers = contentProviders;
 		this.definition = def;
-		this.treeSession = new DefaultTreeSessionFactory().create("SHA-256");	}
+		this.treeSession = session;
+	}
 	
 	@Override
-	public List<StreamSourceResourcesDTO> mirror() throws Exception {
+	public List<ResourceDTO> fetchResources() throws Exception {
 		// Mirror must return a set of "mirrored" resources per StreamSource
-		List<StreamSourceResourcesDTO> resources = new ArrayList<>();
+		List<ResourceDTO> resources = new ArrayList<>();
 		for (StreamSourceDTO src : definition.sources) {
 			if (src.active) {				
-				StreamSourceResourcesDTO local = new StreamSourceResourcesDTO();
-				local.url = src.url;
-				local.active = src.active;
-				local.name = src.name;
-				local.resources = mirror(src);
-				resources.add(local);
+				resources.addAll(fetchIndex(src));
 			}
 		}
 		return resources; 
 	}
 
-	private List<URI> mirror(StreamSourceDTO src) throws Exception {
-		// calculate from index uri:
-		URI baseUri = new URI(src.url.substring(0, src.url.lastIndexOf("/") + 1));
-		return mirror(src.name, new URI(src.url), baseUri);
-	}
 
-	private List<URI> mirror(String name, URI index, URI baseUri) throws Exception {
-		
+
+	private List<ResourceDTO> fetchIndex(StreamSourceDTO origin) throws Exception {
+		URI baseUri = new URI(origin.url.substring(0, origin.url.lastIndexOf("/") + 1));
+		URI index = new URI(origin.url);
+
 		//try (InputStream input = openStream(index)) {
 		try (BufferedSource s = Okio.buffer(Okio.source(openStream(index)))) {
 			IRepositoryContentProvider provider = selectProviderForProvidedIndex(index);
-
 			if (provider != null) {
-				ContentAccessRepositoryIndexProcessor processor = new ContentAccessRepositoryIndexProcessor(name);
+				ContentAccessRepositoryIndexProcessor processor = new ContentAccessRepositoryIndexProcessor(origin);
 				provider.parseIndex(s.inputStream(), baseUri, processor, null);
-				List<URI> indexable = new ArrayList<>();
-				for (LoadableArtifactDTO artifact : processor.getArtifacts()) {
-					File localFile = download(name, artifact);
-					if (localFile != null) {
-						indexable.add(localFile.toURI());
-					}
-				}
-				// Index:
-				return indexable;
-				
+				return processor.getArtifacts();	
 			} else {
 				throw new RuntimeException("Unsupported repository type! " + index.toASCIIString());
 			}
 		}
 
+	}
+	
+	@Override
+	public List<ResourceDTO> download(List<ResourceDTO> remoteList) throws Exception {
+		List<ResourceDTO> ret = new ArrayList<>(remoteList.size());
+		for (ResourceDTO loadable : remoteList) {
+			File target = createLocalName(loadable); // the expected file name
+			
+			ResourceDTO local = download(loadable,target);
+			ret.add(local);
+		}
+		return ret;
 	}
 
 	private InputStream openStream(URI index) throws IOException {
@@ -131,8 +125,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 		return provider;
 	}
 	
-	protected File download(String repoName, LoadableArtifactDTO artifact) throws Exception {
-		File target = new File(baseFolder, repoName + "/" + artifact.getUri().getPath());
+	protected ResourceDTO download( ResourceDTO artifact, File target) throws Exception {
 		if (!alreadyAvailable(target, artifact.getHash())) {
 			System.out.println("Downloading: " + target.getAbsolutePath());
 			target.getParentFile().mkdirs();
@@ -142,15 +135,20 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 				} else {
 					download(artifact.getUri(), target);
 				}
+				
 			}catch(Exception e) {
 				System.err.println("Unable to download " + artifact.getUri() + " Exception: " + e.getMessage());
-				target = null;
+				return null;
 			}
 		} else {
 			System.out.println("Already available: " + target.getAbsolutePath());
 		}
-		return target;
+		return new ResourceDTO(artifact.getOrigin(),target.toURI(),artifact.getHash());
 
+	}
+
+	private File createLocalName(ResourceDTO artifact) {
+		return new File(baseFolder, artifact.getOrigin().name + "/" + artifact.getUri().getPath());
 	}
 
 	private boolean alreadyAvailable(File target, String hash) {

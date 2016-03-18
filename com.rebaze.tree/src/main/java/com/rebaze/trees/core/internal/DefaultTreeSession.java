@@ -199,4 +199,13 @@ public class DefaultTreeSession implements TreeSession
         return createTree( selector, hashValue, new Tree[0], Tag.tag() );
     }
 
+    
+	@Override
+	public Tree reduce(Tree tree) {
+		if (tree.branches().length == 1) {
+			return reduce(tree.branches()[0]);
+		}
+		return tree;
+	}
+
 }
