@@ -6,5 +6,5 @@
 	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Stream; \
-		locations=file://${workspace}/com.rebaze.osgirepo.materializer/target/repo/index.xml; 
+		locations=file://${workspace}/com.rebaze.osgirepo.materializer/repo/index.xml; 
 -releaserepo: Release

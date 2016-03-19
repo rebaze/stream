@@ -1,4 +1,4 @@
-package com.rebaze.osgirepo.materializer;
+package com.rebaze.repository.cli;
 
 import java.io.File;
 import java.io.InputStream;
@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rebaze.index.api.IndexAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.osgirepo.materializer.R5RepoIndexAdmin;
+import com.rebaze.osgirepo.materializer.R5RepoMirrorAdmin;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceResourcesDTO;

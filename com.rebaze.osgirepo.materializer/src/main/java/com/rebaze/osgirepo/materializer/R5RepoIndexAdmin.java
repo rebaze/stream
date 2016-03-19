@@ -4,9 +4,7 @@ import static com.rebaze.tree.api.Selector.selector;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,9 +27,7 @@ import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
 
-import aQute.bnd.deployer.repository.api.IRepositoryContentProvider;
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
-import aQute.lib.collections.SortedList;
 import okio.BufferedSource;
 import okio.Okio;
 
@@ -124,9 +120,8 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 
 	@Override
 	public Tree createTree(String prefix, List<ResourceDTO> resources) {
-		List<ResourceDTO> sorted = new SortedList<>(resources);
-		List<TreePath> virtual = new ArrayList<>(sorted.size());
-		for (ResourceDTO thing : sorted) {
+		List<TreePath> virtual = new ArrayList<>(resources.size());
+		for (ResourceDTO thing : resources) {
 			virtual.add(TreePath.build(prefix, thing));
 		}
 		return indexPaths(virtual).seal();
@@ -172,6 +167,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 	}
 
 	private static class VirtualTree {
+		private static final String RESOURCE = "RESOURCE";
 		private List<TreePath> parts;
 		private Collection<VirtualTree> children;
 		private List<ResourceDTO> leafs;
@@ -190,7 +186,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 				String head = tree.getHead();
 				if (head == null) {
 					treeBuilder.branch(session.createTree(selector(tree.getTail()[0]), tree.resource.getHash(),
-							new Tree[0], Tag.tag("RESOURCE")));
+							new Tree[0], Tag.tag(RESOURCE)));
 					res.add(tree.getResource());
 				}
 			}

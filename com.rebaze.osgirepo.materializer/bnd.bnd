@@ -1,3 +1,6 @@
+Bundle-Name: R5RepoMirrorAdmin Service
+Bundle-Description: R5 Repository MirrorAdmin
+
 -buildpath: \
 	osgi.annotation;version=6.0.1,\
 	osgi.core;version=6.0,\
@@ -28,6 +31,6 @@ Private-Package: \
 Export-Package: com.rebaze.osgirepo.api
 Import-Package: \
 	!android.util,\
+	!javax.net.ssl,\
+	!javax.security.auth.x500,\
 	*
-	
--sub: *.bnd
