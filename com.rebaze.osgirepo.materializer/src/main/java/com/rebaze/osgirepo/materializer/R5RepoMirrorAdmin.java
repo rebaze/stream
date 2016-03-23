@@ -1,33 +1,31 @@
 package com.rebaze.osgirepo.materializer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.rebaze.mirror.api.ResourceDTO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rebaze.mirror.api.MirrorAdmin;
+import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
-import com.rebaze.stream.api.StreamSourceResourcesDTO;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeSession;
-import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -41,63 +39,99 @@ import okio.BufferedSource;
 import okio.Okio;
 import okio.Source;
 
+@Component(immediate = true, name = "R5RepoMirrorAdmin")
 public class R5RepoMirrorAdmin implements MirrorAdmin {
 
-	private final Logger LOG = LoggerFactory.getLogger(R5RepoMirrorAdmin.class);
-	private OkHttpClient client = new OkHttpClient();
+	private static final Logger LOG = LoggerFactory.getLogger(R5RepoMirrorAdmin.class);
 
-	private TreeSession treeSession;
-	private final IRepositoryContentProvider[] providers;
-
-	private final File baseFolder;
+	@Reference
 	private StreamDefinitionDTO definition;
 
-	public R5RepoMirrorAdmin(TreeSession session, File base, StreamDefinitionDTO def, IRepositoryContentProvider... contentProviders) {
-		baseFolder = base;
-		providers = contentProviders;
-		this.definition = def;
-		this.treeSession = session;
-	}
+	@Reference
+	private TreeSession treeSession;
 	
+	private final OkHttpClient client = new OkHttpClient();
+
+
+	// @Reference(cardinality=ReferenceCardinality.OPTIONAL)
+	private IRepositoryContentProvider[] providers = new IRepositoryContentProvider[] { new R5RepoContentProvider() };
+
+	@Activate
+	private void activate(ComponentContext context) {
+		LOG.info("#Mirror! Activating " + context.getProperties().get("component.name"));
+
+	}
+
+	@Deactivate
+	private void deactivate(ComponentContext context) {
+
+		LOG.info("# Mirror! Deactivating " + context.getProperties().get("component.name"));
+	}
+
+	// @Activate
+	void activate(MirrorConfig config) throws Exception {
+		if (1 == 1)
+			throw new RuntimeException("Activating a Mirror!!!");
+		URI uri = null;
+		if (config.definitionUri().contains("//:")) {
+			uri = new URI(config.definitionUri());
+		} else {
+			uri = new File(config.definitionUri()).toURI();
+
+		}
+		try (InputStream stream = uri.toURL().openStream()) {
+
+			final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			definition = gson.fromJson(new InputStreamReader(Okio.buffer(Okio.source(stream)).inputStream()),
+					StreamDefinitionDTO.class);
+		}
+	}
+
+	// testing and standalone constructor. Inject all references statically.
+	/**
+	 * public R5RepoMirrorAdmin(TreeSession session, MirrorConfig config,
+	 * IRepositoryContentProvider... contentProviders) throws Exception {
+	 * providers = contentProviders; this.treeSession = session;
+	 * activate(config); }
+	 **/
+
 	@Override
 	public List<ResourceDTO> fetchResources() throws Exception {
 		// Mirror must return a set of "mirrored" resources per StreamSource
 		List<ResourceDTO> resources = new ArrayList<>();
 		for (StreamSourceDTO src : definition.sources) {
-			if (src.active) {				
+			if (src.active) {
 				resources.addAll(fetchIndex(src));
 			}
 		}
-		return resources; 
+		return resources;
 	}
-
-
 
 	private List<ResourceDTO> fetchIndex(StreamSourceDTO origin) throws Exception {
 		URI baseUri = new URI(origin.url.substring(0, origin.url.lastIndexOf("/") + 1));
 		URI index = new URI(origin.url);
 
-		//try (InputStream input = openStream(index)) {
+		// try (InputStream input = openStream(index)) {
 		try (BufferedSource s = Okio.buffer(Okio.source(openStream(index)))) {
 			IRepositoryContentProvider provider = selectProviderForProvidedIndex(index);
 			if (provider != null) {
 				ContentAccessRepositoryIndexProcessor processor = new ContentAccessRepositoryIndexProcessor(origin);
 				provider.parseIndex(s.inputStream(), baseUri, processor, null);
-				return processor.getArtifacts();	
+				return processor.getArtifacts();
 			} else {
 				throw new RuntimeException("Unsupported repository type! " + index.toASCIIString());
 			}
 		}
 
 	}
-	
+
 	@Override
 	public List<ResourceDTO> download(List<ResourceDTO> remoteList) throws Exception {
 		List<ResourceDTO> ret = new ArrayList<>(remoteList.size());
 		for (ResourceDTO loadable : remoteList) {
 			File target = createLocalName(loadable); // the expected file name
-			
-			ResourceDTO local = download(loadable,target);
+
+			ResourceDTO local = download(loadable, target);
 			ret.add(local);
 		}
 		return ret;
@@ -124,31 +158,32 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 		}
 		return provider;
 	}
-	
-	protected ResourceDTO download( ResourceDTO artifact, File target) throws Exception {
+
+	protected ResourceDTO download(ResourceDTO artifact, File target) throws Exception {
 		if (!alreadyAvailable(target, artifact.getHash())) {
-			System.out.println("Downloading: " + target.getAbsolutePath());
-			target.getParentFile().mkdirs();
+			LOG.info("Downloading yes!: " + target.getAbsolutePath());
 			try {
+				target.getParentFile().mkdirs();
+
 				if ("file".equals(artifact.getUri().getScheme())) {
 					download(new File(artifact.getUri()), target);
 				} else {
 					download(artifact.getUri(), target);
 				}
-				
-			}catch(Exception e) {
-				System.err.println("Unable to download " + artifact.getUri() + " Exception: " + e.getMessage());
-				return null;
+
+			} catch (Exception e) {
+				LOG.error("Unable to download " + artifact.getUri(), e);
+				throw new RuntimeException("Unable to download",e);
 			}
 		} else {
 			System.out.println("Already available: " + target.getAbsolutePath());
 		}
-		return new ResourceDTO(artifact.getOrigin(),target.toURI(),artifact.getHash());
+		return new ResourceDTO(artifact.getOrigin(), target.toURI(), artifact.getHash());
 
 	}
 
 	private File createLocalName(ResourceDTO artifact) {
-		return new File(baseFolder, artifact.getOrigin().name + "/" + artifact.getUri().getPath());
+		return new File(definition.localPath, artifact.getOrigin().name + "/" + artifact.getUri().getPath());
 	}
 
 	private boolean alreadyAvailable(File target, String hash) {
@@ -167,6 +202,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 
 	protected void download(URI uri, File target) throws Exception {
 		Request request = new Request.Builder().url(uri.toURL()).build();
+		try {
 		Response response = client.newCall(request).execute();
 		ResponseBody body = response.body();
 
@@ -174,6 +210,9 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 		// body.contentType() + "..");
 		try (Source a = Okio.source(body.byteStream()); BufferedSink b = Okio.buffer(Okio.sink(target))) {
 			b.writeAll(a);
+		}
+		}catch(Throwable e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -183,4 +222,5 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 			b.writeAll(a);
 		}
 	}
+
 }

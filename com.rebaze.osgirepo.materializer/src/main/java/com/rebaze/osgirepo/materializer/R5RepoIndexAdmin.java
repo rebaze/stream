@@ -1,13 +1,10 @@
 package com.rebaze.osgirepo.materializer;
 
-import static com.rebaze.tree.api.Selector.selector;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,34 +12,53 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.blueprint.reflect.ServiceReferenceMetadata;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rebaze.index.api.IndexAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
 import com.rebaze.stream.api.StreamSourceResourcesDTO;
-import com.rebaze.tree.api.Tag;
-import com.rebaze.tree.api.Tree;
-import com.rebaze.tree.api.TreeBuilder;
-import com.rebaze.tree.api.TreeSession;
 
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
 import okio.BufferedSource;
 import okio.Okio;
 
+@Component(immediate=true)
 public class R5RepoIndexAdmin implements IndexAdmin {
 	private static final Logger LOG = LoggerFactory.getLogger(R5RepoIndexAdmin.class);
 
 	private final R5RepoContentProvider r5provider = new R5RepoContentProvider();
 
-	private TreeSession treeSession;
+	@Reference
+	private StreamDefinitionDTO definition;
 
-	private final File baseFolder;
-
-	public R5RepoIndexAdmin(TreeSession session, File base) {
-		this.baseFolder = base;
-		this.treeSession = session;
+	// used in OSGi with ConfigAdmin
+	public R5RepoIndexAdmin( ) {
+	}
+	
+	@Activate
+	private void activate(ComponentContext context ) {
+		LOG.info("# Activating " + context.getProperties().get("component.name"));
+	}
+	
+	@Deactivate
+	private void deactivate(ComponentContext context ) {
+		LOG.info("# Deactivating " + context.getProperties().get("component.name"));
+	}
+	
+	// testing constructor
+	public R5RepoIndexAdmin(StreamDefinitionDTO def) {
+		this.definition = def;
 	}
 
 	@Override
@@ -51,7 +67,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 		// indexes per origin repo:
 		Map<StreamSourceDTO, List<URI>> map = mapByOrigin(streamResources);
 		for (StreamSourceDTO origin : map.keySet()) {
-			URI singleIndexFile = index(new File(baseFolder, origin.name + "/" + getFileName(origin.url)),
+			URI singleIndexFile = index(new File(definition.localPath, origin.name + "/" + getFileName(origin.url)),
 					map.get(origin));
 			indexes.add(singleIndexFile);
 		}
@@ -91,13 +107,14 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 
 	@Override
 	public URI index(StreamSourceResourcesDTO index) {
-		return index(new File(baseFolder, index.name + "/" + getFileName(index.url)), index.resources);
+		return index(new File(definition.localPath, index.name + "/" + getFileName(index.url)).getAbsoluteFile(), index.resources);
 	}
 
 	private URI index(File indexFileName, List<URI> indexable) {
+		LOG.info("Indexing for " + indexFileName.getAbsolutePath());
 		indexFileName.getParentFile().mkdirs();
 		try (OutputStream out = new FileOutputStream(indexFileName)) {
-			String repoName = "Mirror " + baseFolder.getName();
+			String repoName = "Mirror " + definition.name;
 
 			r5provider.generateIndex(asLocal(indexable), out, repoName, indexFileName.getParentFile().toURI(), true,
 					null, null);
@@ -118,112 +135,6 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 		return ret;
 	}
 
-	@Override
-	public Tree createTree(String prefix, List<ResourceDTO> resources) {
-		List<TreePath> virtual = new ArrayList<>(resources.size());
-		for (ResourceDTO thing : resources) {
-			virtual.add(TreePath.build(prefix, thing));
-		}
-		return indexPaths(virtual).seal();
-	}
-
-	private TreeBuilder indexPaths(List<TreePath> virtual) {
-		TreeBuilder root = treeSession.createTreeBuilder();
-		new VirtualTree(treeSession, root, virtual);
-		return root;
-	}
-
-	private static class TreePath {
-		final private ResourceDTO resource;
-		final private String[] parts;
-
-		public static TreePath build(String prefix, ResourceDTO resource) {
-			String base = resource.getUri().getPath();
-			if (prefix != null) {
-				base = base.substring(prefix.length() + 1);
-			}
-			return new TreePath(base.split("/"), resource);
-		}
-
-		public TreePath(String[] parts, ResourceDTO resource) {
-			this.resource = resource;
-			this.parts = parts;
-		}
-
-		public String getHead() {
-			return (parts.length > 1) ? parts[0] : null;
-		}
-
-		public String[] getTail() {
-			if (parts.length == 1) {
-				return new String[] { parts[0] };
-			}
-			return Arrays.copyOfRange(parts, 1, parts.length);
-		}
-
-		public ResourceDTO getResource() {
-			return resource;
-		}
-	}
-
-	private static class VirtualTree {
-		private static final String RESOURCE = "RESOURCE";
-		private List<TreePath> parts;
-		private Collection<VirtualTree> children;
-		private List<ResourceDTO> leafs;
-		private TreeSession session;
-
-		VirtualTree(TreeSession session, TreeBuilder treeBuilder, List<TreePath> path) {
-			this.session = session;
-			this.parts = path;
-			children = buildChildren(treeBuilder);
-			leafs = buildLeafs(treeBuilder);
-		}
-
-		private List<ResourceDTO> buildLeafs(TreeBuilder treeBuilder) {
-			List<ResourceDTO> res = new ArrayList<>();
-			for (TreePath tree : parts) {
-				String head = tree.getHead();
-				if (head == null) {
-					treeBuilder.branch(session.createTree(selector(tree.getTail()[0]), tree.resource.getHash(),
-							new Tree[0], Tag.tag(RESOURCE)));
-					res.add(tree.getResource());
-				}
-			}
-			return res;
-		}
-
-		private Collection<VirtualTree> buildChildren(TreeBuilder treeBuilder) {
-			Map<String, List<TreePath>> map = new HashMap<>();
-			for (TreePath tree : parts) {
-				String head = tree.getHead();
-				if (head != null) {
-					List<TreePath> current = map.get(head);
-					if (current == null) {
-						current = new ArrayList<TreePath>();
-						map.put(head, current);
-					}
-					current.add(new TreePath(tree.getTail(), tree.resource));
-				}
-			}
-			List<VirtualTree> list = new ArrayList<>(map.size());
-			for (String head : map.keySet()) {
-				List<TreePath> paths = map.get(head);
-				list.add(new VirtualTree(session, treeBuilder.branch(selector(head)), paths));
-			}
-			return list;
-		}
-
-		public Collection<VirtualTree> getChildren() {
-			return children;
-		}
-
-		public List<ResourceDTO> getResources() {
-			return leafs;
-		}
-
-	}
-
 	private String getFileName(String path) {
 		// strip the gz
 		if (path.endsWith(".gz")) {
@@ -237,10 +148,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 		}
 	}
 
-	@Override
-	public Tree createTree(List<ResourceDTO> resources) {
-		return createTree(null, resources);
-	}
+	
 
 	@Override
 	public URI compositeIndex(List<URI> indexes) throws Exception {
@@ -260,7 +168,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 			}
 		}
 		// then create a single composite
-		URI composite = index(new File(baseFolder, "index.xml"), streamResources);
+		URI composite = index(new File(definition.localPath, "index.xml"), streamResources);
 		System.out.println("Created compositeIndex (" + composite.getPath() + ") for " + streamResources.size() + " resources from " + indexes.size() + " indexes.");
 		return composite;
 	}

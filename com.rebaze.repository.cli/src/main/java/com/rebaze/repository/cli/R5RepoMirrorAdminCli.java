@@ -8,10 +8,14 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.rebaze.distribution.Distribution;
+import com.rebaze.distribution.DistributionBuilder;
 import com.rebaze.index.api.IndexAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.osgirepo.materializer.MirrorConfig;
 import com.rebaze.osgirepo.materializer.R5RepoIndexAdmin;
 import com.rebaze.osgirepo.materializer.R5RepoMirrorAdmin;
+import com.rebaze.osgirepo.materializer.StreamPacker;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceResourcesDTO;
@@ -47,14 +51,18 @@ public class R5RepoMirrorAdminCli {
 				StreamDefinitionDTO def = gson.fromJson(
 						new InputStreamReader(Okio.buffer(Okio.source(stream)).inputStream()),
 						StreamDefinitionDTO.class);
-				TreeSession session = new DefaultTreeSessionFactory().create("SHA-256");	
+				def.localPath = baseFolder.getAbsolutePath();
+				TreeSession session = new DefaultTreeSessionFactory().create(def.hashAlgorithm);	
+				MirrorConfig config =  new MirrorConfig();
 				
-				MirrorAdmin mirrorAdmin = new R5RepoMirrorAdmin(session, baseFolder, def, new R5RepoContentProvider());
-				IndexAdmin indexer = new R5RepoIndexAdmin(session, new File(dest));
+				R5RepoMirrorAdmin mirrorAdmin = new R5RepoMirrorAdmin(session,  new R5RepoContentProvider());
+				mirrorAdmin.
+				IndexAdmin indexer = new R5RepoIndexAdmin(def);
+				DistributionBuilder dist = new StreamPacker();
 
 				System.out.println("Mirroring data: " + def.toString());
 				List<ResourceDTO> remoteResources = mirrorAdmin.fetchResources();
-				Tree tree = session.reduce(indexer.createTree(remoteResources)); 	
+				Tree tree = session.reduce(dist.createTree(remoteResources)); 	
 				new TreeConsoleFormatter().prettyPrint(tree);
 				
 				// create packs:

@@ -11,9 +11,7 @@ import java.util.List;
  */
 public interface MirrorAdmin {
 
-	public List<ResourceDTO> fetchResources() throws Exception;
+	List<ResourceDTO> fetchResources() throws Exception;
 
-	List<ResourceDTO> download(List<ResourceDTO> resource) throws Exception;
-	
-	
+	List<ResourceDTO> download(List<ResourceDTO> resource) throws Exception;	
 }
