@@ -96,13 +96,17 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	 **/
 
 	@Override
-	public List<ResourceDTO> fetchResources() throws Exception {
-		// Mirror must return a set of "mirrored" resources per StreamSource
+	public List<ResourceDTO> fetchResources() {
 		List<ResourceDTO> resources = new ArrayList<>();
+		try {
+		// Mirror must return a set of "mirrored" resources per StreamSource
 		for (StreamSourceDTO src : definition.sources) {
 			if (src.active) {
 				resources.addAll(fetchIndex(src));
 			}
+		}
+		} catch (Exception e) {
+			LOG.warn("Problem fetching resources.",e);
 		}
 		return resources;
 	}
@@ -126,13 +130,18 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	}
 
 	@Override
-	public List<ResourceDTO> download(List<ResourceDTO> remoteList) throws Exception {
+	public List<ResourceDTO> download(List<ResourceDTO> remoteList) {
+		
 		List<ResourceDTO> ret = new ArrayList<>(remoteList.size());
+		try {
 		for (ResourceDTO loadable : remoteList) {
 			File target = createLocalName(loadable); // the expected file name
 
 			ResourceDTO local = download(loadable, target);
 			ret.add(local);
+		}
+		} catch (Exception e) {
+			LOG.warn("Problem fetching resources.",e);
 		}
 		return ret;
 	}

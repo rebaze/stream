@@ -12,7 +12,7 @@
       "name":"amdatu_release",
       "url": "http://repository.amdatu.org/release/index.xml",
       "type": "OSGiR5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"maven_deps",

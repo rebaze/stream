@@ -1,6 +1,7 @@
 package com.rebaze.osgirepo.materializer;
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.felix.service.command.Descriptor;
 import org.osgi.service.component.ComponentContext;
@@ -8,6 +9,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,12 +48,17 @@ public class MirrorCommand {
 	
 	@Descriptor("build")
 	public void build() {
+		
 		System.out.println("MirrorCommand called!");
 		try {
-			List<ResourceDTO> res = mirrorAdmin.fetchResources();
-			List<ResourceDTO> local =  mirrorAdmin.download(res);
-			List<URI> indexes = indexAdmin.index(local);
-			indexAdmin.compositeIndex(indexes);
+			final CompletableFuture<List<ResourceDTO>> future = 
+				    CompletableFuture.supplyAsync(() -> mirrorAdmin.fetchResources());
+			// chain up the next steps:
+			future
+			.thenApply(resource -> mirrorAdmin.download(resource))
+			.thenApply(local -> indexAdmin.index(local))
+			.thenApply(indexes -> indexAdmin.compositeIndex(indexes));
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -151,7 +151,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 	
 
 	@Override
-	public URI compositeIndex(List<URI> indexes) throws Exception {
+	public URI compositeIndex(List<URI> indexes) {
 		List<URI> streamResources = new ArrayList<>();
 		StreamSourceDTO origin = new StreamSourceDTO();
 		origin.name = "composite";
@@ -160,11 +160,14 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 		for (URI index : indexes) {
 			URI base = new File(index).getParentFile().toURI();
 			// read that index and get their resources.
+			
 			try (BufferedSource s = Okio.buffer(Okio.source(index.toURL().openStream()))) {
 				r5provider.parseIndex(s.inputStream(), base , processor, null);
 				for (ResourceDTO res : processor.getArtifacts()) {
 					streamResources.add(res.getUri());
 				}
+			}catch(Exception e) {
+				LOG.warn("Problem opening index at " + index,e);
 			}
 		}
 		// then create a single composite
