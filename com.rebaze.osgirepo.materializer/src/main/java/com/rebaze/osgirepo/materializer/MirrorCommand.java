@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.rebaze.index.api.IndexAdmin;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.transport.api.TransportAgent;
 
 
 @Component(immediate=true, service = MirrorCommand.class, property = 
@@ -34,6 +35,12 @@ public class MirrorCommand {
 	@Reference 
 	MirrorAdmin mirrorAdmin; 
 	
+	@Reference 
+	TransportAgent transportAgent; 
+	
+	@Reference
+	MirrorAdmin p2miror; 
+	
 	@Activate
 	private void activate(ComponentContext context ) {
 		LOG.info("# Activating " + context.getProperties().get("component.name"));
@@ -44,20 +51,32 @@ public class MirrorCommand {
 		LOG.info("# Deactivating " + context.getProperties().get("component.name"));
 	}
 	
-//	private StreamDefinitionDTO definition;
-	
-	@Descriptor("build")
+	@Descriptor("mirror")
 	public void build() {
 		
 		System.out.println("MirrorCommand called!");
 		try {
 			final CompletableFuture<List<ResourceDTO>> future = 
 				    CompletableFuture.supplyAsync(() -> mirrorAdmin.fetchResources());
-			// chain up the next steps:
+			
+			// subsequent steps:
 			future
-			.thenApply(resource -> mirrorAdmin.download(resource))
+			.thenApply(resource -> transportAgent.transport(null,resource))
 			.thenApply(local -> indexAdmin.index(local))
 			.thenApply(indexes -> indexAdmin.compositeIndex(indexes));
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Descriptor("index")
+	public void index() {
+		
+		System.out.println("Index called!");
+		try {
+			
 			
 			
 		} catch (Exception e) {

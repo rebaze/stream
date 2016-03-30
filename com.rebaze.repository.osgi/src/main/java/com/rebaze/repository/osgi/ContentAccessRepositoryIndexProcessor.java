@@ -1,4 +1,4 @@
-package com.rebaze.osgirepo.materializer;
+package com.rebaze.repository.osgi;
 
 import java.net.URI;
 import java.util.ArrayList;

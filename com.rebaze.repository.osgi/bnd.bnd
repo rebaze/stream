@@ -1,0 +1,12 @@
+-buildpath: \
+	com.rebaze.api;version=latest,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	osgi.annotation;version=6.0,\
+	biz.aQute.bndlib;version=3.2,\
+	biz.aQute.repository;version=3.2,\
+	slf4j.api;version=1.7,\
+	okio;version=1.6
+Private-Package: \
+	com.rebaze.repository.osgi,\
+	okio

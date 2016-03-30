@@ -52,4 +52,12 @@
 	org.apache.felix.webconsole.plugins.event,\
 	org.apache.felix.webconsole.plugins.memoryusage,\
 	org.apache.felix.webconsole.plugins.scriptconsole,\
-	osgi.enroute.web.simple.provider
+	osgi.enroute.web.simple.provider,\
+	osgi.enroute.scheduler.simple.provider,\
+	com.rebaze.repository.maven;version=latest,\
+	com.rebaze.repository.osgi;version=latest,\
+	com.rebaze.repository.p2;version=latest,\
+	com.rebaze.transport.http;version=latest,\
+	com.rebaze.workspace.simple;version=latest,\
+	org.apache.commons.compress;version=1.10.0,\
+	osgi.enroute.executor.simple.provider;version=1.0.0

@@ -1,0 +1,19 @@
+-buildpath: \
+	com.rebaze.api;version=latest,\
+	osgi.annotation;version=6.0,\
+	osgi.core;version=6.0,\
+	osgi.cmpn;version=6.0,\
+	okhttp;version=2.7,\
+	okio;version=1.6,\
+	slf4j.api;version=1.7
+	
+Private-Package: \
+	okio,\
+	com.squareup.okhttp,\
+	com.squareup.okhttp.*,\
+	com.rebaze.transport.http
+	
+Import-Package: \
+	!android.util,\
+	!javax.security.auth.x500,\
+	*

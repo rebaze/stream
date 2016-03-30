@@ -13,5 +13,4 @@ public interface MirrorAdmin {
 
 	List<ResourceDTO> fetchResources();
 
-	List<ResourceDTO> download(List<ResourceDTO> resource);	
 }

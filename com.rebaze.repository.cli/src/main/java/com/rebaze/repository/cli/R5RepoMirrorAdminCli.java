@@ -13,9 +13,9 @@ import com.rebaze.distribution.DistributionBuilder;
 import com.rebaze.index.api.IndexAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.osgirepo.materializer.MirrorConfig;
-import com.rebaze.osgirepo.materializer.R5RepoIndexAdmin;
-import com.rebaze.osgirepo.materializer.R5RepoMirrorAdmin;
 import com.rebaze.osgirepo.materializer.StreamPacker;
+import com.rebaze.repository.osgi.R5RepoIndexAdmin;
+import com.rebaze.repository.osgi.R5RepoMirrorAdmin;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceResourcesDTO;
@@ -53,10 +53,10 @@ public class R5RepoMirrorAdminCli {
 						StreamDefinitionDTO.class);
 				def.localPath = baseFolder.getAbsolutePath();
 				TreeSession session = new DefaultTreeSessionFactory().create(def.hashAlgorithm);	
+				/**
 				MirrorConfig config =  new MirrorConfig();
 				
 				R5RepoMirrorAdmin mirrorAdmin = new R5RepoMirrorAdmin(session,  new R5RepoContentProvider());
-				mirrorAdmin.
 				IndexAdmin indexer = new R5RepoIndexAdmin(def);
 				DistributionBuilder dist = new StreamPacker();
 
@@ -72,6 +72,7 @@ public class R5RepoMirrorAdminCli {
 				List<URI> indexes = indexer.index(localResources);
 
 				indexer.compositeIndex(indexes);
+				**/
 				
 				// Put that into a descriptor format, name it STREAM
 				

@@ -5,8 +5,11 @@
 	
 Bundle-Version: 0.0.0.${tstamp}
 Export-Package: \
-	com.rebaze.tree.api,\
-	com.rebaze.stream.api,\
-	com.rebaze.mirror.api,\
+	com.rebaze.distribution,\
 	com.rebaze.index.api,\
-	com.rebaze.distribution
+	com.rebaze.mirror.api,\
+	com.rebaze.stream.api,\
+	com.rebaze.transport.api,\
+	com.rebaze.tree.api,\
+	com.rebaze.workspace
+	

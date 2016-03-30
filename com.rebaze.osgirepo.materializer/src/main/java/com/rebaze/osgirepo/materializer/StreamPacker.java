@@ -38,7 +38,6 @@ public class StreamPacker implements DistributionBuilder {
 		
 	}
 	
-
 	public Tree createTree(String prefix, List<ResourceDTO> resources) {
 		List<TreePath> virtual = new ArrayList<>(resources.size());
 		for (ResourceDTO thing : resources) {
