@@ -118,7 +118,7 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 
 			r5provider.generateIndex(asLocal(indexable), out, repoName, indexFileName.getParentFile().toURI(), true,
 					null, null);
-			System.out.println("Created index (" + indexFileName.getAbsolutePath() + ") for " + indexable.size()
+			LOG.info("Created index (" + indexFileName.getAbsolutePath() + ") for " + indexable.size()
 					+ " files in repo: " + repoName);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -139,6 +139,9 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 		// strip the gz
 		if (path.endsWith(".gz")) {
 			path = path.substring(0, path.length() - 3);
+		}
+		if (!path.endsWith(".xml")) {
+			path = path + ".xml";
 		}
 		int idx = path.lastIndexOf("/");
 		if (idx >= 0) {

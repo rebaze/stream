@@ -8,6 +8,7 @@ import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
 
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamSourceDTO;
 
 import aQute.bnd.deployer.repository.api.IRepositoryIndexProcessor;
@@ -31,7 +32,7 @@ public class ContentAccessRepositoryIndexProcessor implements IRepositoryIndexPr
 			URI url = (URI) c.getAttributes().get("url");
 			String hash = (String) c.getAttributes().get("osgi.content");
 			try {
-				list.add(new ResourceDTO(origin, url, hash));
+				list.add(new ResourceDTO(origin, url, hash, HashType.SHA256));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

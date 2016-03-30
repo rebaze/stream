@@ -75,7 +75,7 @@ public class HttpTransporter implements TransportAgent {
 		} else {
 			System.out.println("Already available: " + target.getAbsolutePath());
 		}
-		return new ResourceDTO(artifact.getOrigin(), target.toURI(), artifact.getHash());
+		return new ResourceDTO(artifact.getOrigin(), target.toURI(), artifact.getHash(),artifact.getHashType());
 	}
 
 	protected void download(URI uri, File target) throws Exception {

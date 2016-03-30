@@ -32,13 +32,12 @@ public class MirrorCommand {
 	@Reference 
 	IndexAdmin indexAdmin; 
 	
-	@Reference 
+	@Reference (target="(type=p2)")
 	MirrorAdmin mirrorAdmin; 
 	
 	@Reference 
 	TransportAgent transportAgent; 
 	
-	@Reference
 	MirrorAdmin p2miror; 
 	
 	@Activate

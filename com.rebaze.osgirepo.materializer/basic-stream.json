@@ -6,7 +6,7 @@
       "name":"biz.bnd.latest",
       "url": "https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles/index.xml",
       "type": "OSGiR5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.amdatu.release",
@@ -18,25 +18,26 @@
       "name":"local.maven_deps",
       "url": "file:///Users/tonit/devel/rebaze/autocode/com.rebaze.maven.dependencies/target/index.xml",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.osgi.enroute.latest",
       "url": "https://raw.githubusercontent.com/osgi/osgi.enroute/master/cnf/distro/index.xml",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.bndtools.bundle.hub",
       "url": "https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.eclipse.dist.mars",
       "url": "file:///Users/tonit/Desktop/org.eclipse.mars.p2",
       "type": "org.eclipse.p2",
-      "active":"false"
+      "active":"true",
+      "filter" : "(&(id=org.eclipse.osgi)(!(format=packed)))"
     }
   ]
 }

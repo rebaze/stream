@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
 
@@ -79,6 +80,12 @@ public class P2MirrorAdapter implements MirrorAdmin {
 
 	private static final String ATTR_OUTPUT = "output";
 
+	private static final Object TAG_ARTIFACT_PROPERTY = "property";
+
+	private static final String ATTR_NAME = "name";
+
+	private static final String ATTR_VALUE = "value";
+
 	@Reference
 	private StreamDefinitionDTO definition;
 	
@@ -123,7 +130,7 @@ public class P2MirrorAdapter implements MirrorAdmin {
 	public void readP2artifactsXml(List<ResourceDTO> result, StreamSourceDTO src, InputStream stream) throws IOException {
 		XMLStreamReader reader = null;
 		try {
-			Map<String,String> typeToPath = new HashMap<>();
+			Map<Filter,String> typeToPath = new HashMap<>();
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
 			inputFactory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
@@ -134,7 +141,8 @@ public class P2MirrorAdapter implements MirrorAdmin {
 			ParserState state = ParserState.beforeRoot;
 			
 			// Only valid within inArtifact:
-			Properties properties = new Properties();
+			Map<String,String> properties = new HashMap<>();
+
 			String classifier = null;
 			String id = null;
 			String version = null;
@@ -163,13 +171,15 @@ public class P2MirrorAdapter implements MirrorAdmin {
 							id = reader.getAttributeValue(null, ATTR_ID);
 							version = reader.getAttributeValue(null, ATTR_VERSION);
 							//LOG.info("ID: " +  id);
+						}else if (TAG_ARTIFACT_PROPERTY.equals(localName)) {
+							properties.put(reader.getAttributeValue(null, ATTR_NAME), reader.getAttributeValue(null, ATTR_VALUE));
 						}
 						break;
 					case inMappings:
 						if (TAG_RULE.equals(localName)) {
 							String filter = reader.getAttributeValue(null, ATTR_FILTER);
 							String output = reader.getAttributeValue(null, ATTR_OUTPUT);
-							typeToPath.put(filter, output);
+							typeToPath.put(new Filter(fixupString(filter)), output);
 						}
 						break;
 					}
@@ -179,8 +189,17 @@ public class P2MirrorAdapter implements MirrorAdmin {
 					if (state == ParserState.inArtifacts && TAG_ARTIFACT.equals(localName)) {
 						//state = ParserState.inArtifacts;
 						// here we need to feed the result list:
-						String path = resolvePath(src, typeToPath,classifier,id,version);
-						result.add( resource( src, path, (String)properties.get("download.md5")));
+						properties.put("id",id);
+						properties.put("classifier",classifier);
+						properties.put("version",version);
+						properties.put("repoUrl",src.url); 
+						String path = resolvePath(src, typeToPath,properties);
+						
+						ResourceDTO resource = resource( src, path, (String)properties.get("download.md5"), ResourceDTO.HashType.MD5);
+						if (filter(resource,properties)) {
+							result.add( resource);
+							
+						}
 						properties.clear();
 					}
 					if (state == ParserState.inMappings && TAG_MAPPINGS.equals(localName))
@@ -200,12 +219,38 @@ public class P2MirrorAdapter implements MirrorAdmin {
 				} catch (XMLStreamException e) {
 				}
 		}
+		// at the end: block!
+		LOG.info("RESULT: " + result.size());
 	}
 
-	private ResourceDTO resource( StreamSourceDTO src, String uri, String hash) {
+	// kill whitespace..
+	private String fixupString(String s) {
+		StringBuilder sb = new StringBuilder();
+		int len = s.length();
+		for (int i = 0; i < len; i++) {
+			char c = s.charAt(i);
+			if (!Character.isWhitespace(c)) {
+				if (Character.isUpperCase(c))
+					c = Character.toLowerCase(c);
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+
+	private boolean filter(ResourceDTO resource, Map<?,?> props) {
+		String given = resource.getOrigin().filter;
+		if (given != null) {
+			Filter filter = new Filter(given);
+			return filter.matchMap(props);
+		}else {
+			return true;
+		}
+	}
+
+	private ResourceDTO resource( StreamSourceDTO src, String uri, String hash,HashType hashType) {
 		try {
-			ResourceDTO res =  new ResourceDTO(src, new URI(uri), hash);
-			//LOG.info("New Resource " + res);
+			ResourceDTO res =  new ResourceDTO(src, new URI(uri), hash,hashType);
 			return res;
 			
 		}catch(Exception e) {
@@ -213,26 +258,23 @@ public class P2MirrorAdapter implements MirrorAdmin {
 		}
 	}
 
-	private String resolvePath(StreamSourceDTO src, Map<String, String> typeToPath, String classifier, String id, String version) {
+	private String resolvePath(StreamSourceDTO src, Map<Filter, String> typeToPath, Map<String,String> properties) {
 		// test filters using osgi filter expr and math a path. Then resolve the path using inputs:
-		String mask = "";
-		for (String key : typeToPath.keySet()) {
+		String mask = null;
+		for (Filter key : typeToPath.keySet()) {
 			// use osgi filter resolver later:
-			if (key.contains(classifier)) {
+			if (key.matchMap(properties)) {
 				mask = typeToPath.get(key);
+				break;
 			}
 		}
-		
-		return resolveMask(src, mask,classifier,id,version);
+		return resolveMask(src, mask,properties);
 	}
 
-	private String resolveMask(StreamSourceDTO src, String mask, String classifier, String id, String version) {
-		// just replace the variables in mask:
-		// replace repourl too.
-		mask = simpleReplace(mask,"repoUrl",src.url);
-		mask = simpleReplace(mask,"id",id);
-		mask = simpleReplace(mask,"version",version);
-		mask = simpleReplace(mask,"classifier",classifier);
+	private String resolveMask(StreamSourceDTO src, String mask, Map<String,String> properties) {
+		for (String key : properties.keySet()) {
+			mask = simpleReplace(mask,key,properties.get(key));
+		}
 		return mask;
 	}
 	

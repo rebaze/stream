@@ -9,13 +9,14 @@ import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.tree.api.TreeSessionFactory;
 import com.rebaze.workspace.WorkspaceAdmin;
 
 @Component
 public class SimpleWorkspaceAdmin implements WorkspaceAdmin {
 
 	@Reference
-	private TreeSession treeSession;
+	private TreeSessionFactory treeFactory;
 	
 	@Reference
 	private StreamDefinitionDTO definition;
@@ -29,7 +30,8 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin {
 	public boolean existsInWorkspace(ResourceDTO res) {
 		File target = getPathFor(res);
 		if (target.exists()) {
-			Tree tree = treeSession.createStreamTreeBuilder().add(target).seal();
+			// TODO: Cache this:
+			Tree tree = treeFactory.create(res.getHashType().name()).createStreamTreeBuilder().add(target).seal();
 			if (res.getHash() == null || !res.getHash().equals(tree.fingerprint())) {
 				System.err.println("Bad checksum: " + res.getHash() + "(we have " + tree.fingerprint() + "): Redownload.");
 				return false;

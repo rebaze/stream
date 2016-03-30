@@ -2,18 +2,25 @@ package com.rebaze.mirror.api;
 
 import java.net.URI;
 
+import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamSourceDTO;
 
 public class ResourceDTO  {
 	
+	public static enum HashType {
+		SHA1,SHA256,MD5
+	}
+	
 	final StreamSourceDTO origin;
 	final private String hash;
 	final private URI uri;
+	final private HashType hashtype;
 	
-	public ResourceDTO(StreamSourceDTO origin, URI uri, String hash) {
+	public ResourceDTO(StreamSourceDTO origin, URI uri, String hash, HashType hashType) {
 		this.origin = origin;
 		this.uri = uri;
 		this.hash = hash;
+		this.hashtype = hashType;
 	}
 
 	public StreamSourceDTO getOrigin() {
@@ -27,10 +34,14 @@ public class ResourceDTO  {
 	public URI getUri() {
 		return uri;
 	}
+	
+	public boolean isHashType(HashType type) {
+		return type == hashtype;
+	}
 
 	@Override
 	public String toString() {
-		return "ResourceDTO [origin=" + origin + ", hash=" + hash + ", uri=" + uri + "]";
+		return "ResourceDTO [origin=" + origin + ", hash=" + hash + ", hashtype=" + hashtype + ", uri=" + uri + "]";
 	}
 
 	@Override
@@ -68,5 +79,9 @@ public class ResourceDTO  {
 		} else if (!uri.equals(other.uri))
 			return false;
 		return true;
+	}
+
+	public HashType getHashType() {
+		return hashtype;
 	}
 }
