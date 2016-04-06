@@ -12,11 +12,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -28,13 +27,13 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.mirror.api.ResourceDTO.HashType;
-import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
 
 import okio.Buffer;
@@ -52,6 +51,8 @@ import okio.Okio;
 @Component(property = "type=p2")
 public class P2MirrorAdapter implements MirrorAdmin {
 
+	private static final Logger LOG = LoggerFactory.getLogger(P2MirrorAdapter.class);
+
 	public static final String NAME = "P2";
 
 	private static final String INDEX_NAME_COMPRESSED = "artifacts.jar";
@@ -65,9 +66,7 @@ public class P2MirrorAdapter implements MirrorAdmin {
 	private static final String TAG_ARTIFACT = "artifact";
 
 	private static final String ATTR_TYPE = "type";
-
-	private static final Logger LOG = LoggerFactory.getLogger(P2MirrorAdapter.class);
-
+	
 	public static final String TYPE = "org.eclipse.p2";
 
 	private static final String ATTR_CLASSIFIER = "classifier";
@@ -86,42 +85,43 @@ public class P2MirrorAdapter implements MirrorAdmin {
 
 	private static final String ATTR_VALUE = "value";
 
-	@Reference
-	private StreamDefinitionDTO definition;
+	//@Reference(target="(type="+TYPE+")")
+	//private StreamDefinitionDTO definition;
+		
+	@Reference(target="(type="+TYPE+")")
+	private List<StreamSourceDTO> source;
 	
 	public P2MirrorAdapter() {
-		// TODO Auto-generated constructor stub
 	}
 	
-	public P2MirrorAdapter(StreamDefinitionDTO def) {
-		this.definition = def;
+	public P2MirrorAdapter(StreamSourceDTO... src) {
+		this.source = Arrays.asList(src);
 	}
 
 	@Override
 	public List<ResourceDTO> fetchResources() {
 		List<ResourceDTO> resources = new ArrayList<>();
-		try {
-			// Mirror must return a set of "mirrored" resources per StreamSource
-			for (StreamSourceDTO src : definition.sources) {
-				if (TYPE.equals(src.type) && src.active) {
-					resources.addAll(fetchIndex(src));
-				}
-
-			}
-		} catch (Exception e) {
-			LOG.warn("Problem fetching resources.", e);
+		for (StreamSourceDTO src : source) {
+			resources.addAll(fetchIndex(src));
 		}
+		//return (source.stream().map(s -> fetchIndex(s)).collect(Collectors.toList());;
+		
 		return resources;
 	}
 
-	private Collection<? extends ResourceDTO> fetchIndex(StreamSourceDTO src) throws Exception {
+	private List<ResourceDTO> fetchIndex(StreamSourceDTO src) {
 		List<ResourceDTO> ret = new ArrayList<>();
-		String archive = src.url + "/" + INDEX_NAME_COMPRESSED;
-		try (InputStream inp = extractSingle(archive, INDEX_NAME_PRETTY).inputStream()) {
-			readP2artifactsXml(ret,src, inp);
+		try {
+			String archive = src.url + "/" + INDEX_NAME_COMPRESSED;
+			try (InputStream inp = extractSingle(archive, INDEX_NAME_PRETTY).inputStream()) {
+				readP2artifactsXml(ret,src, inp);
+			}
+		}catch(Exception e) {
+			throw new RuntimeException(e);
 		}
 		return ret;
 	}
+	
 
 	private static enum ParserState {
 		beforeRoot, inRoot, inMappings, inArtifacts
@@ -220,7 +220,7 @@ public class P2MirrorAdapter implements MirrorAdmin {
 				}
 		}
 		// at the end: block!
-		LOG.info("RESULT: " + result.size());
+		//LOG.info("RESULT: " + result.size());
 	}
 
 	// kill whitespace..

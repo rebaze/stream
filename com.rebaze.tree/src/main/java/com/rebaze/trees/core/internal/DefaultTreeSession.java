@@ -137,7 +137,7 @@ public class DefaultTreeSession implements TreeSession {
 		try {
 			return MessageDigest.getInstance(digest);
 		} catch (NoSuchAlgorithmException e) {
-			throw new TreeException("Problem loading digest with algorthm.");
+			throw new TreeException("Problem loading digest with algorthm: digest",e);
 		}
 	}
 

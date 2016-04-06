@@ -1,4 +1,4 @@
-package com.rebaze.osgirepo.materializer;
+package com.rebaze.stream.app;
 
 import static com.rebaze.tree.api.Selector.selector;
 

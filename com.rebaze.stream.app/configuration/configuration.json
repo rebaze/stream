@@ -1,0 +1,19 @@
+[
+	{
+		"service.pid": "org.apache.felix.http",
+		"org.apache.felix.http.enable": true,
+		"org.osgi.service.http.port": 8088,
+		"org.apache.felix.http.debug": true
+	},
+	{
+		"service.pid": "com.rebaze.stream.configuration",
+		"streamLocation" : "basic-stream.json"
+		
+	},
+	{
+		"service.factoryPid": "aQute.executor.ExecutorImpl",
+		"service.pid": "DefaultExecutor",
+		"type": "FIXED",
+		"size": 10
+	}
+]

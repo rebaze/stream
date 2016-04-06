@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
-import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
 import com.rebaze.tree.api.TreeSession;
 
@@ -28,16 +27,16 @@ import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
 import okio.BufferedSource;
 import okio.Okio;
 
-@Component(immediate = true, name = "R5RepoMirrorAdmin")
+@Component(property = "type=r5")
 public class R5RepoMirrorAdmin implements MirrorAdmin {
 
 	private static final Logger LOG = LoggerFactory.getLogger(R5RepoMirrorAdmin.class);
 
-	private static final String R5TYPE = "org.osgi.r5";
-
-	@Reference
-	private StreamDefinitionDTO definition;
-
+	private static final String TYPE = "org.osgi.r5";
+	
+	@Reference(target="(type="+TYPE+")")
+	private List<StreamSourceDTO> source;
+	
 	@Reference
 	private TreeSession treeSession;
 
@@ -69,15 +68,11 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	public List<ResourceDTO> fetchResources() {
 		List<ResourceDTO> resources = new ArrayList<>();
 		try {
-		// Mirror must return a set of "mirrored" resources per StreamSource
-		for (StreamSourceDTO src : definition.sources) {
-				if (R5TYPE.equals(src.type) && src.active) {
-					resources.addAll(fetchIndex(src));
-				}
-			
-		}
+			for (StreamSourceDTO s : source) {
+				resources.addAll(fetchIndex(s));
+			}
 		} catch (Exception e) {
-			LOG.warn("Problem fetching resources.",e);
+			LOG.error("Problem fetching resources.",e);
 		}
 		return resources;
 	}
@@ -97,10 +92,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 				throw new RuntimeException("Unsupported repository type! " + index.toASCIIString());
 			}
 		}
-
-	}
-
-	
+	}	
 
 	private InputStream openStream(URI index) throws IOException {
 		if (index.getPath().endsWith(".gz")) {

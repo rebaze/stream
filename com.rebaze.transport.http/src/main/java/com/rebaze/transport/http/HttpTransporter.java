@@ -47,9 +47,10 @@ public class HttpTransporter implements TransportAgent {
 			for (ResourceDTO loadable : resources) {
 				File target = workspaceAdmin.getPathFor(loadable); // the expected file
 															// name
-
-				ResourceDTO local = download(loadable, target);
-				ret.add(local);
+				ResourceDTO local = download(loadable, target, monitor);
+				if (local != null) {
+					ret.add(local);
+				}
 			}
 		} catch (Exception e) {
 			LOG.warn("Problem fetching resources.", e);
@@ -57,11 +58,11 @@ public class HttpTransporter implements TransportAgent {
 		return ret;
 	}
 	
-	protected ResourceDTO download(ResourceDTO artifact, File target) throws Exception {
+	protected ResourceDTO download(ResourceDTO artifact, File target, TransportMonitor monitor) throws Exception {
 		if (!workspaceAdmin.existsInWorkspace(artifact)) {
-			LOG.info("Downloading yes!: " + target.getAbsolutePath());
 			try {
 				target.getParentFile().mkdirs();
+				monitor.transporting(artifact);
 				if ("file".equals(artifact.getUri().getScheme())) {
 					download(new File(artifact.getUri()), target);
 				} else {
@@ -72,10 +73,10 @@ public class HttpTransporter implements TransportAgent {
 				LOG.error("Unable to download " + artifact.getUri(), e);
 				throw new RuntimeException("Unable to download", e);
 			}
-		} else {
-			System.out.println("Already available: " + target.getAbsolutePath());
+			return new ResourceDTO(artifact.getOrigin(), target.toURI(), artifact.getHash(),artifact.getHashType());
+		}else {
+			return null;
 		}
-		return new ResourceDTO(artifact.getOrigin(), target.toURI(), artifact.getHash(),artifact.getHashType());
 	}
 
 	protected void download(URI uri, File target) throws Exception {

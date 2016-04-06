@@ -19,7 +19,8 @@ public class P2MirrorAdapterTest {
 		def.sources = new StreamSourceDTO[] {
 				stream("file:///Users/tonit/Desktop/jenkinshome/mirror")
 		};
-		P2MirrorAdapter mirror = new P2MirrorAdapter(def);
+		P2MirrorAdapter mirror = new P2MirrorAdapter();
+		
 		List<ResourceDTO> resources = mirror.fetchResources();
 		assertEquals(22927,resources.size());
 		

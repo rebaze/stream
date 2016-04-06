@@ -2,4 +2,9 @@
 	com.rebaze.api;version=latest,\
 	osgi.core;version=6.0,\
 	osgi.cmpn;version=6.0,\
-	slf4j.api;version=1.7
+	slf4j.api;version=1.7,\
+	osgi.enroute.base.api
+	
+-testpath: \
+	junit; version=4,\
+	hamcrest-core; version=1.3

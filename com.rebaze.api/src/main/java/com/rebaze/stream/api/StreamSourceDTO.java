@@ -7,7 +7,7 @@ public class StreamSourceDTO extends DTO {
 	public String name;
 	public String url;
 	public String type;
-	public String filter;
+	public String filter = null;
 
 	public boolean active = true;
 	
