@@ -1,36 +1,37 @@
 {
   "name" : "stream.basic.osgi",
   "version" : "1",
+  "description" : "",
   "sources": [
     {
       "name":"biz.bnd.latest",
       "url": "https://bndtools.ci.cloudbees.com/job/bnd.master/lastSuccessfulBuild/artifact/dist/bundles/index.xml",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.amdatu.release",
       "url": "http://repository.amdatu.org/release/index.xml",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"local.maven_deps",
       "url": "file:///Users/tonit/devel/rebaze/autocode/com.rebaze.maven.dependencies/target/index.xml",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.osgi.enroute.latest",
       "url": "https://raw.githubusercontent.com/osgi/osgi.enroute/master/cnf/distro/index.xml",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.bndtools.bundle.hub",
       "url": "https://raw.githubusercontent.com/bndtools/bundle-hub/master/index.xml.gz",
       "type": "org.osgi.r5",
-      "active":"true"
+      "active":"false"
     },
     {
       "name":"org.eclipse.dist.mars.frameworks",

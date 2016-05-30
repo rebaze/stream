@@ -2,7 +2,6 @@ package com.rebaze.mirror.api;
 
 import java.net.URI;
 
-import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamSourceDTO;
 
 public class ResourceDTO {
@@ -18,7 +17,7 @@ public class ResourceDTO {
 			return val;
 		}
 	}
-
+	
 	final StreamSourceDTO origin;
 	final private String hash;
 	final private URI uri;

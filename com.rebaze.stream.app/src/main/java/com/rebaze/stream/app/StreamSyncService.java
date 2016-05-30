@@ -22,6 +22,7 @@ import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.transport.api.TransportAgent;
 import com.rebaze.transport.api.TransportMonitor;
+import com.rebaze.workspace.api.ResourceLink;
 
 import osgi.enroute.scheduler.api.Scheduler;
 
@@ -43,7 +44,7 @@ public class StreamSyncService implements TransportMonitor
     @Reference( target = "(type=composite)" )
     MirrorAdmin mirrorAdmin;
 
-    private transient CompletableFuture<List<ResourceDTO>> pipe;
+    private transient CompletableFuture<List<ResourceLink>> pipe;
 
     @Reference
     TransportAgent transportAgent;
@@ -92,6 +93,10 @@ public class StreamSyncService implements TransportMonitor
                             .supplyAsync( () -> mirrorAdmin.fetchResources() );
                     // subsequent steps:
                     pipe = future.thenApply( resource -> transportAgent.transport( this, resource ) );
+                    // then create a r5 distribution:
+                    
+                    // update distribution, which might be just like a workspace.
+                    
                     pipe.whenComplete( (complete,e) -> LOG.info("Complete new artifacts in store: " + complete.size() ) );
                 }
                 catch ( Exception e )

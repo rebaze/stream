@@ -27,7 +27,6 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +87,7 @@ public class P2MirrorAdapter implements MirrorAdmin {
 	//@Reference(target="(type="+TYPE+")")
 	//private StreamDefinitionDTO definition;
 		
-	@Reference(target="(type="+TYPE+")")
+	@Reference(target="(&(type="+TYPE+")(active=true))")
 	private List<StreamSourceDTO> source;
 	
 	public P2MirrorAdapter() {
@@ -300,4 +299,10 @@ public class P2MirrorAdapter implements MirrorAdmin {
 		}
 		return content;
 	}
+	
+
+    @Override
+    public String toString() {
+        return "[P2MirrorAdapter]";
+    }
 }

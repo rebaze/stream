@@ -1,0 +1,21 @@
+{
+	"links": 
+	[
+		{
+			"name": "jira",
+			"url": "http://jira.company.com",
+			"access-types" : [ "website", "api" ],
+			"auth-type": "company-ldap"
+		},
+		{
+			"name": "scm",
+			"url": "http://github.com/rebaze",
+			"access-types" : [ "website", "api" ],
+			"auth-type": "company-ldap"
+		}, 
+		{
+			"name" : "build",
+			"url" : ""
+		}
+	]
+}

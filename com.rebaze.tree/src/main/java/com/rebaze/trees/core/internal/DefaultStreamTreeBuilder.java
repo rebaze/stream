@@ -89,7 +89,7 @@ public class DefaultStreamTreeBuilder implements StreamTreeBuilder
 
     public void reset()
     {
-        m_dataAmountRead = 0L;
+        m_dataAmountRead = 0L; 
     }
 
     @Override

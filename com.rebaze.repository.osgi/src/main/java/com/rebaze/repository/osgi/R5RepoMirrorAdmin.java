@@ -34,7 +34,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 
 	private static final String TYPE = "org.osgi.r5";
 	
-	@Reference(target="(type="+TYPE+")")
+	@Reference(target="(&(type="+TYPE+")(active=true))")
 	private List<StreamSourceDTO> source;
 	
 	@Reference
@@ -114,5 +114,10 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 			}
 		}
 		return provider;
+	}
+	
+	@Override
+	public String toString() {
+	    return "[R5RepoMirrorAdmin]";
 	}
 }

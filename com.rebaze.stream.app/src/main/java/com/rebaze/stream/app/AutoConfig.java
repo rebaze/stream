@@ -77,6 +77,7 @@ public class AutoConfig
                 Dictionary<String, String> dict = new Hashtable<>();
                 dict.put( "name", src.name );
                 dict.put( "type", src.type );
+                dict.put( "active", new Boolean(src.active).toString() );
                 if (src.filter != null) {
                     dict.put( "filter", src.filter );
                 }

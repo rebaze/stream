@@ -1,2 +1,2 @@
 @org.osgi.annotation.versioning.Version("1.0.0")
-package com.rebaze.workspace;
+package com.rebaze.workspace.api;
