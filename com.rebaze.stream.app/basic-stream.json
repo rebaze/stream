@@ -25,7 +25,7 @@
       "name":"org.osgi.enroute.latest",
       "url": "https://raw.githubusercontent.com/osgi/osgi.enroute/master/cnf/distro/index.xml",
       "type": "org.osgi.r5",
-      "active":"false"
+      "active":"true"
     },
     {
       "name":"org.bndtools.bundle.hub",

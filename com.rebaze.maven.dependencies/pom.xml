@@ -131,7 +131,21 @@
 			<artifactId>pax-logging-service</artifactId>
 			<version>1.8.5</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.eclipsesource.jaxrs</groupId>
+			<artifactId>jersey-all</artifactId>
+			<version>2.22.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eclipsesource.jaxrs</groupId>
+			<artifactId>jersey-all</artifactId>
+			<version>2.22.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.eclipsesource.jaxrs</groupId>
+			<artifactId>publisher</artifactId>
+			<version>5.3.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

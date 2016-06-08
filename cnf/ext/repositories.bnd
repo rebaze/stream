@@ -9,6 +9,10 @@
 		locations=file:///Users/tonit/Desktop/target/repo/index.xml; \
 	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
+		name=Maven Central; \
+		locations=file://${workspace}/com.rebaze.maven.dependencies/target/index.xml.gz; \
+	, \
+	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Eclipse Mars; \
 		locations=file://${workspace}/com.rebaze.osgirepo.materializer/target/repo/org.eclipse.dist.mars/org.eclipse.mars.p2.xml; 
 		

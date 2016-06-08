@@ -3,7 +3,7 @@
 		"service.pid": "org.apache.felix.http",
 		"org.apache.felix.http.enable": true,
 		"org.osgi.service.http.port": 8088,
-		"org.apache.felix.http.debug": true
+		"org.apache.felix.http.debug": false
 	},
 	{
 		"service.pid": "com.rebaze.stream.configuration",
@@ -15,5 +15,9 @@
 		"service.pid": "DefaultExecutor",
 		"type": "FIXED",
 		"size": 10
+	},
+	{
+		"service.pid": "com.eclipsesource.jaxrs.connector",
+		"root": "/services"
 	}
 ]

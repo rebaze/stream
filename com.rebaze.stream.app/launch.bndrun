@@ -64,5 +64,7 @@
 	com.rebaze.stream.app;version=latest,\
 	org.ops4j.pax.logging.pax-logging-service,\
 	org.ops4j.pax.logging.pax-logging-api,\
-	osgi.enroute.rest.simple.provider
+	osgi.enroute.rest.simple.provider,\
+	com.eclipsesource.jaxrs.jersey-all,\
+	com.eclipsesource.jaxrs.publisher
 	

@@ -15,7 +15,8 @@ Bundle-Name: Rebaze Stream App
 	slf4j.simple;version=1.7,\
 	org.apache.felix.gogo.runtime,\
 	org.apache.commons.compress,\
-	osgi.enroute.base.api
+	osgi.enroute.base.api,\
+	com.eclipsesource.jaxrs.jersey-all;version=2.22
 
 -testpath: \
 	junit; version=4,\

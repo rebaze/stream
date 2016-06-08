@@ -2,7 +2,6 @@ package com.rebaze.workspace.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Hashtable;
 
 import com.rebaze.mirror.api.ResourceDTO.HashType;
 
