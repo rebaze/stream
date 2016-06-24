@@ -3,6 +3,7 @@ package com.rebaze.trees.ext.operators;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertNotEquals;
 public class CombinatorIntegrityTest
 {
     private TreeConsoleFormatter formatter = new TreeConsoleFormatter();
-    private TreeSession session =  new DefaultTreeSessionFactory().create();
+    private TreeSession session =  new DefaultTreeSessionFactory().getTreeSession(HashAlgorithm.SHA1);
 
     @Ignore
     @Test

@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
-import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamSourceDTO;
+import com.rebaze.tree.api.HashAlgorithm;
 
 import okio.Buffer;
 import okio.Okio;
@@ -194,7 +194,7 @@ public class P2MirrorAdapter implements MirrorAdmin {
 						properties.put("repoUrl",src.url); 
 						String path = resolvePath(src, typeToPath,properties);
 						
-						ResourceDTO resource = resource( src, path, (String)properties.get("download.md5"), ResourceDTO.HashType.MD5);
+						ResourceDTO resource = resource( src, path, (String)properties.get("download.md5"), HashAlgorithm.MD5);
 						if (filter(resource,properties)) {
 							result.add( resource);
 							
@@ -247,7 +247,7 @@ public class P2MirrorAdapter implements MirrorAdmin {
 		}
 	}
 
-	private ResourceDTO resource( StreamSourceDTO src, String uri, String hash,HashType hashType) {
+	private ResourceDTO resource( StreamSourceDTO src, String uri, String hash, HashAlgorithm hashType) {
 		try {
 			ResourceDTO res =  new ResourceDTO(src, new URI(uri), hash,hashType);
 			return res;

@@ -3,7 +3,11 @@ package com.rebaze.workspace.api;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import com.rebaze.mirror.api.ResourceDTO.HashType;
+import com.rebaze.tree.api.HashAlgorithm;
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.StaticTree;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
 
 /**
  * Format URI: streamlink:<SHATYPE>/<SHA>
@@ -12,47 +16,46 @@ import com.rebaze.mirror.api.ResourceDTO.HashType;
  * @author tonit
  *
  */
-public class ResourceLink {
+public class ResourceLink implements Tree {
 	
 	public final static String SCHEME = "streamlink";
 
-	private final HashType type;
-	private final String id;
+	private final Tree tree;
 	private final URI uri;
 	
-	public static ResourceLink from(URI uri) {
+	public static ResourceLink from( URI uri) {
 		if (SCHEME.equals(uri.getScheme())) {
 			String rawPath = uri.getPath();
-			return from(uri, rawPath);
+			return from( uri, rawPath);
 		}else {
 			throw new IllegalArgumentException("Incoming Uri is not a ResourceLink: " + uri);
 		}
 	}
 	
-	public static ResourceLink from(URI uri, String rawPath) {
+	public static ResourceLink from( URI uri, String rawPath) {
 		String[] path = rawPath.split("/");
 		if (path.length != 3) {
 			throw new IllegalArgumentException("Incoming ResourceLink is not correctly formated: " + rawPath);
 		}
 		String type = path[1];
 		String id = path[2];
-		return new ResourceLink(HashType.valueOf(type), id, uri);
+		Tree tree = new StaticTree(Selector.selector(""),HashAlgorithm.valueOf(type),id,new Tree[0],(Tag)null);
+		return new ResourceLink(tree, uri);
 	}
 
-	public static ResourceLink from(String rawPath) {
-		return from(null,rawPath);
+	public static ResourceLink from( String rawPath) {
+		return from( null,rawPath);
 	}
 
-	public ResourceLink(HashType type, String id) {
-		this(type,id,null); // will create the uri automatically.
+	public ResourceLink(Tree tree) {
+		this(tree,null); // will create the uri automatically.
 	}
 	
-	public ResourceLink(HashType type, String id, URI uri) {
-		this.type = type;
-		this.id = id;
+	public ResourceLink(Tree tree, URI uri) {
+		this.tree = tree;
 		if (uri == null) {
 			try {
-				this.uri = new URI(SCHEME + ":/" + type + "/" + id);
+				this.uri = new URI(SCHEME + ":/" + tree.algorithm().value() + "/" + tree.fingerprint());
 			} catch (URISyntaxException e) {
 				throw new IllegalArgumentException("Cannot create URI from " + toString());
 			}
@@ -61,56 +64,59 @@ public class ResourceLink {
 		}
 	}
 	
-	public HashType type() {
-		return type;
-	}
-	
-	public String id() {
-		return id;
-	}
-
 	public URI toUri() {
 		return uri ;
 	}
 	
 	@Override
 	public String toString() {
-		return "ResourceLink[" + type + ";" + id + "]";
+		return "ResourceLink[" + tree.toString() + "]";
 	}
 	
 	@Override
 	public int hashCode() {
+		return tree.hashCode();
+		/**
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		return result;
+		**/
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ResourceLink other = (ResourceLink) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (type != other.type)
-			return false;
-		if (uri == null) {
-			if (other.uri != null)
-				return false;
-		} else if (!uri.equals(other.uri))
-			return false;
-		return true;
+		return tree.equals(obj);
 	}
+
+	@Override
+	public HashAlgorithm algorithm() {
+		return tree.algorithm();
+	}
+
+	@Override
+	public String fingerprint() {
+		return tree.fingerprint();
+	}
+
+	@Override
+	public Selector selector() {
+		return tree.selector();
+	}
+
+	@Override
+	public Tree[] branches() {
+		return tree.branches();
+	}
+
+	@Override
+	public Tag tags() {
+		return tree.tags();
+	}
+	
+	
 
 	
 }

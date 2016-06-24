@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -19,8 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rebaze.mirror.api.ResourceDTO;
-import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamDefinitionDTO;
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.tree.api.TreeSessionFactory;
@@ -70,8 +69,7 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailab
 	}
 
 	private ResourceLink linkFromPath(File f) {
-		Tree tree = treeFactory.create("SHA-256").createStreamTreeBuilder().add(f).seal();
-		return new ResourceLink(HashType.SHA256, tree.fingerprint());
+		return new ResourceLink( treeFactory.getTreeSession(HashAlgorithm.SHA256).createStreamTreeBuilder().add(f).seal() );
 	}
 
 	// only when hash is not available
@@ -98,7 +96,8 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailab
 
 	@Override
 	public DataSource resolve(ResourceDTO artifact) {
-		return resolve(new ResourceLink(artifact.getHashType(), artifact.getHash()));
+		
+		return resolve(new ResourceLink(artifact));
 	}
 
 	public boolean existsInWorkspaceLegacy(ResourceDTO res) {
@@ -106,9 +105,10 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailab
 		File target = getPathFor(res);
 		if (target.exists()) {
 			// TODO: Cache this:
-			Tree tree = treeFactory.create(res.getHashType().value()).createStreamTreeBuilder().add(target).seal();
-			if (res.getHash() == null || !res.getHash().equals(tree.fingerprint())) {
-				LOG.warn("Bad checksum: " + res.getHash() + "(we have " + tree.fingerprint() + "): Redownload.");
+			Tree tree = treeFactory.getTreeSession(res.algorithm()).createStreamTreeBuilder().add(target).seal();
+			
+			if (res.fingerprint() == null || !res.fingerprint().equals(tree.fingerprint())) {
+				LOG.warn("Bad checksum: " + res.fingerprint() + "(we have " + tree.fingerprint() + "): Redownload.");
 				return false;
 			} else {
 				return true;
@@ -127,9 +127,9 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailab
 	public void resourceLinkAvailable(ResourceLink link, DataSource src) {
 		// create secondary links:
 		try {
-			Tree tree = treeFactory.create(HashType.MD5.name()).createStreamTreeBuilder()
+			Tree tree = treeFactory.getTreeSession(HashAlgorithm.MD5).createStreamTreeBuilder()
 					.add(src.uri().toURL().openStream()).seal();
-			ResourceLink linkMD5 = new ResourceLink(HashType.MD5, tree.fingerprint());
+			ResourceLink linkMD5 = new ResourceLink(tree);
 			System.out.println("ADDED " + linkMD5);
 			System.out.println("+ (primary: " + src.uri().toASCIIString() + ") ADDED " + link);
 			store.put(linkMD5, src);

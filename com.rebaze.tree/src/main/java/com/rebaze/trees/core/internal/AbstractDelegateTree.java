@@ -8,6 +8,7 @@
  */
 package com.rebaze.trees.core.internal;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Selector;
 import com.rebaze.tree.api.Tag;
 import com.rebaze.tree.api.Tree;
@@ -66,5 +67,11 @@ public abstract class AbstractDelegateTree implements Tree
     {
         return m_tree.tags();
     }
+    
+
+	@Override
+	public HashAlgorithm algorithm() {
+		return m_tree.algorithm();
+	}
 
 }

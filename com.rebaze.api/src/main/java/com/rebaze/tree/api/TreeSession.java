@@ -18,4 +18,6 @@ public interface TreeSession {
 
 	Tree reduce(Tree tree);
 
+	HashAlgorithm getHashAlgorithm();
+
 }

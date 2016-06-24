@@ -27,6 +27,13 @@ package com.rebaze.tree.api;
 public interface Tree
 {
 
+	/**
+     * The algorithm used to create the fingerprint of this tree.
+     * 
+     * @return the hash value of this tree.
+     */
+    HashAlgorithm algorithm();
+    
     /**
      * Hash value of all its sub branches. Can also be called a hash. Default implementations may
      * use a SHA-1.
@@ -56,5 +63,7 @@ public interface Tree
      * @return Tags for this tree.
      */
     Tag tags();
+    
+    
 
 }

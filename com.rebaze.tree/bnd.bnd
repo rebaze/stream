@@ -12,4 +12,5 @@
 Bundle-Version: 0.0.0.${tstamp}
 Private-Package: com.rebaze.trees.core.internal
 Export-Package: \
-	com.rebaze.trees.ext.operators
+	com.rebaze.trees.ext.operators,\
+	com.rebaze.trees.util

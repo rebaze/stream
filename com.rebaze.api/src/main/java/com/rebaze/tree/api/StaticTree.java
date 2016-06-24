@@ -6,11 +6,7 @@
  * which accompanies this distribution and is available at http://www.apache.org/licenses/LICENSE-2.0.
  *
  */
-package com.rebaze.trees.core.internal;
-
-import com.rebaze.tree.api.Selector;
-import com.rebaze.tree.api.Tag;
-import com.rebaze.tree.api.Tree;
+package com.rebaze.tree.api;
 
 /**
  * Default implementation not really suitable for very large trees but fast and simple.
@@ -18,15 +14,17 @@ import com.rebaze.tree.api.Tree;
  * @author Toni Menzel <toni.menzel@rebaze.com>
  *
  */
-public class InMemoryTreeImpl implements Tree
+public class StaticTree implements Tree
 {
     final private String m_hashValue;
     final private Tree[] m_subs;
     final private Selector m_selector;
     final private Tag m_tag;
+	private final HashAlgorithm m_algo;
 
-    public InMemoryTreeImpl( Selector selector, String hashValue, Tree[] subs, Tag tag )
+    public StaticTree( Selector selector, HashAlgorithm alg, String hashValue, Tree[] subs, Tag tag )
     {
+    	m_algo = alg;
         m_selector = selector;
         m_hashValue = hashValue;
         m_subs = subs;
@@ -82,4 +80,9 @@ public class InMemoryTreeImpl implements Tree
     {
         return m_tag;
     }
+
+	@Override
+	public HashAlgorithm algorithm() {
+		return m_algo;
+	}
 }

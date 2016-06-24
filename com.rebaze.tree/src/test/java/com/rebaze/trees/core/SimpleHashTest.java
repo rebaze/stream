@@ -12,23 +12,26 @@ import static com.rebaze.tree.api.Selector.selector;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Test;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 import com.rebaze.trees.core.internal.InMemoryTreeBuilderImpl;
+import com.rebaze.trees.core.internal.TreeConsoleFormatter;
 
 public class SimpleHashTest
 {
-    private TreeSession session =  new DefaultTreeSessionFactory().create();
+    private TreeSession session =  new DefaultTreeSessionFactory().getTreeSession(HashAlgorithm.SHA1);
 
     @Test
     public void emptyCollector() throws Exception
     {
         TreeBuilder root = session.createTreeBuilder().selector( selector( "Root" ) );
-        int i=0;
         assertEquals( InMemoryTreeBuilderImpl.FIXED_EMPTY, root.seal().fingerprint() );
 
         TreeBuilder root2 = session.createTreeBuilder().selector( selector( "RootOther" ) );
@@ -78,17 +81,35 @@ public class SimpleHashTest
         assertNotEquals( "first childs must be different", tree1.branches()[0].fingerprint(), tree2.branches()[0].fingerprint() );
 
     }
-
+    
     @Test
-    public void testReuseCollectors()
+    public void testSimpleCompare() throws UnsupportedEncodingException
     {
         TreeBuilder sn1 = session.createTreeBuilder();
-        sn1.branch( selector( "p1" ) ).add( "one".getBytes() );
-        sn1.branch( selector( "p1" ) ).add( "two".getBytes() );
+        sn1.branch( selector( "p1" ) ).add( "a".getBytes("UTF-8") );
 
         TreeBuilder sn2 = session.createTreeBuilder();
-        sn2.branch( selector( "p1" ) ).add( "one".getBytes() ).add( "two".getBytes() );
+        sn2.branch( selector( "p1" ) ).add( "a".getBytes("UTF-8") );
+      //sn2.branch( selector( "p1" ) ).add( "one".getBytes() ).add( "two".getBytes() );
 
-        assertEquals( "Should no elements", sn1.seal(),sn2.seal() );
+        TreeConsoleFormatter formatter = new TreeConsoleFormatter();
+        formatter.prettyPrint(sn1.seal(),sn2.seal());
+        assertEquals( "Should be identical.", sn1.seal().fingerprint(),sn2.seal().fingerprint() );
+        
+    }
+
+    @Test
+    public void testReuseCollectors() throws UnsupportedEncodingException
+    {
+        TreeBuilder sn1 = session.createTreeBuilder();
+        sn1.branch( selector( "p1" ) ).add( "a".getBytes("UTF-8") );
+        sn1.branch( selector( "p1" ) ).add( "b".getBytes("UTF-8") );
+
+        TreeBuilder sn2 = session.createTreeBuilder();
+        sn2.branch( selector( "p1" ) ).add( "a".getBytes("UTF-8") );
+        sn2.branch( selector( "p1" ) ).add( "b".getBytes("UTF-8") );
+      //sn2.branch( selector( "p1" ) ).add( "one".getBytes() ).add( "two".getBytes() );
+
+        assertEquals( "Should be identical.", sn1.seal().fingerprint(),sn2.seal().fingerprint() );
     }
 }

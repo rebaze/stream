@@ -8,8 +8,8 @@ import org.osgi.resource.Capability;
 import org.osgi.resource.Resource;
 
 import com.rebaze.mirror.api.ResourceDTO;
-import com.rebaze.mirror.api.ResourceDTO.HashType;
 import com.rebaze.stream.api.StreamSourceDTO;
+import com.rebaze.tree.api.HashAlgorithm;
 
 import aQute.bnd.deployer.repository.api.IRepositoryIndexProcessor;
 import aQute.bnd.deployer.repository.api.Referral;
@@ -31,8 +31,9 @@ public class ContentAccessRepositoryIndexProcessor implements IRepositoryIndexPr
 		for (Capability c : cap) {
 			URI url = (URI) c.getAttributes().get("url");
 			String hash = (String) c.getAttributes().get("osgi.content");
+			// TODO make ResourceDTO have Tree structure instead of alg+hash.
 			try {
-				list.add(new ResourceDTO(origin, url, hash, HashType.SHA256));
+				list.add(new ResourceDTO(origin, url, hash, HashAlgorithm.SHA256));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

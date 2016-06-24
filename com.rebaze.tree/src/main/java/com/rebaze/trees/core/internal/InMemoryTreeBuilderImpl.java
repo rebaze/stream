@@ -9,8 +9,11 @@
 package com.rebaze.trees.core.internal;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.util.*;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Selector;
 import com.rebaze.tree.api.Tag;
 import com.rebaze.tree.api.Tree;
@@ -28,8 +31,10 @@ import com.rebaze.trees.core.*;
 public class InMemoryTreeBuilderImpl implements TreeBuilder
 {
     public static final String FIXED_EMPTY = "0000000000000000000000000000000000000000";
+    final private static HashAlgorithm EMPTY_ALGO = HashAlgorithm.SHA1;
 
     final private static Comparator<Tree> TREE_COMPARATOR = new HashUtil.TreeComparator();
+    
     final private MessageDigest m_digest;
     private Tree m_hash;
     private boolean noData = true;
@@ -41,10 +46,15 @@ public class InMemoryTreeBuilderImpl implements TreeBuilder
     private Tag m_tag;
     private final TreeSession m_tools;
 
-    public InMemoryTreeBuilderImpl( TreeSession session, MessageDigest digest )
+    public InMemoryTreeBuilderImpl( TreeSession session)
     {
-        m_tools = session;
-        m_digest = digest;
+    	m_tools = session;
+    	
+        try {
+			m_digest = MessageDigest.getInstance(m_tools.getHashAlgorithm().value());
+		} catch (NoSuchAlgorithmException e) {
+			throw new TreeException("HashAlgorithm not found.", e);
+		}
         //m_sub = new ArrayList<TreeBuilder>();
         m_subItems = new HashMap<Selector, TreeBuilder>();
     }
@@ -149,8 +159,12 @@ public class InMemoryTreeBuilderImpl implements TreeBuilder
         TreeBuilder c = m_subItems.get( selector );
         if ( c == null )
         {
+        	System.out.println("New selector " + selector);
             c = m_tools.createTreeBuilder().selector( selector );
             m_subItems.put( selector, c );
+        }else {
+        	System.out.println("Reuse selector " + selector);
+
         }
 
         return c;

@@ -2,6 +2,7 @@ package com.rebaze.trees.core;
 
 import org.junit.Test;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertNull;
 
 public class TreeIndexTest
 {
-    private TreeSession session =  new DefaultTreeSessionFactory().create();
+    private TreeSession session =  new DefaultTreeSessionFactory().getTreeSession(HashAlgorithm.SHA1);
 
     @Test
     public void compoundSelectArrayTest() throws IOException

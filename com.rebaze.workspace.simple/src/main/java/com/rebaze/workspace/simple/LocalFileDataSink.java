@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rebaze.mirror.api.ResourceDTO;
-import com.rebaze.mirror.api.ResourceDTO.HashType;
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.workspace.api.DataSink;
@@ -66,7 +66,7 @@ public class LocalFileDataSink implements DataSink {
 				LOG.warn("copied a file that already exists in store: " + fStorageName.getAbsolutePath());
 			}
 			// now we copy over the tmp file to the store:
-			ResourceLink link = new ResourceLink(HashType.SHA1,tree.fingerprint());
+			ResourceLink link = new ResourceLink(tree);//
 			if (consumer != null) {
 				consumer.resourceLinkAvailable( link, new LocalDataSource(fStorageName));
 			}

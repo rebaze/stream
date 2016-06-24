@@ -5,7 +5,6 @@ import static com.rebaze.tree.api.Selector.selector;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +19,6 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.metatype.annotations.Designate;
@@ -131,15 +129,6 @@ public class StreamPacker implements DistributionBuilder
         return indexFileName;
     }
     
-    @Deactivate
-    private void deactivate( ComponentContext context ) throws IOException
-    {
-        LOG.info( "# Deactivating " + context.getProperties().get( "component.name" ) );
-        if (schedulerSession != null) {
-            schedulerSession.close();
-        }
-    }
-
     public Tree createTree( String prefix, List<ResourceDTO> resources )
     {
         List<TreePath> virtual = new ArrayList<>( resources.size() );
@@ -222,7 +211,7 @@ public class StreamPacker implements DistributionBuilder
                 String head = tree.getHead();
                 if ( head == null )
                 {
-                    treeBuilder.branch( session.createTree( selector( tree.getTail()[0] ), tree.resource.getHash(),
+                    treeBuilder.branch( session.createTree( selector( tree.getTail()[0] ), tree.resource.fingerprint(),
                             new Tree[0], Tag.tag( RESOURCE ) ) );
                     res.add( tree.getResource() );
                 }

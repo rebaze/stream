@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
@@ -27,7 +28,7 @@ public class DiffTreeCombinatorTest
 {
 
     private static TreeConsoleFormatter FORMAT = new TreeConsoleFormatter();
-    private TreeSession session =  new DefaultTreeSessionFactory().create();
+    private TreeSession session =  new DefaultTreeSessionFactory().getTreeSession(HashAlgorithm.SHA1);
 
     @Test
     public void diffIdenticalEmpty()

@@ -3,46 +3,36 @@ package com.rebaze.mirror.api;
 import java.net.URI;
 
 import com.rebaze.stream.api.StreamSourceDTO;
+import com.rebaze.tree.api.HashAlgorithm;
+import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.Tag;
+import com.rebaze.tree.api.Tree;
 
-public class ResourceDTO {
-	public static enum HashType {
-		SHA1("SHA-1"), SHA256("SHA-256"), MD5("MD5");
-		private final String val;
-
-		HashType(String val) {
-			this.val = val;
-		}
-
-		public String value() {
-			return val;
-		}
-	}
+public class ResourceDTO implements Tree {
 	
 	final StreamSourceDTO origin;
 	final private String hash;
 	final private URI uri;
-	final private HashType hashtype;
+	final private HashAlgorithm hashtype;
+	final private Selector selector;
 
-	public ResourceDTO(StreamSourceDTO origin, URI uri, String hash, HashType hashType) {
+	public ResourceDTO(StreamSourceDTO origin, URI uri, String hash, HashAlgorithm hashType) {
 		this.origin = origin;
 		this.uri = uri;
 		this.hash = hash;
 		this.hashtype = hashType;
+		this.selector = Selector.selector(uri.toASCIIString());
 	}
 
 	public StreamSourceDTO getOrigin() {
 		return this.origin;
 	}
 
-	public String getHash() {
-		return hash;
-	}
-
 	public URI getUri() {
 		return uri;
 	}
 
-	public boolean isHashType(HashType type) {
+	public boolean isHashType(HashAlgorithm type) {
 		return type == hashtype;
 	}
 
@@ -88,7 +78,28 @@ public class ResourceDTO {
 		return true;
 	}
 
-	public HashType getHashType() {
+	@Override
+	public HashAlgorithm algorithm() {
 		return hashtype;
+	}
+
+	@Override
+	public String fingerprint() {
+		return hash;
+	}
+
+	@Override
+	public Selector selector() {
+		return selector;
+	}
+
+	@Override
+	public Tree[] branches() {
+		return new Tree[0];
+	}
+
+	@Override
+	public Tag tags() {
+		return null;
 	}
 }

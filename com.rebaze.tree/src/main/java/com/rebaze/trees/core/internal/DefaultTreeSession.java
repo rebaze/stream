@@ -8,7 +8,9 @@
  */
 package com.rebaze.trees.core.internal;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Selector;
+import com.rebaze.tree.api.StaticTree;
 import com.rebaze.tree.api.StreamTreeBuilder;
 import com.rebaze.tree.api.Tag;
 import com.rebaze.tree.api.Tree;
@@ -31,17 +33,14 @@ import org.osgi.service.component.annotations.ServiceScope;
  */
 @Component(scope=ServiceScope.SINGLETON)
 public class DefaultTreeSession implements TreeSession {
-	public static final String DEFAULT_HASH_ALOGO = "SHA-256";
+	public static final String DEFAULT_HASH_ALOGO = "SHA-1";
 	public static final String CHARSET_NAME = "UTF-8";
 	// private String m_messageDigestAlgorithm = DEFAULT_HASH_ALOGO;
-	private final MessageDigest m_digest;
+	private final HashAlgorithm m_digest;
 
-	public DefaultTreeSession() {
-		this(DEFAULT_HASH_ALOGO);
-	}
-
-	public DefaultTreeSession(String digestAlg) {
-		m_digest = createMessageDigest(digestAlg);
+	public DefaultTreeSession(HashAlgorithm digestAlg) {
+		
+		m_digest = digestAlg;
 	}
 
 	/**
@@ -96,7 +95,7 @@ public class DefaultTreeSession implements TreeSession {
 	 */
 	@Override
 	public TreeBuilder createTreeBuilder() {
-		return new InMemoryTreeBuilderImpl(this, m_digest);
+		return new InMemoryTreeBuilderImpl(this);
 	}
 
 	/*
@@ -130,7 +129,7 @@ public class DefaultTreeSession implements TreeSession {
 	 */
 	@Override
 	public Tree createTree(Selector selector, String hashValue, Tree[] subs, Tag tag) {
-		return new InMemoryTreeImpl(selector, hashValue, subs, tag);
+		return new StaticTree(selector, m_digest, hashValue, subs, tag);
 	}
 
 	private MessageDigest createMessageDigest(String digest) {
@@ -202,6 +201,11 @@ public class DefaultTreeSession implements TreeSession {
 			return reduce(tree.branches()[0]);
 		}
 		return tree;
+	}
+
+	@Override
+	public HashAlgorithm getHashAlgorithm() {
+		return m_digest;
 	}
 
 }

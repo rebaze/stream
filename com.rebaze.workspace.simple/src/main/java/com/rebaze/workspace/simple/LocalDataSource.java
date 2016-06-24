@@ -10,6 +10,7 @@ public class LocalDataSource implements DataSource {
 	private final URI uri;
 	
 	LocalDataSource(File f) {
+		
 		uri = f.toURI();
 	}
 	

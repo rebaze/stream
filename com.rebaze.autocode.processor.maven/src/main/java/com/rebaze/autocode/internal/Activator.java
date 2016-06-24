@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.TreeSession;
 import com.rebaze.trees.core.internal.DefaultTreeSessionFactory;
 
@@ -15,7 +16,7 @@ public class Activator implements BundleActivator
     {
         Hashtable props = new Hashtable();
         bc.registerService(
-            TreeSession.class.getName(), new DefaultTreeSessionFactory().create(), props);
+            TreeSession.class.getName(), new DefaultTreeSessionFactory().getTreeSession(HashAlgorithm.SHA1), props);
     }
 
 	@Override

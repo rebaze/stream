@@ -11,6 +11,7 @@ package com.rebaze.trees.core.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Selector;
 import com.rebaze.tree.api.Tree;
 
