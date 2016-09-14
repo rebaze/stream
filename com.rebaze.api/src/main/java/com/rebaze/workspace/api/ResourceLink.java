@@ -13,6 +13,7 @@ import com.rebaze.tree.api.Tree;
  * Format URI: streamlink:<SHATYPE>/<SHA>
  * E.g.
  * streamlink:SHA-256/IBIUBI6IB6767
+ * TODO: hash://sha256/c8909ef4e934d5954f1ef8c8
  * @author tonit
  *
  */

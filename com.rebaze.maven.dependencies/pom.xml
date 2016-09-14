@@ -6,6 +6,12 @@
 	<groupId>com.rebaze.maven</groupId>
 	<artifactId>com.rebaze.maven.dependencies-</artifactId>
 	<version>0.1-SNAPSHOT</version>
+	
+	<properties>
+		<neo4jogm.version>2.0.4</neo4jogm.version>
+		 <commonslang>3.4</commonslang>
+        <commonscodec>1.10</commonscodec>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -23,12 +29,39 @@
 			<artifactId>ops4j-base-exec</artifactId>
 			<version>1.5.0</version>
 		</dependency>
+		  <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commonslang}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commonscodec}</version>
+            </dependency>
 		<!-- <dependency> <groupId>org.ops4j.base</groupId> <artifactId>ops4j-base-util</artifactId> 
 			<version>1.5.0</version> </dependency> -->
+		
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>4.2.0.201601211800-r</version>
+			<version>4.4.1.201607150455-r</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j.driver</groupId>
+			<artifactId>neo4j-java-driver</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-core</artifactId>
+			<version>${neo4jogm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-ogm-bolt-driver</artifactId>
+			<version>${neo4jogm.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup.okio</groupId>
@@ -73,6 +106,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr</artifactId>
+			<version>2.0.6</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.webconsole.plugins.memoryusage</artifactId>
 			<version>1.0.6</version>
 		</dependency>
@@ -96,6 +135,12 @@
 			<artifactId>org.apache.felix.webconsole.plugins.subsystems</artifactId>
 			<version>0.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.configadmin</artifactId>
+			<version>1.8.10</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.http.jetty</artifactId>

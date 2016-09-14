@@ -30,16 +30,12 @@ import com.rebaze.workspace.api.ResourceLinkAvailableConsumer;
 import com.rebaze.workspace.api.WorkspaceAdmin;
 
 @Component(immediate = true)
-@Path("/workspace")
 public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailableConsumer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkspaceAdmin.class);
 
 	@Reference
 	private TreeSessionFactory treeFactory;
-
-	@Reference
-	private TreeSession treeSession;
 
 	// a redundant store for all incoming links:
 	private final Map<ResourceLink, DataSource> store = new HashMap<>();
@@ -120,7 +116,7 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailab
 
 	@Override
 	public DataSink sink(ResourceDTO artifact) {
-		return new LocalFileDataSink(wsLocation, artifact, treeSession, this);
+		return new LocalFileDataSink(wsLocation, artifact, treeFactory.getTreeSession(HashAlgorithm.SHA1), this);
 	}
 
 	@Override
@@ -148,14 +144,21 @@ public class SimpleWorkspaceAdmin implements WorkspaceAdmin, ResourceLinkAvailab
 		return res;
 	}
 
-	@GET
+	
+	//@GET
 	public File getLocation() {
 		return wsLocation;
 	}
-
+	
 	@Override
 	public Collection<DataSource> list() {
 		return store.values();
 	}
+	
+	@Override
+	public String toString() {
+		return "[SimpleWorkspace: " + this.wsLocation.getAbsolutePath() + "]";
+	}
 
+	
 }

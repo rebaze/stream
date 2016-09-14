@@ -28,10 +28,12 @@ import org.slf4j.LoggerFactory;
 
 import com.rebaze.distribution.DistributionBuilder;
 import com.rebaze.mirror.api.ResourceDTO;
+import com.rebaze.tree.api.HashAlgorithm;
 import com.rebaze.tree.api.Tag;
 import com.rebaze.tree.api.Tree;
 import com.rebaze.tree.api.TreeBuilder;
 import com.rebaze.tree.api.TreeSession;
+import com.rebaze.tree.api.TreeSessionFactory;
 import com.rebaze.workspace.api.WorkspaceAdmin;
 
 import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
@@ -63,7 +65,7 @@ public class StreamPacker implements DistributionBuilder
     }
 
     @Reference
-    private TreeSession treeSession;
+    private TreeSessionFactory treeSession;
     
     @Reference
     private WorkspaceAdmin workspace;
@@ -88,7 +90,7 @@ public class StreamPacker implements DistributionBuilder
         LOG.info( "# Activating Stream: " + context.getProperties().get( "component.name" ) );
         try
         {
-          //  this.schedulerSession = scheduler.schedule( () -> pack(), config.tickRemoteSyncPattern() );
+            this.schedulerSession = scheduler.schedule( () -> pack(), config.tickRemoteSyncPattern() );
         }
         catch ( Exception e )
         {
@@ -141,8 +143,9 @@ public class StreamPacker implements DistributionBuilder
 
     private TreeBuilder indexPaths( List<TreePath> virtual )
     {
-        TreeBuilder root = treeSession.createTreeBuilder();
-        new VirtualTree( treeSession, root, virtual );
+        TreeSession session = treeSession.getTreeSession( HashAlgorithm.SHA1 );
+        TreeBuilder root = session.createTreeBuilder();
+        new VirtualTree( session, root, virtual );
         return root;
     }
 

@@ -11,19 +11,18 @@ import com.rebaze.autocode.api.Autocode;
 
 @Component(immediate=true, service = Basic.class, property = 
 	{
-			"osgi.command.scope=autocode",
-			"osgi.command.function=build"
+			"osgi.command.scope=stream",
+			"osgi.command.function=update"
 	})
 public class Basic {
 
-	@Reference Autocode autocode; 
-
-	@Descriptor("build")
-	public void build(String path) {
-		System.out.println("Hello World.");
+	@Reference MavenRepoUtil mavenRepo; 
+	
+	@Descriptor("Runs an update against maven central.")
+	public void update(@Descriptor("path to bom") String path) {
 		try {
 			
-			autocode.build(new File(path));
+			mavenRepo.resolve(new File(path));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

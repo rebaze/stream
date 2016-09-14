@@ -1,0 +1,49 @@
+
+Bundle-Version:					1.0.0.${tstamp}
+Bundle-Description: Standalone License Dumper
+
+Private-Package: \
+	com.google.gson,\
+	com.google.gson.annotations,\
+	com.google.gson.internal,\
+	com.google.gson.internal.bind,\
+	com.google.gson.internal.bind.util,\
+	com.google.gson.reflect,\
+	com.google.gson.stream,\
+	org.osgi.dto,\
+	org.apache.commons.lang3,\
+	org.apache.maven,\
+	org.apache.maven.model,\
+	org.apache.maven.model.io,\
+	org.apache.maven.model.io.xpp3,\
+	org.apache.maven.model.merge,\
+	org.codehaus,\
+	org.codehaus.plexus,\
+	org.codehaus.plexus.util,\
+	org.codehaus.plexus.util.cli,\
+	org.codehaus.plexus.util.cli.shell,\
+	org.codehaus.plexus.util.dag,\
+	org.codehaus.plexus.util.introspection,\
+	org.codehaus.plexus.util.io,\
+	org.codehaus.plexus.util.reflection,\
+	org.codehaus.plexus.util.xml,\
+	org.codehaus.plexus.util.xml.pull
+	
+-buildpath: \
+	osgi.enroute.base.api;version=1.0,\
+	com.google.gson,\
+	org.apache.maven:maven-model;version=3.3,\
+	org.codehaus.plexus:plexus-utils;version=3.0
+	
+-testpath: \
+	osgi.enroute.junit.wrapper;version=4.12
+
+Main-Class: com.rebaze.analytics.license.provider.Main
+
+Bundle-Copyright: rebaze
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.html
+Bundle-Vendor: rebaze
+Bundle-Name: analytics-license-dumper
+Export-Package: \
+	com.rebaze.analytics.license.provider,\
+	com.rebaze.analytics.license

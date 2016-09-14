@@ -14,6 +14,13 @@
 	, \
 	aQute.bnd.deployer.repository.FixedIndexedRepo; \
 		name=Eclipse Mars; \
-		locations=file://${workspace}/com.rebaze.osgirepo.materializer/target/repo/org.eclipse.dist.mars/org.eclipse.mars.p2.xml; 
-		
+		locations=file://${workspace}/com.rebaze.osgirepo.materializer/target/repo/org.eclipse.dist.mars/org.eclipse.mars.p2.xml; \
+	, \
+	aQute.bnd.repository.maven.provider.MavenBndRepository; \
+		releaseUrl=http://localhost:8081/nexus/content/groups/public/; \
+		index=${.}/release.maven; \
+		name="LocalNexus"
+
+-connection-log: connection.log
+
 -releaserepo: Release

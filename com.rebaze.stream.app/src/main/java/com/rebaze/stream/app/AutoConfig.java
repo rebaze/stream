@@ -17,7 +17,6 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ import com.rebaze.stream.api.StreamDefinitionDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
 
 import okio.Okio;
-import osgi.enroute.scheduler.api.Scheduler;
 
 @Designate( ocd = AutoConfig.Config.class )
 @Component( immediate = true, name = "Stream Autoconfig", configurationPid = "com.rebaze.stream.configuration" )

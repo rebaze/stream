@@ -42,7 +42,7 @@ public class ContentAccessRepositoryIndexProcessor implements IRepositoryIndexPr
 
 	@Override
 	public void processReferral(URI parentUri, Referral referral, int maxDepth, int currentDepth) {
-		
+		throw new UnsupportedOperationException("Unsupported in ContentAccessRepositoryIndexProcessor");
 	}
 	
 	public List<ResourceDTO> getArtifacts() {

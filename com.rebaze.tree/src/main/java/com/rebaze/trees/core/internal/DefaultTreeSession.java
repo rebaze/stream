@@ -31,7 +31,6 @@ import org.osgi.service.component.annotations.ServiceScope;
  *
  * @author Toni Menzel <toni.menzel@rebaze.com>
  */
-@Component(scope=ServiceScope.SINGLETON)
 public class DefaultTreeSession implements TreeSession {
 	public static final String DEFAULT_HASH_ALOGO = "SHA-1";
 	public static final String CHARSET_NAME = "UTF-8";

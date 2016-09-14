@@ -30,7 +30,7 @@ import aQute.bnd.deployer.repository.providers.R5RepoContentProvider;
 import okio.BufferedSource;
 import okio.Okio;
 
-@Component(immediate=true)
+@Component(immediate=true, property="type=r5")
 public class R5RepoIndexAdmin implements IndexAdmin {
 	private static final Logger LOG = LoggerFactory.getLogger(R5RepoIndexAdmin.class);
 
@@ -174,5 +174,10 @@ public class R5RepoIndexAdmin implements IndexAdmin {
 		URI composite = index(new File(definition.localPath, "index.xml"), streamResources);
 		System.out.println("Created compositeIndex (" + composite.getPath() + ") for " + streamResources.size() + " resources from " + indexes.size() + " indexes.");
 		return composite;
+	}
+	
+	@Override
+	public String toString() {
+		return "[R5RepoIndexAdmin: " + this.definition.name + "]";
 	}
 }

@@ -2,13 +2,14 @@ package com.rebaze.stream.app;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-
-import org.apache.felix.service.command.Descriptor;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -40,11 +41,14 @@ public class StreamSyncService implements TransportMonitor
     @ObjectClassDefinition( name = "Stream-Tick Configuration" )
     @interface Config
     {
-        String tickRemoteSyncPattern() default "*/30 * * * * * *";
+        String tickRemoteSyncPattern() default "*/60 * * * * * *";
     }
     
     @Reference
     IndexAdmin indexAdmin;
+    
+    @Reference
+    ConfigurationAdmin cm;
 
     @Reference( target = "(type=composite)" )
     MirrorAdmin mirrorAdmin;
@@ -92,7 +96,36 @@ public class StreamSyncService implements TransportMonitor
     {                
         LOG.info( "# Ping: " + pipe );
         LOG.debug( "# Check debug: " + pipe );
+        //Configuration c = null;
+        try
+        {
+            for (Configuration c : cm.listConfigurations( null )) {
+                LOG.info( "config: " + c );
+                
+                Dictionary dict = c.getProperties();
+                if (dict != null) {
+                Enumeration keys = dict.keys();
+                    while (keys.hasMoreElements()) {
+                        Object k = keys.nextElement();
+                        Object v = dict.get( k );
+                        LOG.info( "   " +  k + " = " + v);
+                    }
+                }
 
+            }
+        }
+        catch ( IOException e1 )
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        catch ( InvalidSyntaxException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
         synchronized (this)
         {
             if ( pipe == null || pipe.isDone() )
@@ -108,6 +141,7 @@ public class StreamSyncService implements TransportMonitor
                 }
             }
         }
+        
     }
     
     private List<ResourceLink> work() {

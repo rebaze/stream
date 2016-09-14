@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import com.rebaze.mirror.api.MirrorAdmin;
 import com.rebaze.mirror.api.ResourceDTO;
 import com.rebaze.stream.api.StreamSourceDTO;
-import com.rebaze.tree.api.TreeSession;
 
 import aQute.bnd.deployer.repository.api.Decision;
 import aQute.bnd.deployer.repository.api.IRepositoryContentProvider;
@@ -36,9 +35,6 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	
 	@Reference(target="(&(type="+TYPE+")(active=true))")
 	private List<StreamSourceDTO> source;
-	
-	@Reference
-	private TreeSession treeSession;
 
 	// @Reference(cardinality=ReferenceCardinality.OPTIONAL)
 	private IRepositoryContentProvider[] providers = new IRepositoryContentProvider[] { new R5RepoContentProvider() };
@@ -46,12 +42,10 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 	@Activate
 	private void activate(ComponentContext context) {
 		LOG.info("#Mirror! Activating " + context.getProperties().get("component.name"));
-
 	}
 
 	@Deactivate
 	private void deactivate(ComponentContext context) {
-
 		LOG.info("# Mirror! Deactivating " + context.getProperties().get("component.name"));
 	}
 
@@ -82,6 +76,7 @@ public class R5RepoMirrorAdmin implements MirrorAdmin {
 		URI index = new URI(origin.url);
 
 		// try (InputStream input = openStream(index)) {
+	
 		try (BufferedSource s = Okio.buffer(Okio.source(openStream(index)))) {
 			IRepositoryContentProvider provider = selectProviderForProvidedIndex(index);
 			if (provider != null) {

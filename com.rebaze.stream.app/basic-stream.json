@@ -35,10 +35,10 @@
     },
     {
       "name":"org.eclipse.dist.mars.frameworks",
-      "url": "file:///Users/tonit/Desktop/org.eclipse.mars.p2/",
+      "url": "file:////Applications/EclipseNeon.app/Contents/Eclipse/",
       "type": "org.eclipse.p2",
       "active":"true",
-      "filter" : "(&(id=org.eclipse.osgi)(!(format=packed)))"
+      "filter" : "(!(format=packed)))"
     }
   ]
 }

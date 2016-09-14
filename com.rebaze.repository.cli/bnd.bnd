@@ -60,4 +60,5 @@ Private-Package: \
 	com.rebaze.index.api,\
 	aQute.bnd.version,\
 	com.rebaze.repository.cli
+	
 Import-Package: *

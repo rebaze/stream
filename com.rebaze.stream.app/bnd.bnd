@@ -16,7 +16,8 @@ Bundle-Name: Rebaze Stream App
 	org.apache.felix.gogo.runtime,\
 	org.apache.commons.compress,\
 	osgi.enroute.base.api,\
-	com.eclipsesource.jaxrs.jersey-all;version=2.22
+	com.eclipsesource.jaxrs.jersey-all;version=2.22,\
+	org.apache.felix.webconsole
 
 -testpath: \
 	junit; version=4,\
@@ -30,6 +31,7 @@ Private-Package: \
 	com.google.gson.*
 	
 Export-Package: com.rebaze.stream.app
+
 Import-Package: \
 	!android.util,\
 	!javax.security.auth.x500,\
