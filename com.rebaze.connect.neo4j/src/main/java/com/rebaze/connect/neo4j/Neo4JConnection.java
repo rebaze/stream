@@ -25,8 +25,6 @@ public class Neo4JConnection {
 		 * title:'King'})"); }
 		 **/
 		
-		Session s = new 
-		
 		ClassLoader old = Thread.currentThread().getContextClassLoader();
 		try {
 			//Thread.currentThread().setContextClassLoader(null);

@@ -15,9 +15,12 @@ public class OSGiAwareSessionFactory implements SessionFactoryProvider {
 	}
 
 	@Override
+	// TODO: TBD
 	public Session openSession() {
-		Driver driver = new BoltDriver(driverConfiguration);
-		return new Neo4jSession(metaData(),driver);
+		// load it all on your own. 
+		//Driver driver = new BoltDriver(driverConfiguration);
+		//return new Neo4jSession(metaData(),driver);
+		return null;
 	}
 
 }
